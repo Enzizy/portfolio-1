@@ -14,6 +14,9 @@ export function MotionSection({ children, className, id, labelledBy }: MotionSec
   return (
     <motion.section
       id={id}
+      data-cat-perch={id}
+      data-cat-zone={id}
+      data-cat-zone-root={id}
       aria-labelledby={labelledBy}
       className={className}
       initial={false}

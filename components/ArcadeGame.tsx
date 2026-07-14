@@ -1,155 +1,237 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Pause, Play, RotateCcw, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Pause, Play, RotateCcw, Sprout, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-const MAZE = [
-  "###############",
-  "#.............#",
-  "#.###.###.###.#",
-  "#.............#",
-  "#.##.#.#.#.##.#",
-  "#....#...#....#",
-  "###.#.....#.###",
-  "#.............#",
-  "###.#.###.#.###",
-  "#....#...#....#",
-  "#.##.#.#.#.##.#",
-  "#.............#",
-  "###############",
-] as const;
-
-type Point = { x: number; y: number };
-type Direction = "up" | "down" | "left" | "right";
-type GameStatus = "ready" | "playing" | "paused" | "won" | "lost";
-type GameState = {
-  player: Point;
-  ghosts: Point[];
-  pellets: Set<string>;
-  direction: Direction | null;
-  score: number;
-  lives: number;
+type GameStatus = "ready" | "playing" | "paused" | "lost";
+type Obstacle = { id: number; x: number; kind: "plant" | "rock" };
+type Collectible = { id: number; x: number; y: number };
+type RunnerWorld = {
   status: GameStatus;
+  catY: number;
+  velocityY: number;
+  obstacles: Obstacle[];
+  collectibles: Collectible[];
+  distance: number;
+  bonus: number;
+  speed: number;
+  spawnIn: number;
+  nextId: number;
 };
 
-const START_PLAYER = { x: 1, y: 1 };
-const START_GHOSTS = [{ x: 13, y: 11 }, { x: 13, y: 1 }];
-const DELTAS: Record<Direction, Point> = {
-  up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 },
-};
-const KEY_DIRECTIONS: Record<string, Direction> = {
-  ArrowUp: "up", w: "up", W: "up", ArrowDown: "down", s: "down", S: "down",
-  ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d: "right", D: "right",
-};
+const CAT_LEFT = 18;
+const CAT_RIGHT = 25;
+const BASE_SPEED = 34;
+const GRAVITY = 1050;
+const JUMP_VELOCITY = 430;
 
-function pointKey(point: Point) { return `${point.x}-${point.y}`; }
-function isOpen(point: Point) { return MAZE[point.y]?.[point.x] !== "#"; }
-function move(point: Point, direction: Direction) {
-  const delta = DELTAS[direction];
-  const next = { x: point.x + delta.x, y: point.y + delta.y };
-  return isOpen(next) ? next : point;
+function createWorld(status: GameStatus = "ready"): RunnerWorld {
+  return {
+    status,
+    catY: 0,
+    velocityY: 0,
+    obstacles: [],
+    collectibles: [],
+    distance: 0,
+    bonus: 0,
+    speed: BASE_SPEED,
+    spawnIn: 1.35,
+    nextId: 1,
+  };
 }
-function createPellets() {
-  const pellets = new Set<string>();
-  MAZE.forEach((row, y) => [...row].forEach((cell, x) => {
-    if (cell === "." && !(x === START_PLAYER.x && y === START_PLAYER.y)) pellets.add(`${x}-${y}`);
-  }));
-  return pellets;
-}
-function createGame(): GameState {
-  return { player: START_PLAYER, ghosts: START_GHOSTS, pellets: createPellets(), direction: null, score: 0, lives: 3, status: "ready" };
-}
-function chooseGhostMove(ghost: Point, player: Point) {
-  const options = (Object.keys(DELTAS) as Direction[]).map((direction) => move(ghost, direction)).filter((next) => next !== ghost);
-  if (!options.length) return ghost;
-  const ranked = options.sort((a, b) => {
-    const distanceA = Math.abs(a.x - player.x) + Math.abs(a.y - player.y);
-    const distanceB = Math.abs(b.x - player.x) + Math.abs(b.y - player.y);
-    return distanceA - distanceB;
-  });
-  return Math.random() < 0.58 ? ranked[0] : ranked[Math.floor(Math.random() * ranked.length)];
+
+function getScore(world: RunnerWorld) {
+  return Math.floor(world.distance) + world.bonus;
 }
 
 export function ArcadeGame({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [game, setGame] = useState<GameState>(createGame);
+  const worldRef = useRef<RunnerWorld>(createWorld());
+  const lastFrameRef = useRef(0);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const cells = useMemo(() => MAZE.flatMap((row, y) => [...row].map((cell, x) => ({ cell, x, y }))), []);
+  const [game, setGame] = useState<RunnerWorld>(() => createWorld());
+  const [bestScore, setBestScore] = useState(0);
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
 
-  const resetGame = useCallback(() => setGame(createGame()), []);
-  const setDirection = useCallback((direction: Direction) => {
-    setGame((current) => ({ ...current, direction, status: current.status === "ready" || current.status === "paused" ? "playing" : current.status }));
+  useEffect(() => {
+    setPortalRoot(document.body);
   }, []);
+
+  const publishWorld = useCallback(() => {
+    setGame({
+      ...worldRef.current,
+      obstacles: [...worldRef.current.obstacles],
+      collectibles: [...worldRef.current.collectibles],
+    });
+  }, []);
+
+  const restartGame = useCallback((startImmediately = false) => {
+    worldRef.current = createWorld(startImmediately ? "playing" : "ready");
+    if (startImmediately) worldRef.current.velocityY = JUMP_VELOCITY;
+    lastFrameRef.current = performance.now();
+    publishWorld();
+  }, [publishWorld]);
+
+  const jump = useCallback(() => {
+    const world = worldRef.current;
+    if (world.status === "lost") {
+      restartGame(true);
+      return;
+    }
+    if (world.status === "ready") world.status = "playing";
+    if (world.status !== "playing" || world.catY > 2) return;
+    world.velocityY = JUMP_VELOCITY;
+    lastFrameRef.current = performance.now();
+    publishWorld();
+  }, [publishWorld, restartGame]);
+
+  const togglePause = useCallback(() => {
+    const world = worldRef.current;
+    if (world.status === "lost") return;
+    world.status = world.status === "playing" ? "paused" : "playing";
+    lastFrameRef.current = performance.now();
+    publishWorld();
+  }, [publishWorld]);
 
   useEffect(() => {
     if (!isOpen) return;
     closeButtonRef.current?.focus();
+    setBestScore(Number.parseInt(localStorage.getItem("cat-runner-best") ?? "0", 10) || 0);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") return onClose();
-      const direction = KEY_DIRECTIONS[event.key];
-      if (direction) { event.preventDefault(); setDirection(direction); }
-      if (event.key === " ") {
+      if ([" ", "ArrowUp", "w", "W"].includes(event.key)) {
         event.preventDefault();
-        setGame((current) => ({ ...current, status: current.status === "playing" ? "paused" : current.status === "paused" || current.status === "ready" ? "playing" : current.status }));
+        jump();
       }
+      if (event.key === "p" || event.key === "P") togglePause();
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => { window.removeEventListener("keydown", onKeyDown); document.body.style.overflow = previousOverflow; };
-  }, [isOpen, onClose, setDirection]);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen, jump, onClose, togglePause]);
 
   useEffect(() => {
     if (!isOpen || game.status !== "playing") return;
-    const timer = window.setInterval(() => {
-      setGame((current) => {
-        if (current.status !== "playing") return current;
-        const player = current.direction ? move(current.player, current.direction) : current.player;
-        const pellets = new Set(current.pellets);
-        const atePellet = pellets.delete(pointKey(player));
-        const ghosts = current.ghosts.map((ghost) => chooseGhostMove(ghost, player));
-        const wasCaught = ghosts.some((ghost) => pointKey(ghost) === pointKey(player));
-        if (wasCaught) {
-          const lives = current.lives - 1;
-          return { ...current, player: START_PLAYER, ghosts: START_GHOSTS, direction: null, lives, status: lives ? "ready" : "lost" };
+    let animationFrame = 0;
+    lastFrameRef.current = performance.now();
+
+    const update = (now: number) => {
+      const world = worldRef.current;
+      if (world.status !== "playing") return;
+      const deltaTime = Math.min((now - lastFrameRef.current) / 1000, 0.034);
+      lastFrameRef.current = now;
+
+      world.speed = BASE_SPEED + Math.min(22, world.distance / 155);
+      world.distance += world.speed * deltaTime;
+      world.velocityY -= GRAVITY * deltaTime;
+      world.catY = Math.max(0, world.catY + world.velocityY * deltaTime);
+      if (world.catY === 0) world.velocityY = 0;
+
+      world.spawnIn -= deltaTime;
+      if (world.spawnIn <= 0) {
+        const obstacleId = world.nextId++;
+        const kind = Math.random() > 0.55 ? "rock" : "plant";
+        world.obstacles.push({ id: obstacleId, x: 106, kind });
+        if (Math.random() > 0.48) {
+          world.collectibles.push({ id: world.nextId++, x: 112, y: 54 + Math.random() * 42 });
         }
-        return { ...current, player, ghosts, pellets, score: current.score + (atePellet ? 10 : 0), status: pellets.size ? "playing" : "won" };
+        const difficultyDelay = Math.max(0.78, 1.32 - world.distance / 950);
+        world.spawnIn = difficultyDelay + Math.random() * 0.58;
+      }
+
+      world.obstacles.forEach((obstacle) => { obstacle.x -= world.speed * deltaTime; });
+      world.collectibles.forEach((collectible) => { collectible.x -= world.speed * deltaTime; });
+      world.obstacles = world.obstacles.filter((obstacle) => obstacle.x > -12);
+      world.collectibles = world.collectibles.filter((collectible) => {
+        const wasCollected = collectible.x >= CAT_LEFT && collectible.x <= CAT_RIGHT
+          && Math.abs(world.catY + 25 - collectible.y) < 30;
+        if (wasCollected) world.bonus += 100;
+        return !wasCollected && collectible.x > -8;
       });
-    }, 145);
-    return () => window.clearInterval(timer);
-  }, [game.status, isOpen]);
 
-  const togglePause = () => setGame((current) => ({ ...current, status: current.status === "playing" ? "paused" : current.status === "paused" || current.status === "ready" ? "playing" : current.status }));
+      const crashed = world.obstacles.some((obstacle) => {
+        const obstacleHeight = obstacle.kind === "rock" ? 32 : 29;
+        return obstacle.x >= CAT_LEFT && obstacle.x <= CAT_RIGHT && world.catY < obstacleHeight - 5;
+      });
+      if (crashed) {
+        world.status = "lost";
+        const score = getScore(world);
+        setBestScore((currentBest) => {
+          const nextBest = Math.max(currentBest, score);
+          localStorage.setItem("cat-runner-best", String(nextBest));
+          return nextBest;
+        });
+        publishWorld();
+        return;
+      }
 
-  return (
+      publishWorld();
+      animationFrame = requestAnimationFrame(update);
+    };
+
+    animationFrame = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [game.status, isOpen, publishWorld]);
+
+  const score = getScore(game);
+  const speedLabel = `${(game.speed / BASE_SPEED).toFixed(1)}x`;
+  const runFrame = Math.floor(game.distance / 2) % 8;
+
+  if (!portalRoot) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div className="game-overlay" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-          <motion.div className="game-dialog" role="dialog" aria-modal="true" aria-labelledby="game-title" initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.98 }} transition={{ duration: 0.22 }}>
+          <motion.div className="game-dialog runner-dialog" role="dialog" aria-modal="true" aria-labelledby="game-title" initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.98 }} transition={{ duration: 0.22 }}>
             <header className="game-header">
-              <div><span>// MINI ARCADE</span><h2 id="game-title">Dot Chaser</h2></div>
+              <div><span>// MINI ARCADE</span><h2 id="game-title">CAT RUNNER</h2><p>Chase the horizon</p></div>
               <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close game"><X size={20} /></button>
             </header>
-            <div className="game-stats" aria-live="polite"><span>Score <b>{game.score.toString().padStart(4, "0")}</b></span><span>Lives <b>{"●".repeat(game.lives) || "—"}</b></span></div>
-            <div className="game-board" role="application" aria-label={`Dot Chaser game. Score ${game.score}. ${game.lives} lives remaining.`}>
-              {cells.map(({ cell, x, y }) => {
-                const key = `${x}-${y}`;
-                const ghostIndex = game.ghosts.findIndex((ghost) => pointKey(ghost) === key);
-                return <div className={`game-cell ${cell === "#" ? "game-wall" : ""}`} key={key}>{game.pellets.has(key) && <i className="game-pellet" />}{pointKey(game.player) === key && <i className={`game-player game-player--${game.direction ?? "right"}`} />}{ghostIndex >= 0 && <i className={`game-ghost game-ghost--${ghostIndex + 1}`} />}</div>;
-              })}
-              {game.status !== "playing" && <div className="game-message"><b>{game.status === "won" ? "Maze cleared!" : game.status === "lost" ? "Game over" : game.status === "paused" ? "Paused" : "Ready?"}</b><span>{game.status === "ready" ? "Press a direction to start" : game.status === "paused" ? "Press space to continue" : "Nice run!"}</span></div>}
+
+            <div className="runner-stats" aria-live="polite">
+              <span>Score <b>{score.toString().padStart(5, "0")}</b></span>
+              <span>Best <b>{bestScore.toString().padStart(5, "0")}</b></span>
+              <span>Speed <b>{speedLabel}</b></span>
             </div>
-            <div className="game-actions"><button type="button" onClick={togglePause} disabled={game.status === "won" || game.status === "lost"}>{game.status === "playing" ? <Pause size={15} /> : <Play size={15} />}{game.status === "playing" ? "Pause" : "Play"}</button><button type="button" onClick={resetGame}><RotateCcw size={15} />Restart</button></div>
-            <div className="game-controls" aria-label="Game controls">
-              <button type="button" onClick={() => setDirection("up")} aria-label="Move up"><ArrowUp /></button>
-              <button type="button" onClick={() => setDirection("left")} aria-label="Move left"><ArrowLeft /></button>
-              <button type="button" onClick={() => setDirection("down")} aria-label="Move down"><ArrowDown /></button>
-              <button type="button" onClick={() => setDirection("right")} aria-label="Move right"><ArrowRight /></button>
+
+            <button className="runner-board" type="button" onClick={jump} aria-label={`Cat runner game. Score ${score}. Tap or press space to jump.`}>
+              <span className="runner-cloud runner-cloud--one" />
+              <span className="runner-cloud runner-cloud--two" />
+              <span className="runner-hill" />
+              <span className="runner-cat" style={{ bottom: `${19 + game.catY}px` }}>
+                <span className="runner-cat-sprite" style={{ backgroundPosition: `${(runFrame / 7) * 100}% 0` }} />
+              </span>
+              {game.obstacles.map((obstacle) => (
+                <span className={`runner-obstacle runner-obstacle--${obstacle.kind}`} style={{ left: `${obstacle.x}%` }} key={obstacle.id}>
+                  {obstacle.kind === "plant" ? <Sprout aria-hidden="true" /> : <i aria-hidden="true" />}
+                </span>
+              ))}
+              {game.collectibles.map((collectible) => <span className="runner-fish" style={{ left: `${collectible.x}%`, bottom: `${collectible.y + 20}px` }} key={collectible.id} aria-hidden="true">◆</span>)}
+              <span className="runner-ground" />
+              {game.status !== "playing" && (
+                <span className="runner-message">
+                  <b>{game.status === "lost" ? "RUN TERMINATED" : game.status === "paused" ? "PAUSED" : "READY TO RUN?"}</b>
+                  <small>{game.status === "lost" ? `Final score: ${score} · Tap to retry` : game.status === "paused" ? "Press P or Play to continue" : "Tap, Space, or ↑ to jump"}</small>
+                </span>
+              )}
+            </button>
+
+            <div className="game-actions">
+              <button type="button" onClick={togglePause} disabled={game.status === "lost"}>{game.status === "playing" ? <Pause size={15} /> : <Play size={15} />}{game.status === "playing" ? "Pause" : "Play"}</button>
+              <button type="button" onClick={() => restartGame(false)}><RotateCcw size={15} />Restart</button>
+              <button className="runner-jump-button" type="button" onClick={jump}>Jump <span>Space</span></button>
             </div>
-            <p className="game-hint">Use arrow keys or WASD · Space to pause</p>
+            <p className="game-hint">SPACE / ↑ to jump · P to pause · Collect blue gems · Avoid plants and rocks</p>
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    portalRoot,
   );
 }

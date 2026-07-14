@@ -12,7 +12,7 @@ const socials = [
 
 export function Hero() {
   return (
-    <section id="top" className="hero" aria-labelledby="hero-title">
+    <section id="top" className="hero" aria-labelledby="hero-title" data-cat-zone-root="top">
       <motion.div
         className="hero-copy"
         initial={false}
@@ -20,7 +20,7 @@ export function Hero() {
         transition={{ duration: 0.28 }}
       >
         <p className="eyebrow">// HELLO, I&apos;M</p>
-        <h1 id="hero-title">Zhyronne<br />Batican</h1>
+        <h1 id="hero-title" data-cat-perch data-cat-zone="top" data-cat-kind="hero">Zhyronne<br />Batican</h1>
         <div className="roles">
           <span>Full Stack Developer</span>
           <span>AI Engineer</span>
@@ -31,8 +31,8 @@ export function Hero() {
           scalable, and designed with purpose.
         </p>
         <div className="hero-actions">
-          <a className="button button--dark" href="#projects">View Projects <ArrowUpRight size={15} /></a>
-          <a className="button button--light" href="#contact">Let&apos;s Work Together <ArrowUpRight size={15} /></a>
+          <a className="button button--dark" href="#projects" data-cat-perch data-cat-zone="top" data-cat-kind="button">View Projects <ArrowUpRight size={15} /></a>
+          <a className="button button--light" href="#contact" data-cat-perch data-cat-zone="top" data-cat-kind="button">Let&apos;s Work Together <ArrowUpRight size={15} /></a>
         </div>
         <p className="availability"><i aria-hidden="true" />Available for freelance projects</p>
       </motion.div>

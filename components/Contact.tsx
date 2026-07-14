@@ -16,7 +16,7 @@ export function Contact() {
       <div className="contact-copy">
         <h2>Let&apos;s build something<br />amazing together.</h2>
         <p>I&apos;m currently available for freelance projects.</p>
-        <a href="mailto:zhyronnebatican@gmail.com" className="button button--dark">Send a Message <ArrowUpRight size={15} /></a>
+        <a href="mailto:zhyronnebatican@gmail.com" className="button button--dark" data-cat-perch data-cat-zone="contact" data-cat-kind="button">Send a Message <ArrowUpRight size={15} /></a>
       </div>
       <div className="contact-links">
         {contactLinks.map(({ icon: Icon, label, ...link }) => (
