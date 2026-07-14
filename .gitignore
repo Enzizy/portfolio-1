@@ -1,0 +1,24 @@
+# Dependencies
+/node_modules
+
+# Next.js build output
+/.next
+/out
+
+# Local browser-test artifacts
+/.playwright-cli
+/output
+
+# TypeScript caches
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs and local tooling
+*.log
+.DS_Store
+Thumbs.db
+.vercel
