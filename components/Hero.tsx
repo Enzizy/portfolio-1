@@ -46,8 +46,8 @@ export function Hero() {
         <div className="dot-grid" aria-hidden="true" />
         <motion.div className="portrait-frame" whileHover={{ scale: 1.015 }} transition={{ duration: 0.2 }}>
           <Image
-            src="/images/portrait-placeholder.png"
-            alt="Professional portrait placeholder for Zhyronne Batican"
+            src="/images/me.jpg"
+            alt="Portrait of Zhyronne Batican"
             fill
             priority
             sizes="(max-width: 767px) 86vw, 38vw"

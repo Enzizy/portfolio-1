@@ -5,6 +5,7 @@ import { Gamepad2, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { navItems } from "@/data/portfolio";
 import { ArcadeGame } from "./ArcadeGame";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -28,6 +29,7 @@ export function Navigation() {
             const target = item === "Services" ? "about" : item === "Skills" ? "skills" : item.toLowerCase();
             return <a key={item} href={`#${target}`}>/{item.toUpperCase()}</a>;
           })}
+          <ThemeToggle />
           <button className="play-button" type="button" onClick={() => setIsGameOpen(true)}><Gamepad2 size={14} />PLAY</button>
         </div>
 
@@ -56,6 +58,7 @@ export function Navigation() {
               const target = item === "Services" ? "about" : item === "Skills" ? "skills" : item.toLowerCase();
               return <a key={item} href={`#${target}`} onClick={() => setIsOpen(false)}>/{item.toUpperCase()}</a>;
             })}
+            <ThemeToggle mobile />
             <button className="mobile-play-button" type="button" onClick={() => { setIsOpen(false); setIsGameOpen(true); }}><Gamepad2 size={16} />/PLAY</button>
           </motion.nav>
         )}

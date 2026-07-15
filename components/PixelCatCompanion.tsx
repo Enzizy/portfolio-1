@@ -10,6 +10,8 @@ type CatPose = "idle" | "crouch" | "launch" | "airborne" | "fall" | "land" | "wa
 const PERCH_OFFSETS = [0.14, 0.82, 0.25, 0.72, 0.38];
 const WALK_DURATION_SECONDS = 2.4;
 const JUMP_DURATION_SECONDS = 1.8;
+const DARK_RESTING_RIGHT_OFFSET = 108;
+const MOBILE_DARK_RESTING_RIGHT_OFFSET = 101;
 
 function getSpriteFrame(pose: CatPose, tick: number) {
   if (pose === "walk") return { column: tick % 8, row: 0, groundOffset: 0 };
@@ -43,14 +45,28 @@ export function PixelCatCompanion() {
   const pointsRef = useRef<CatPosition[]>([]);
   const currentPointRef = useRef(0);
   const currentPositionRef = useRef<CatPosition>({ x: -80, y: 100, facing: 1 });
+  const previousDarkModeRef = useRef<boolean | null>(null);
+  const darkDockedRef = useRef(false);
+  const companionRef = useRef<HTMLDivElement>(null);
   const animationTimersRef = useRef<number[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkDocked, setIsDarkDocked] = useState(false);
   const [frameTick, setFrameTick] = useState(0);
   const [travelMode, setTravelMode] = useState<TravelMode>("idle");
   const [pose, setPose] = useState<CatPose>("idle");
   const [actionDuration, setActionDuration] = useState(0.8);
   const [position, setPosition] = useState<CatPosition>({ x: -80, y: 100, facing: 1 });
   const [jumpOrigin, setJumpOrigin] = useState<CatPosition>({ x: -80, y: 100, facing: 1 });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncTheme = () => setIsDarkMode(root.dataset.theme === "dark");
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     let isCancelled = false;
@@ -78,6 +94,53 @@ export function PixelCatCompanion() {
       });
     };
 
+    const getDarkModeRestingPoint = (fixed = false): CatPosition => {
+      const zoom = Number.parseFloat(getComputedStyle(document.body).zoom) || 1;
+      const restingRightOffset = window.matchMedia("(max-width: 767px)").matches
+        ? MOBILE_DARK_RESTING_RIGHT_OFFSET
+        : DARK_RESTING_RIGHT_OFFSET;
+      return {
+        // The sleeping artwork sits right of center inside its transparent sprite frame.
+        x: ((fixed ? 0 : window.scrollX) + window.innerWidth - restingRightOffset) / zoom,
+        y: ((fixed ? 0 : window.scrollY) + window.innerHeight - 88) / zoom,
+        facing: -1,
+      };
+    };
+
+    const getRenderedPosition = (): CatPosition => {
+      const zoom = Number.parseFloat(getComputedStyle(document.body).zoom) || 1;
+      const rect = companionRef.current?.getBoundingClientRect();
+      if (!rect) return currentPositionRef.current;
+      return {
+        x: (rect.left + window.scrollX) / zoom,
+        y: (rect.top + window.scrollY) / zoom,
+        facing: currentPositionRef.current.facing,
+      };
+    };
+
+    const jumpToTarget = (baseTarget: CatPosition, onSettled?: () => void, originOverride?: CatPosition) => {
+      const origin = originOverride ?? currentPositionRef.current;
+      const facing: 1 | -1 = baseTarget.x >= origin.x ? 1 : -1;
+      const target = { ...baseTarget, facing };
+      const orientedOrigin = { ...origin, facing };
+      currentPositionRef.current = target;
+      setJumpOrigin(orientedOrigin);
+      setPosition(orientedOrigin);
+      setPose("crouch");
+      setTravelMode("idle");
+      schedule(() => {
+        setActionDuration(JUMP_DURATION_SECONDS);
+        setPosition(target);
+        setPose("launch");
+        setTravelMode("jumping");
+      }, 400);
+      schedule(() => setPose("airborne"), 760);
+      schedule(() => setPose("fall"), 1550);
+      schedule(() => { setPose("land"); setTravelMode("idle"); }, 2200);
+      schedule(() => setPose("idle"), 2800);
+      if (onSettled) schedule(onSettled, 2880);
+    };
+
     const moveTo = (pointIndex: number, requestedMode?: "walk" | "jump") => {
       const baseTarget = pointsRef.current[pointIndex];
       if (!baseTarget) return;
@@ -103,21 +166,7 @@ export function PixelCatCompanion() {
         return;
       }
 
-      const orientedOrigin = { ...origin, facing };
-      setJumpOrigin(orientedOrigin);
-      setPosition(orientedOrigin);
-      setPose("crouch");
-      setTravelMode("idle");
-      schedule(() => {
-        setActionDuration(JUMP_DURATION_SECONDS);
-        setPosition(target);
-        setPose("launch");
-        setTravelMode("jumping");
-      }, 400);
-      schedule(() => setPose("airborne"), 760);
-      schedule(() => setPose("fall"), 1550);
-      schedule(() => { setPose("land"); setTravelMode("idle"); }, 2200);
-      schedule(() => setPose("idle"), 2800);
+      jumpToTarget(target);
     };
 
     const startCycle = () => {
@@ -144,17 +193,54 @@ export function PixelCatCompanion() {
       await document.fonts.ready;
       if (isCancelled) return;
       readPath();
-      const firstPoint = pointsRef.current[0];
-      if (!firstPoint) return;
-      currentPositionRef.current = firstPoint;
-      setPosition(firstPoint);
-      setJumpOrigin(firstPoint);
+      const previousDarkMode = previousDarkModeRef.current;
+      previousDarkModeRef.current = isDarkMode;
+      const routePoint = pointsRef.current[currentPointRef.current] ?? pointsRef.current[0];
+      if (!routePoint) return;
       setIsReady(true);
+
+      if (isDarkMode) {
+        const renderedOrigin = getRenderedPosition();
+        darkDockedRef.current = false;
+        setIsDarkDocked(false);
+        jumpToTarget(getDarkModeRestingPoint(), () => {
+          const fixedNook = getDarkModeRestingPoint(true);
+          currentPositionRef.current = fixedNook;
+          setPosition(fixedNook);
+          setJumpOrigin(fixedNook);
+          darkDockedRef.current = true;
+          setIsDarkDocked(true);
+          setPose("sleep");
+          setTravelMode("idle");
+        }, renderedOrigin);
+        return;
+      }
+
+      if (previousDarkMode) {
+        const renderedOrigin = getRenderedPosition();
+        darkDockedRef.current = false;
+        setIsDarkDocked(false);
+        currentPositionRef.current = renderedOrigin;
+        setPosition(renderedOrigin);
+        setJumpOrigin(renderedOrigin);
+        setPose("wake");
+        setTravelMode("idle");
+        schedule(() => jumpToTarget(routePoint, startCycle, renderedOrigin), 1250);
+        return;
+      }
+
+      currentPositionRef.current = routePoint;
+      setPosition(routePoint);
+      setJumpOrigin(routePoint);
+      setPose("idle");
+      setTravelMode("idle");
       startCycle();
     };
     const onResize = () => {
       readPath();
-      const target = pointsRef.current[currentPointRef.current];
+      const target = darkDockedRef.current
+        ? getDarkModeRestingPoint(true)
+        : pointsRef.current[currentPointRef.current];
       if (target) {
         currentPositionRef.current = target;
         setPosition(target);
@@ -169,7 +255,7 @@ export function PixelCatCompanion() {
       animationTimersRef.current.forEach((timer) => window.clearTimeout(timer));
       animationTimersRef.current = [];
     };
-  }, [prefersReducedMotion]);
+  }, [isDarkMode, prefersReducedMotion]);
 
   useEffect(() => {
     setFrameTick(0);
@@ -190,9 +276,12 @@ export function PixelCatCompanion() {
     : { x: position.x, y: position.y, rotate: 0 };
 
   return (
-    <motion.div
+    <>
+      <span className={`pixel-cat-spotlight ${isDarkMode ? "pixel-cat-spotlight--visible" : ""}`} aria-hidden="true" />
+      <motion.div
+      ref={companionRef}
       aria-hidden="true"
-      className={`pixel-cat-companion ${isReady ? "pixel-cat-companion--ready" : ""} pixel-cat-companion--${travelMode} pixel-cat-companion--pose-${pose} pixel-cat-companion--facing-${position.facing === 1 ? "right" : "left"}`}
+      className={`pixel-cat-companion ${isReady ? "pixel-cat-companion--ready" : ""} ${isDarkDocked ? "pixel-cat-companion--dark" : ""} pixel-cat-companion--${travelMode} pixel-cat-companion--pose-${pose} pixel-cat-companion--facing-${position.facing === 1 ? "right" : "left"}`}
       initial={false}
       animate={animatedPosition}
       transition={prefersReducedMotion ? { duration: 0 } : isArcJump ? { duration: actionDuration, times: [0, 0.38, 1], ease: "easeInOut" } : travelMode === "walking" ? { duration: actionDuration, ease: "easeInOut" } : { duration: 0.12 }}
@@ -201,6 +290,7 @@ export function PixelCatCompanion() {
       <span className="pixel-cat-zzz">Zzz</span>
       <span className="pixel-cat-speech">Hire me!</span>
       <span className="pixel-cat-facing"><SpriteCat pose={pose} tick={frameTick} /></span>
-    </motion.div>
+      </motion.div>
+    </>
   );
 }
