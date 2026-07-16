@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, type Transition, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 type CatPosition = { x: number; y: number; facing: 1 | -1 };
@@ -149,15 +149,16 @@ export function PixelCatCompanion() {
       const target = { ...baseTarget, facing };
       const mode = requestedMode ?? (Math.abs(target.y - origin.y) < 48 ? "walk" : "jump");
       currentPointRef.current = pointIndex;
-      currentPositionRef.current = target;
 
       if (prefersReducedMotion) {
+        currentPositionRef.current = target;
         setPosition(target);
         setPose("idle");
         setTravelMode("idle");
         return;
       }
       if (mode === "walk") {
+        currentPositionRef.current = target;
         setActionDuration(WALK_DURATION_SECONDS);
         setPosition(target);
         setPose("walk");
@@ -166,7 +167,7 @@ export function PixelCatCompanion() {
         return;
       }
 
-      jumpToTarget(target);
+      jumpToTarget(target, undefined, origin);
     };
 
     const startCycle = () => {
@@ -266,7 +267,9 @@ export function PixelCatCompanion() {
   }, [pose, prefersReducedMotion]);
 
   const isArcJump = travelMode === "jumping" && !prefersReducedMotion;
-  const jumpPeak = Math.min(jumpOrigin.y, position.y) - 54;
+  const jumpDistance = Math.hypot(position.x - jumpOrigin.x, position.y - jumpOrigin.y);
+  const jumpHeight = Math.min(104, Math.max(54, 54 + jumpDistance * 0.08));
+  const jumpPeak = Math.min(jumpOrigin.y, position.y) - jumpHeight;
   const animatedPosition = isArcJump
     ? {
         x: [jumpOrigin.x, (jumpOrigin.x + position.x) / 2, position.x],
@@ -274,22 +277,33 @@ export function PixelCatCompanion() {
         rotate: [0, -7 * position.facing, 0],
       }
     : { x: position.x, y: position.y, rotate: 0 };
+  const movementTransition: Transition = prefersReducedMotion
+    ? { duration: 0 }
+    : isArcJump
+      ? {
+          x: { duration: actionDuration, times: [0, 0.42, 1], ease: ["easeOut", "easeInOut"] },
+          y: { duration: actionDuration, times: [0, 0.42, 1], ease: ["easeOut", "easeIn"] },
+          rotate: { duration: actionDuration, times: [0, 0.42, 1], ease: "easeInOut" },
+        }
+      : travelMode === "walking"
+        ? { duration: actionDuration, ease: [0.4, 0, 0.2, 1] }
+        : { duration: 0.12, ease: "easeOut" };
 
   return (
     <>
       <span className={`pixel-cat-spotlight ${isDarkMode ? "pixel-cat-spotlight--visible" : ""}`} aria-hidden="true" />
       <motion.div
-      ref={companionRef}
-      aria-hidden="true"
-      className={`pixel-cat-companion ${isReady ? "pixel-cat-companion--ready" : ""} ${isDarkDocked ? "pixel-cat-companion--dark" : ""} pixel-cat-companion--${travelMode} pixel-cat-companion--pose-${pose} pixel-cat-companion--facing-${position.facing === 1 ? "right" : "left"}`}
-      initial={false}
-      animate={animatedPosition}
-      transition={prefersReducedMotion ? { duration: 0 } : isArcJump ? { duration: actionDuration, times: [0, 0.38, 1], ease: "easeInOut" } : travelMode === "walking" ? { duration: actionDuration, ease: "easeInOut" } : { duration: 0.12 }}
-    >
-      <span className="pixel-cat-heart">♥</span>
-      <span className="pixel-cat-zzz">Zzz</span>
-      <span className="pixel-cat-speech">Hire me!</span>
-      <span className="pixel-cat-facing"><SpriteCat pose={pose} tick={frameTick} /></span>
+        ref={companionRef}
+        aria-hidden="true"
+        className={`pixel-cat-companion ${isReady ? "pixel-cat-companion--ready" : ""} ${isDarkDocked ? "pixel-cat-companion--dark" : ""} pixel-cat-companion--${travelMode} pixel-cat-companion--pose-${pose} pixel-cat-companion--facing-${position.facing === 1 ? "right" : "left"}`}
+        initial={false}
+        animate={animatedPosition}
+        transition={movementTransition}
+      >
+        <span className="pixel-cat-heart">♥</span>
+        <span className="pixel-cat-zzz">Zzz</span>
+        <span className="pixel-cat-speech">Hire me!</span>
+        <span className="pixel-cat-facing"><SpriteCat pose={pose} tick={frameTick} /></span>
       </motion.div>
     </>
   );
