@@ -2,42 +2,24 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => { finished: Promise<void> };
-};
+import { toggleDocumentTheme } from "@/lib/theme";
 
 export function ThemeToggle({ mobile = false }: { mobile?: boolean }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    setIsDark(document.documentElement.dataset.theme === "dark");
+    const root = document.documentElement;
+    const syncTheme = () => setIsDark(root.dataset.theme === "dark");
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
   }, []);
 
   const toggleTheme = () => {
-    const root = document.documentElement;
-    const nextTheme = isDark ? "light" : "dark";
     const rect = buttonRef.current?.getBoundingClientRect();
-    root.style.setProperty("--theme-x", `${rect ? rect.left + rect.width / 2 : window.innerWidth / 2}px`);
-    root.style.setProperty("--theme-y", `${rect ? rect.top + rect.height / 2 : 32}px`);
-
-    const applyTheme = () => {
-      root.dataset.theme = nextTheme;
-      localStorage.setItem("portfolio-theme", nextTheme);
-      setIsDark(nextTheme === "dark");
-    };
-    const viewTransitionDocument = document as ViewTransitionDocument;
-    root.dataset.themeTransitioning = "true";
-
-    if (viewTransitionDocument.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const transition = viewTransitionDocument.startViewTransition(applyTheme);
-      void transition.finished.finally(() => delete root.dataset.themeTransitioning);
-      return;
-    }
-
-    applyTheme();
-    window.setTimeout(() => delete root.dataset.themeTransitioning, 650);
+    toggleDocumentTheme(rect ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : undefined);
   };
 
   return (

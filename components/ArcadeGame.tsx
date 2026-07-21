@@ -205,7 +205,7 @@ export function ArcadeGame({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <span className="runner-cloud runner-cloud--two" />
               <span className="runner-hill" />
               <span className="runner-cat" style={{ bottom: `${19 + game.catY}px` }}>
-                <span className="runner-cat-sprite" style={{ backgroundPosition: `${(runFrame / 7) * 100}% 0` }} />
+                <span className="runner-cat-sprite" style={{ backgroundPosition: `${(runFrame / 7) * 100}% ${(1 / 7) * 100}%` }} />
               </span>
               {game.obstacles.map((obstacle) => (
                 <span className={`runner-obstacle runner-obstacle--${obstacle.kind}`} style={{ left: `${obstacle.x}%` }} key={obstacle.id}>
