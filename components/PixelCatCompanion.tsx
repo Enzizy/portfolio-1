@@ -1,18 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, type Transition, useReducedMotion } from "framer-motion";
+import { motion, type Transition, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { DARK_RESTING_RIGHT_OFFSET, JUMP_DURATION_SECONDS, MOBILE_DARK_RESTING_RIGHT_OFFSET, PERCH_OFFSETS, type CatPosition, type TravelMode, type TravelTo, WALK_DURATION_SECONDS } from "./pixel-cat/cat-config";
+import { CatCompanionMenu } from "./pixel-cat/CatCompanionMenu";
 import { CatSprite, getCatFrameDuration, type CatPose } from "./pixel-cat/CatSprite";
-
-type CatPosition = { x: number; y: number; facing: 1 | -1 };
-type TravelMode = "idle" | "walking" | "jumping";
-type TravelTo = (target: CatPosition, mode?: "walk" | "jump", onSettled?: () => void) => void;
-
-const PERCH_OFFSETS = [0.14, 0.82, 0.25, 0.72, 0.38];
-const WALK_DURATION_SECONDS = 2.4;
-const JUMP_DURATION_SECONDS = 1.8;
-const DARK_RESTING_RIGHT_OFFSET = 108;
-const MOBILE_DARK_RESTING_RIGHT_OFFSET = 101;
 
 export function PixelCatCompanion() {
   const prefersReducedMotion = useReducedMotion();
@@ -31,6 +23,7 @@ export function PixelCatCompanion() {
   const interactionTravelingRef = useRef(false);
   const interactionLockedRef = useRef(false);
   const menuOpenRef = useRef(false);
+  const menuScrollPositionRef = useRef({ x: 0, y: 0 });
   const travelToRef = useRef<TravelTo>(() => undefined);
   const [isReady, setIsReady] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -482,22 +475,31 @@ export function PixelCatCompanion() {
     return () => window.clearInterval(timer);
   }, [prefersReducedMotion, renderedPose]);
 
-  const handlePet = () => {
+  const playCompanionReaction = (message: string, duration: number) => {
     setIsMenuOpen(false);
     if (interactionTimerRef.current) window.clearTimeout(interactionTimerRef.current);
     interactionTokenRef.current += 1;
     interactionActiveRef.current = true;
     interactionLockedRef.current = true;
     setInteractionPose("celebrate");
-    showReaction("Purr... thank you!", 2600, true);
+    showReaction(message, duration, true);
     interactionTimerRef.current = window.setTimeout(() => {
       interactionActiveRef.current = false;
       interactionLockedRef.current = false;
       setInteractionPose(null);
       interactionTimerRef.current = null;
-    }, 2600);
+    }, duration);
   };
 
+  const toggleMenu = () => setIsMenuOpen((open) => {
+    if (!open) menuScrollPositionRef.current = { x: window.scrollX, y: window.scrollY };
+    return !open;
+  });
+  const handleSayHello = () => requestAnimationFrame(() => {
+    playCompanionReaction("Hello! Nice to meet you!", 3200);
+    window.scrollTo(menuScrollPositionRef.current.x, menuScrollPositionRef.current.y);
+  });
+  const handlePet = () => playCompanionReaction("Purr... thank you!", 2600);
   const handlePlayRunner = () => {
     setIsMenuOpen(false);
     window.dispatchEvent(new Event("portfolio:open-game"));
@@ -564,7 +566,7 @@ export function PixelCatCompanion() {
         aria-expanded={isMenuOpen}
         aria-haspopup="true"
         className={`pixel-cat-companion ${isReady ? "pixel-cat-companion--ready" : ""} ${isDarkDocked ? "pixel-cat-companion--dark" : ""} ${isCelebrating ? "pixel-cat-companion--celebrating" : ""} ${isReacting ? "pixel-cat-companion--reacting" : ""} ${isMenuOpen ? "pixel-cat-companion--menu-open" : ""} pixel-cat-companion--${travelMode} pixel-cat-companion--pose-${renderedPose} pixel-cat-companion--facing-${position.facing === 1 ? "right" : "left"}`}
-        onClick={() => setIsMenuOpen((open) => !open)}
+        onClick={toggleMenu}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
             setIsMenuOpen(false);
@@ -572,7 +574,7 @@ export function PixelCatCompanion() {
           }
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            setIsMenuOpen((open) => !open);
+            toggleMenu();
           }
         }}
         initial={false}
@@ -583,27 +585,14 @@ export function PixelCatCompanion() {
         <span className="pixel-cat-zzz">Zzz</span>
         <span className="pixel-cat-speech">{speechMessage}</span>
         <span className="pixel-cat-facing"><CatSprite pose={renderedPose} tick={frameTick} /></span>
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              className="pixel-cat-menu"
-              role="group"
-              aria-label="Cat companion shortcuts"
-              initial={{ opacity: 0, y: 5, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 4, scale: 0.97 }}
-              transition={{ duration: 0.18 }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <span>CAT SHORTCUTS</span>
-              <a href="/projects" onClick={() => setIsMenuOpen(false)}>View projects</a>
-              <a href="/#contact" onClick={() => setIsMenuOpen(false)}>Say hello</a>
-              <button type="button" onClick={handlePlayRunner}>Play runner</button>
-              <button type="button" onClick={handlePet}>Give a pet</button>
-              <button type="button" onClick={handleHideCat}>Hide cat</button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <CatCompanionMenu
+          isOpen={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
+          onSayHello={handleSayHello}
+          onPlayRunner={handlePlayRunner}
+          onPet={handlePet}
+          onHide={handleHideCat}
+        />
       </motion.div>
     </>
   );

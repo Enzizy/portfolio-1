@@ -124,7 +124,12 @@ export function ArcadeGame({
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target instanceof HTMLElement ? event.target : null;
       const isControlFocused = Boolean(target?.closest("button, a, input, select, textarea"));
-      if ([" ", "ArrowUp", "w", "W"].includes(event.key)) {
+      if (["ArrowUp", "w", "W"].includes(event.key)) {
+        event.preventDefault();
+        jump();
+        return;
+      }
+      if (event.key === " ") {
         if (isControlFocused && !target?.classList.contains("runner-board")) return;
         event.preventDefault();
         jump();

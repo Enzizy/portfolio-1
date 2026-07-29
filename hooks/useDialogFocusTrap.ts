@@ -27,8 +27,19 @@ export function useDialogFocusTrap(
     const previouslyFocused = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
+    const scrollPosition = { x: window.scrollX, y: window.scrollY };
+    const previousRootOverflow = document.documentElement.style.overflow;
     const previousOverflow = document.body.style.overflow;
+    const previousPosition = document.body.style.position;
+    const previousTop = document.body.style.top;
+    const previousLeft = document.body.style.left;
+    const previousWidth = document.body.style.width;
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `${-scrollPosition.y}px`;
+    document.body.style.left = `${-scrollPosition.x}px`;
+    document.body.style.width = "100%";
 
     const focusTimer = window.setTimeout(() => {
       initialFocusRef.current?.focus();
@@ -66,8 +77,14 @@ export function useDialogFocusTrap(
     return () => {
       window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
+      document.documentElement.style.overflow = previousRootOverflow;
       document.body.style.overflow = previousOverflow;
-      (returnFocusRef?.current ?? previouslyFocused)?.focus();
+      document.body.style.position = previousPosition;
+      document.body.style.top = previousTop;
+      document.body.style.left = previousLeft;
+      document.body.style.width = previousWidth;
+      (returnFocusRef?.current ?? previouslyFocused)?.focus({ preventScroll: true });
+      window.scrollTo(scrollPosition.x, scrollPosition.y);
     };
   }, [dialogRef, initialFocusRef, isOpen, returnFocusRef]);
 }
