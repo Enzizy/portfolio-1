@@ -264,7 +264,7 @@ export function PixelCatCompanion() {
       return {
         // The sleeping artwork sits right of center inside its transparent sprite frame.
         x: ((fixed ? 0 : window.scrollX) + window.innerWidth - restingRightOffset) / zoom,
-        y: ((fixed ? 0 : window.scrollY) + window.innerHeight - 88) / zoom,
+        y: ((fixed ? 0 : window.scrollY) + window.innerHeight - 108) / zoom,
         facing: -1,
       };
     };

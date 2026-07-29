@@ -504,7 +504,7 @@ html[data-theme="dark"] .theme-toggle--mobile { border-color: var(--page-border)
 @media (forced-colors: active) { .button, .project-card, .service-icon, .contact-form input, .contact-form select, .contact-form textarea { border: 1px solid CanvasText; }.pixel-cat-spotlight, .dot-grid { display: none; } }
 
 /* Gemini-powered cat portfolio guide */
-.cat-chat { position: fixed; z-index: 90; right: 18px; bottom: 72px; display: grid; justify-items: end; gap: 10px; pointer-events: none; }
+.cat-chat { position: fixed; z-index: 90; right: 18px; bottom: 16px; display: grid; justify-items: end; gap: 10px; pointer-events: none; }
 .cat-chat__launcher, .cat-chat__panel { pointer-events: auto; }
 .cat-chat__launcher { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 14px; border: 1px solid var(--page-text); border-radius: 999px; background: var(--page-text); color: var(--page-bg); box-shadow: 0 14px 34px -17px rgba(17,17,17,.75); font: 600 10px/1 monospace; cursor: pointer; }
 .cat-chat__launcher i { position: absolute; top: -2px; right: -2px; width: 9px; height: 9px; border: 2px solid var(--page-bg); border-radius: 50%; background: #2bb673; }
@@ -534,5 +534,5 @@ html[data-theme="dark"] .theme-toggle--mobile { border-color: var(--page-border)
 .cat-chat__form button:disabled { opacity: .35; cursor: not-allowed; }
 .cat-chat__note { margin: 7px 0 9px; color: var(--muted-text); font: 7px/1 monospace; text-align: center; }
 @keyframes cat-chat-dot { 0%,70%,100% { opacity: .35; transform: translateY(0); } 35% { opacity: 1; transform: translateY(-3px); } }
-@media (max-width: 767px) { .cat-chat { right: 12px; bottom: 68px; }.cat-chat__panel { width: min(360px, calc(100vw - 24px)); }.cat-chat__messages { height: min(285px, 38vh); }.cat-chat__launcher { min-height: 40px; } }
+@media (max-width: 767px) { .cat-chat { right: 12px; bottom: 12px; }.cat-chat__panel { width: min(360px, calc(100vw - 24px)); }.cat-chat__messages { height: min(285px, 38vh); }.cat-chat__launcher { min-height: 40px; } }
 @media (forced-colors: active) { .cat-chat__launcher, .cat-chat__panel, .cat-chat__message { border: 1px solid CanvasText; } }

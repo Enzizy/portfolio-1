@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, MessageCircle, Minus, Sparkles } from "lucide-react";
+import { ArrowUp, Cat, MessageCircle, Minus } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { CatSprite } from "./pixel-cat/CatSprite";
 
@@ -197,7 +197,7 @@ export function CatChat() {
         whileHover={{ y: -2 }}
         whileTap={{ scale: 0.97 }}
       >
-        {isOpen ? <MessageCircle size={18} /> : <Sparkles size={15} />}
+        {isOpen ? <MessageCircle size={18} /> : <Cat size={16} />}
         <span>{isOpen ? "Close chat" : "Ask my cat"}</span>
         {!isOpen && <i aria-hidden="true" />}
       </motion.button>
