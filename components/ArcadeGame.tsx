@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Pause, Play, RotateCcw, X } from "lucide-react";
+import { Pause, Play, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDialogFocusTrap } from "@/hooks/useDialogFocusTrap";
+import { isCatSoundEnabled, playCatSound, setCatSoundEnabled, startRunnerMusic, unlockCatAudio } from "@/lib/catAudio";
 import { CatSprite, getCatFrameDuration, type CatPose } from "./pixel-cat/CatSprite";
 
 type GameStatus = "ready" | "playing" | "paused" | "lost";
@@ -71,9 +72,11 @@ export function ArcadeGame({
   const [bestScore, setBestScore] = useState(0);
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const [catFrame, setCatFrame] = useState(0);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   useEffect(() => {
     setPortalRoot(document.body);
+    setSoundEnabled(isCatSoundEnabled());
   }, []);
 
   const publishWorld = useCallback(() => {
@@ -86,7 +89,10 @@ export function ArcadeGame({
 
   const restartGame = useCallback((startImmediately = false) => {
     worldRef.current = createWorld(startImmediately ? "playing" : "ready");
-    if (startImmediately) worldRef.current.velocityY = JUMP_VELOCITY;
+    if (startImmediately) {
+      worldRef.current.velocityY = JUMP_VELOCITY;
+      playCatSound("jump");
+    }
     lastFrameRef.current = performance.now();
     publishWorld();
   }, [publishWorld]);
@@ -106,6 +112,7 @@ export function ArcadeGame({
     world.landingFor = 0;
     world.jumpBufferFor = 0;
     world.velocityY = JUMP_VELOCITY;
+    playCatSound("jump");
     lastFrameRef.current = performance.now();
     publishWorld();
   }, [publishWorld, restartGame]);
@@ -144,6 +151,12 @@ export function ArcadeGame({
 
   useDialogFocusTrap(isOpen, dialogRef, closeButtonRef, onClose, returnFocusRef);
 
+  const shouldPlayMusic = isOpen && soundEnabled && game.status !== "lost";
+  useEffect(() => {
+    if (!shouldPlayMusic) return;
+    return startRunnerMusic();
+  }, [shouldPlayMusic]);
+
   useEffect(() => {
     if (!isOpen || game.status !== "playing") return;
     let animationFrame = 0;
@@ -167,6 +180,7 @@ export function ArcadeGame({
           world.jumpBufferFor = 0;
           world.landingFor = 0;
           world.velocityY = JUMP_VELOCITY;
+          playCatSound("jump");
         } else if (wasAirborne) {
           world.landingFor = 0.26;
         }
@@ -192,7 +206,10 @@ export function ArcadeGame({
       world.collectibles = world.collectibles.filter((collectible) => {
         const wasCollected = collectible.x >= CAT_LEFT && collectible.x <= CAT_RIGHT
           && Math.abs(world.catY + 25 - collectible.y) < 30;
-        if (wasCollected) world.bonus += 100;
+        if (wasCollected) {
+          world.bonus += 100;
+          playCatSound("collect");
+        }
         return !wasCollected && collectible.x > -8;
       });
 
@@ -208,6 +225,7 @@ export function ArcadeGame({
       });
       if (crashed) {
         world.status = "lost";
+        playCatSound("crash");
         const score = getScore(world);
         setBestScore((currentBest) => {
           const nextBest = Math.max(currentBest, score);
@@ -228,6 +246,12 @@ export function ArcadeGame({
 
   const score = getScore(game);
   const speedLabel = `${(game.speed / BASE_SPEED).toFixed(1)}x`;
+  const toggleSound = () => {
+    const nextEnabled = !soundEnabled;
+    setCatSoundEnabled(nextEnabled);
+    setSoundEnabled(nextEnabled);
+    if (nextEnabled) void unlockCatAudio();
+  };
   const runnerPose: CatPose = game.status === "lost"
     ? "land"
     : game.status !== "playing"
@@ -260,7 +284,12 @@ export function ArcadeGame({
           <motion.div ref={dialogRef} className="game-dialog runner-dialog" role="dialog" aria-modal="true" aria-labelledby="game-title" tabIndex={-1} initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.98 }} transition={{ duration: 0.22 }}>
             <header className="game-header">
               <div><span>// MINI ARCADE</span><h2 id="game-title">CAT RUNNER</h2><p>Chase the horizon</p></div>
-              <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close game"><X size={20} /></button>
+              <div className="game-header__actions">
+                <button type="button" onClick={toggleSound} aria-label={soundEnabled ? "Mute game sound" : "Turn on game sound"} aria-pressed={soundEnabled} title={soundEnabled ? "Mute sound" : "Turn on sound"}>
+                  {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+                </button>
+                <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close game"><X size={20} /></button>
+              </div>
             </header>
 
             <div className="runner-stats">

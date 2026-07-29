@@ -5,6 +5,7 @@ import { Command, Gamepad2, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { navItems } from "@/data/portfolio";
+import { unlockCatAudio } from "@/lib/catAudio";
 import { ArcadeGame } from "./ArcadeGame";
 import { CommandPalette } from "./CommandPalette";
 import { ThemeToggle } from "./ThemeToggle";
@@ -37,6 +38,7 @@ export function Navigation() {
       setIsCommandOpen(true);
     };
     const openGame = () => {
+      void unlockCatAudio();
       modalReturnFocusRef.current = document.activeElement instanceof HTMLElement
         ? document.activeElement
         : menuButtonRef.current;
@@ -95,6 +97,7 @@ export function Navigation() {
     setIsCommandOpen(true);
   };
   const openGame = () => {
+    void unlockCatAudio();
     modalReturnFocusRef.current = isOpen
       ? menuButtonRef.current
       : document.activeElement instanceof HTMLElement ? document.activeElement : menuButtonRef.current;
@@ -104,7 +107,7 @@ export function Navigation() {
   };
 
   return (
-    <header id="top" className={`site-header ${isScrolled ? "site-header--scrolled" : ""}`}>
+    <header className={`site-header ${isScrolled ? "site-header--scrolled" : ""}`}>
       <nav className="nav-shell" aria-label="Primary navigation">
         <a href={pathname === "/" ? "#top" : "/"} className="logo" aria-label="Zhyronne Batican, home">ZB<span>.</span></a>
 
@@ -155,7 +158,7 @@ export function Navigation() {
       <CommandPalette
         isOpen={isCommandOpen}
         onClose={() => setIsCommandOpen(false)}
-        onOpenGame={() => { setIsCommandOpen(false); setIsGameOpen(true); }}
+        onOpenGame={() => { void unlockCatAudio(); setIsCommandOpen(false); setIsGameOpen(true); }}
         returnFocusRef={modalReturnFocusRef}
       />
       <ArcadeGame isOpen={isGameOpen} onClose={() => setIsGameOpen(false)} returnFocusRef={modalReturnFocusRef} />

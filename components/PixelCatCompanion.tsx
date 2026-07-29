@@ -2,10 +2,10 @@
 
 import { motion, type Transition, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { playCatSound } from "@/lib/catAudio";
 import { DARK_RESTING_RIGHT_OFFSET, JUMP_DURATION_SECONDS, MOBILE_DARK_RESTING_RIGHT_OFFSET, PERCH_OFFSETS, type CatPosition, type TravelMode, type TravelTo, WALK_DURATION_SECONDS } from "./pixel-cat/cat-config";
 import { CatCompanionMenu } from "./pixel-cat/CatCompanionMenu";
 import { CatSprite, getCatFrameDuration, type CatPose } from "./pixel-cat/CatSprite";
-
 export function PixelCatCompanion() {
   const prefersReducedMotion = useReducedMotion();
   const pointsRef = useRef<CatPosition[]>([]);
@@ -467,6 +467,7 @@ export function PixelCatCompanion() {
 
   useEffect(() => {
     setFrameTick(0);
+    if (renderedPose === "sleep") playCatSound("sleep");
     if (prefersReducedMotion) return;
     const timer = window.setInterval(
       () => setFrameTick((frame) => frame + 1),
@@ -475,8 +476,9 @@ export function PixelCatCompanion() {
     return () => window.clearInterval(timer);
   }, [prefersReducedMotion, renderedPose]);
 
-  const playCompanionReaction = (message: string, duration: number) => {
+  const playCompanionReaction = (message: string, duration: number, sound: "hello" | "purr") => {
     setIsMenuOpen(false);
+    playCatSound(sound);
     if (interactionTimerRef.current) window.clearTimeout(interactionTimerRef.current);
     interactionTokenRef.current += 1;
     interactionActiveRef.current = true;
@@ -490,16 +492,15 @@ export function PixelCatCompanion() {
       interactionTimerRef.current = null;
     }, duration);
   };
-
   const toggleMenu = () => setIsMenuOpen((open) => {
     if (!open) menuScrollPositionRef.current = { x: window.scrollX, y: window.scrollY };
     return !open;
   });
   const handleSayHello = () => requestAnimationFrame(() => {
-    playCompanionReaction("Hello! Nice to meet you!", 3200);
+    playCompanionReaction("Hello! Nice to meet you!", 3200, "hello");
     window.scrollTo(menuScrollPositionRef.current.x, menuScrollPositionRef.current.y);
   });
-  const handlePet = () => playCompanionReaction("Purr... thank you!", 2600);
+  const handlePet = () => playCompanionReaction("Purr... thank you!", 2600, "purr");
   const handlePlayRunner = () => {
     setIsMenuOpen(false);
     window.dispatchEvent(new Event("portfolio:open-game"));

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
+import { CatChat } from "@/components/CatChat";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,9 +33,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
       </head>
-      <body className={GeistSans.className}>
+      <body id="top" className={GeistSans.className}>
         <a className="skip-link" href="#main-content">Skip to main content</a>
         {children}
+        <CatChat />
       </body>
     </html>
   );
