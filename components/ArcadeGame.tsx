@@ -1,13 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Pause, Play, RotateCcw, Sprout, X } from "lucide-react";
+import { Pause, Play, RotateCcw, X } from "lucide-react";
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDialogFocusTrap } from "@/hooks/useDialogFocusTrap";
+import { CatSprite, getCatFrameDuration, type CatPose } from "./pixel-cat/CatSprite";
 
 type GameStatus = "ready" | "playing" | "paused" | "lost";
-type Obstacle = { id: number; x: number; kind: "plant" | "rock" };
+type ObstacleKind = "boulder" | "stones" | "plant" | "branch";
+type Obstacle = { id: number; x: number; kind: ObstacleKind };
 type Collectible = { id: number; x: number; y: number };
 type RunnerWorld = {
   status: GameStatus;
@@ -20,6 +22,7 @@ type RunnerWorld = {
   speed: number;
   spawnIn: number;
   nextId: number;
+  landingFor: number;
 };
 
 const CAT_LEFT = 18;
@@ -40,6 +43,7 @@ function createWorld(status: GameStatus = "ready"): RunnerWorld {
     speed: BASE_SPEED,
     spawnIn: 1.35,
     nextId: 1,
+    landingFor: 0,
   };
 }
 
@@ -63,6 +67,7 @@ export function ArcadeGame({
   const [game, setGame] = useState<RunnerWorld>(() => createWorld());
   const [bestScore, setBestScore] = useState(0);
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
+  const [catFrame, setCatFrame] = useState(0);
 
   useEffect(() => {
     setPortalRoot(document.body);
@@ -91,6 +96,7 @@ export function ArcadeGame({
     }
     if (world.status === "ready") world.status = "playing";
     if (world.status !== "playing" || world.catY > 2) return;
+    world.landingFor = 0;
     world.velocityY = JUMP_VELOCITY;
     lastFrameRef.current = performance.now();
     publishWorld();
@@ -138,14 +144,20 @@ export function ArcadeGame({
 
       world.speed = BASE_SPEED + Math.min(22, world.distance / 155);
       world.distance += world.speed * deltaTime;
+      const wasAirborne = world.catY > 0;
       world.velocityY -= GRAVITY * deltaTime;
       world.catY = Math.max(0, world.catY + world.velocityY * deltaTime);
-      if (world.catY === 0) world.velocityY = 0;
+      if (world.catY === 0) {
+        world.velocityY = 0;
+        if (wasAirborne) world.landingFor = 0.26;
+      }
+      world.landingFor = Math.max(0, world.landingFor - deltaTime);
 
       world.spawnIn -= deltaTime;
       if (world.spawnIn <= 0) {
         const obstacleId = world.nextId++;
-        const kind = Math.random() > 0.55 ? "rock" : "plant";
+        const obstacleKinds: ObstacleKind[] = ["boulder", "stones", "plant", "branch"];
+        const kind = obstacleKinds[Math.floor(Math.random() * obstacleKinds.length)];
         world.obstacles.push({ id: obstacleId, x: 106, kind });
         if (Math.random() > 0.48) {
           world.collectibles.push({ id: world.nextId++, x: 112, y: 54 + Math.random() * 42 });
@@ -165,7 +177,13 @@ export function ArcadeGame({
       });
 
       const crashed = world.obstacles.some((obstacle) => {
-        const obstacleHeight = obstacle.kind === "rock" ? 32 : 29;
+        const obstacleHeights: Record<ObstacleKind, number> = {
+          boulder: 36,
+          stones: 31,
+          plant: 39,
+          branch: 22,
+        };
+        const obstacleHeight = obstacleHeights[obstacle.kind];
         return obstacle.x >= CAT_LEFT && obstacle.x <= CAT_RIGHT && world.catY < obstacleHeight - 5;
       });
       if (crashed) {
@@ -190,7 +208,28 @@ export function ArcadeGame({
 
   const score = getScore(game);
   const speedLabel = `${(game.speed / BASE_SPEED).toFixed(1)}x`;
-  const runFrame = Math.floor(game.distance / 2) % 8;
+  const runnerPose: CatPose = game.status === "lost"
+    ? "land"
+    : game.status !== "playing"
+      ? "idle"
+      : game.landingFor > 0
+        ? "land"
+        : game.catY <= 2
+          ? "run"
+          : game.velocityY > 150
+            ? "launch"
+            : game.velocityY >= 0
+              ? "airborne"
+              : "fall";
+
+  useEffect(() => {
+    setCatFrame(0);
+    const timer = window.setInterval(
+      () => setCatFrame((frame) => frame + 1),
+      getCatFrameDuration(runnerPose),
+    );
+    return () => window.clearInterval(timer);
+  }, [runnerPose]);
 
   if (!portalRoot) return null;
 
@@ -217,13 +256,11 @@ export function ArcadeGame({
               <span className="runner-cloud runner-cloud--one" />
               <span className="runner-cloud runner-cloud--two" />
               <span className="runner-hill" />
-              <span className="runner-cat" style={{ bottom: `${19 + game.catY}px` }}>
-                <span className="runner-cat-sprite" style={{ backgroundPosition: `${(runFrame / 7) * 100}% ${(1 / 7) * 100}%` }} />
+              <span className={`runner-cat runner-cat--${runnerPose}`} style={{ bottom: `${19 + game.catY}px` }} aria-hidden="true">
+                <CatSprite pose={runnerPose} tick={catFrame} />
               </span>
               {game.obstacles.map((obstacle) => (
-                <span className={`runner-obstacle runner-obstacle--${obstacle.kind}`} style={{ left: `${obstacle.x}%` }} key={obstacle.id}>
-                  {obstacle.kind === "plant" ? <Sprout aria-hidden="true" /> : <i aria-hidden="true" />}
-                </span>
+                <span className={`runner-obstacle runner-obstacle--${obstacle.kind}`} style={{ left: `${obstacle.x}%` }} key={obstacle.id} aria-hidden="true" />
               ))}
               {game.collectibles.map((collectible) => <span className="runner-fish" style={{ left: `${collectible.x}%`, bottom: `${collectible.y + 20}px` }} key={collectible.id} aria-hidden="true">◆</span>)}
               <span className="runner-ground" />
@@ -240,7 +277,7 @@ export function ArcadeGame({
               <button type="button" onClick={() => restartGame(false)}><RotateCcw size={15} />Restart</button>
               <button className="runner-jump-button" type="button" onClick={jump}>Jump <span>Space</span></button>
             </div>
-            <p className="game-hint">SPACE / ↑ to jump · P to pause · Collect blue gems · Avoid plants and rocks</p>
+            <p className="game-hint">SPACE / ↑ to jump · P to pause · Collect blue gems · Avoid rocks, plants, and branches</p>
           </motion.div>
         </motion.div>
       )}
