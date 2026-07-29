@@ -258,13 +258,12 @@ export function PixelCatCompanion() {
 
     const getDarkModeRestingPoint = (fixed = false): CatPosition => {
       const zoom = Number.parseFloat(getComputedStyle(document.body).zoom) || 1;
-      const restingRightOffset = window.matchMedia("(max-width: 767px)").matches
-        ? MOBILE_DARK_RESTING_RIGHT_OFFSET
-        : DARK_RESTING_RIGHT_OFFSET;
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      const restingRightOffset = isMobile ? MOBILE_DARK_RESTING_RIGHT_OFFSET : DARK_RESTING_RIGHT_OFFSET;
       return {
         // The sleeping artwork sits right of center inside its transparent sprite frame.
         x: ((fixed ? 0 : window.scrollX) + window.innerWidth - restingRightOffset) / zoom,
-        y: ((fixed ? 0 : window.scrollY) + window.innerHeight - 108) / zoom,
+        y: ((fixed ? 0 : window.scrollY) + window.innerHeight - (isMobile ? 95 : 108)) / zoom,
         facing: -1,
       };
     };
