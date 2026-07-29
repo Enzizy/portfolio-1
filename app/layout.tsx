@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description:
     "Full stack developer, AI engineer, and UI/UX designer building purposeful digital products.",
   keywords: ["Full Stack Developer", "AI Engineer", "UI/UX Designer", "Zhyronne Batican"],
+  verification: {
+    google: "UXmgTovg7upSW0wO0GCwRdK0flSNkupoRxaN0obTeQM",
+  },
   openGraph: {
     title: "Zhyronne Batican — Full Stack Developer",
     description: "Modern web applications, AI-powered tools, and thoughtful digital experiences.",
