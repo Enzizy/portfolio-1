@@ -2,6 +2,7 @@ export type CatPose =
   | "idle"
   | "walk"
   | "run"
+  | "ground-run"
   | "crouch"
   | "launch"
   | "airborne"
@@ -26,6 +27,7 @@ type SpriteSequence = {
 const SPRITE_SEQUENCES: Record<CatPose, SpriteSequence> = {
   walk: { row: 0, frames: [0, 1, 2, 3, 4, 5, 6, 7], duration: 170 },
   run: { row: 1, frames: [0, 1, 2, 3, 4, 5, 6, 7], duration: 135 },
+  "ground-run": { row: 0, frames: [0, 1, 2, 3, 4, 5, 6, 7], duration: 110 },
   crouch: { row: 2, frames: [0], duration: 360 },
   launch: { row: 2, frames: [1, 2], duration: 180 },
   airborne: { row: 2, frames: [2, 3, 4], duration: 220 },

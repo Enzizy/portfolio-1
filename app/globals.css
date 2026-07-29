@@ -139,7 +139,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .runner-ground::after { content: ""; position: absolute; inset: -6px 0 auto; height: 7px; opacity: .8; background: repeating-linear-gradient(110deg,#70975f 0 4px,#93b47e 4px 9px,transparent 9px 15px); animation: runner-ground-scroll .46s linear infinite; }
 .runner-cat { position: absolute; z-index: 4; left: 16%; bottom: 19px; width: 64px; height: 64px; transition: none; }
 .runner-cat .pixel-cat-sprite { width: 64px; height: 64px; filter: drop-shadow(0 3px 1px rgba(17,17,17,.1)); }
-.runner-cat--run { transform: translateY(1px); }.runner-cat--launch { transform: rotate(-4deg); }.runner-cat--fall { transform: rotate(4deg); }
+.runner-cat--ground-run { transform: translateY(2px); }.runner-cat--launch { transform: rotate(-4deg); }.runner-cat--fall { transform: rotate(4deg); }
 .runner-obstacle { position: absolute; z-index: 3; width: 64px; height: 64px; background-image: url('/images/game/cat-runner-obstacles.png'); background-repeat: no-repeat; background-size: 200% 200%; image-rendering: pixelated; transform: translateX(-50%); filter: drop-shadow(0 3px 1px rgba(17,17,17,.12)); }
 .runner-obstacle--boulder { bottom: 5px; background-position: left top; }.runner-obstacle--stones { bottom: 5px; background-position: right top; }.runner-obstacle--plant { bottom: -3px; background-position: left bottom; }.runner-obstacle--branch { bottom: -3px; background-position: right bottom; }
 .runner-fish { position: absolute; z-index: 3; color: #4b8cff; font-size: 15px; line-height: 1; transform: translateX(-50%) rotate(45deg); text-shadow: 0 0 10px rgba(75,140,255,.8); }

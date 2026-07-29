@@ -215,7 +215,7 @@ export function ArcadeGame({
       : game.landingFor > 0
         ? "land"
         : game.catY <= 2
-          ? "run"
+          ? "ground-run"
           : game.velocityY > 150
             ? "launch"
             : game.velocityY >= 0
