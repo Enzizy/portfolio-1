@@ -57,7 +57,7 @@ export function CatSprite({ pose, tick }: { pose: CatPose; tick: number }) {
 
   return (
     <span
-      className="pixel-cat-sprite"
+      className={`pixel-cat-sprite pixel-cat-sprite--${pose}`}
       role="img"
       aria-label={`A cute black pixel cat performing ${pose}`}
       style={{ backgroundPosition: `${(column / 7) * 100}% ${verticalPosition}%` }}

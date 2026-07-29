@@ -103,6 +103,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .pixel-cat-facing { display: block; width: 64px; height: 64px; transform-origin: center; }
 .pixel-cat-companion--facing-left .pixel-cat-facing { transform: scaleX(-1); }
 .pixel-cat-sprite { display: block; width: 64px; height: 64px; background-image: url('/images/black-cat-atlas-v2.png'); background-repeat: no-repeat; background-size: 800% 800%; image-rendering: pixelated; }
+.pixel-cat-sprite--yarn, .pixel-cat-sprite--inspect { clip-path: inset(0 0 12px); }
 .pixel-cat-companion::after { content: ""; position: absolute; width: 34px; height: 3px; left: 15px; bottom: 9px; border-radius: 50%; background: rgba(17,17,17,.14); }
 .pixel-cat-heart { position: absolute; z-index: 2; top: 1px; right: 3px; color: #f06474; font-size: 10px; opacity: 0; }
 .pixel-cat-zzz { position: absolute; z-index: 2; top: 0; right: -1px; color: #666; font: 8px/1 monospace; letter-spacing: -1px; opacity: 0; }
