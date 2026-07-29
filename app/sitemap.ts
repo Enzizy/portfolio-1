@@ -1,8 +1,6 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/data/portfolio";
-
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio-1-enzizy.vercel.app")
-  .replace(/\/+$/, "");
+import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();

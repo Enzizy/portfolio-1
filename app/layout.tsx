@@ -2,14 +2,18 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { GeistSans } from "geist/font/sans";
 import { CatChat } from "@/components/CatChat";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(siteUrl),
   title: "Zhyronne Batican — Full Stack Developer",
   description:
     "Full stack developer, AI engineer, and UI/UX designer building purposeful digital products.",
   keywords: ["Full Stack Developer", "AI Engineer", "UI/UX Designer", "Zhyronne Batican"],
+  alternates: {
+    canonical: "/",
+  },
   verification: {
     google: "UXmgTovg7upSW0wO0GCwRdK0flSNkupoRxaN0obTeQM",
   },
@@ -17,6 +21,7 @@ export const metadata: Metadata = {
     title: "Zhyronne Batican — Full Stack Developer",
     description: "Modern web applications, AI-powered tools, and thoughtful digital experiences.",
     type: "website",
+    url: "/",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Zhyronne Batican portfolio" }],
   },
   twitter: {
