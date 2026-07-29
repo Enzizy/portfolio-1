@@ -23,6 +23,7 @@ type RunnerWorld = {
   spawnIn: number;
   nextId: number;
   landingFor: number;
+  jumpBufferFor: number;
 };
 
 const CAT_LEFT = 18;
@@ -30,6 +31,7 @@ const CAT_RIGHT = 25;
 const BASE_SPEED = 34;
 const GRAVITY = 1050;
 const JUMP_VELOCITY = 430;
+const JUMP_BUFFER_SECONDS = 0.16;
 
 function createWorld(status: GameStatus = "ready"): RunnerWorld {
   return {
@@ -44,6 +46,7 @@ function createWorld(status: GameStatus = "ready"): RunnerWorld {
     spawnIn: 1.35,
     nextId: 1,
     landingFor: 0,
+    jumpBufferFor: 0,
   };
 }
 
@@ -95,8 +98,13 @@ export function ArcadeGame({
       return;
     }
     if (world.status === "ready") world.status = "playing";
-    if (world.status !== "playing" || world.catY > 2) return;
+    if (world.status !== "playing") return;
+    if (world.catY > 2) {
+      world.jumpBufferFor = JUMP_BUFFER_SECONDS;
+      return;
+    }
     world.landingFor = 0;
+    world.jumpBufferFor = 0;
     world.velocityY = JUMP_VELOCITY;
     lastFrameRef.current = performance.now();
     publishWorld();
@@ -144,12 +152,19 @@ export function ArcadeGame({
 
       world.speed = BASE_SPEED + Math.min(22, world.distance / 155);
       world.distance += world.speed * deltaTime;
+      world.jumpBufferFor = Math.max(0, world.jumpBufferFor - deltaTime);
       const wasAirborne = world.catY > 0;
       world.velocityY -= GRAVITY * deltaTime;
       world.catY = Math.max(0, world.catY + world.velocityY * deltaTime);
       if (world.catY === 0) {
         world.velocityY = 0;
-        if (wasAirborne) world.landingFor = 0.26;
+        if (world.jumpBufferFor > 0) {
+          world.jumpBufferFor = 0;
+          world.landingFor = 0;
+          world.velocityY = JUMP_VELOCITY;
+        } else if (wasAirborne) {
+          world.landingFor = 0.26;
+        }
       }
       world.landingFor = Math.max(0, world.landingFor - deltaTime);
 
@@ -252,10 +267,7 @@ export function ArcadeGame({
             <p className="sr-only" role="status" aria-live="polite">
               {game.status === "lost" ? `Run ended with a score of ${score}.` : game.status === "paused" ? "Game paused." : game.status === "ready" ? "Game ready." : ""}
             </p>
-            <button className="runner-board" type="button" onClick={jump} aria-label="Cat runner play area. Tap or press Space to jump.">
-              <span className="runner-cloud runner-cloud--one" />
-              <span className="runner-cloud runner-cloud--two" />
-              <span className="runner-hill" />
+            <button className={`runner-board runner-board--${game.status}`} type="button" onClick={jump} aria-label="Cat runner play area. Tap or press Space to jump.">
               <span className={`runner-cat runner-cat--${runnerPose}`} style={{ bottom: `${19 + game.catY}px` }} aria-hidden="true">
                 <CatSprite pose={runnerPose} tick={catFrame} />
               </span>
