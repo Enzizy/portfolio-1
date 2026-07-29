@@ -20,6 +20,7 @@ type SpriteSequence = {
   row: number;
   frames: number[];
   duration: number;
+  verticalPosition?: number;
 };
 
 const SPRITE_SEQUENCES: Record<CatPose, SpriteSequence> = {
@@ -37,8 +38,10 @@ const SPRITE_SEQUENCES: Record<CatPose, SpriteSequence> = {
   wake: { row: 4, frames: [3, 4, 5, 6, 7], duration: 360 },
   yarn: { row: 5, frames: [0, 1, 2, 3, 4, 5, 6, 7], duration: 260 },
   inspect: { row: 6, frames: [0, 1, 2, 3, 4, 5, 6, 7], duration: 330 },
-  celebrate: { row: 7, frames: [0, 1, 2, 1, 0, 2, 3], duration: 250 },
-  hide: { row: 7, frames: [4, 5, 6, 7, 6, 5], duration: 430 },
+  // The artwork in the last atlas row is taller than its nominal cell and
+  // extends upward. Shift the crop so ears and props remain inside the frame.
+  celebrate: { row: 7, frames: [0, 1, 2, 1, 0, 2, 3], duration: 250, verticalPosition: 96.43 },
+  hide: { row: 7, frames: [4, 5, 6, 7, 6, 5], duration: 430, verticalPosition: 96.43 },
 };
 
 export function getCatFrameDuration(pose: CatPose) {
@@ -48,13 +51,14 @@ export function getCatFrameDuration(pose: CatPose) {
 export function CatSprite({ pose, tick }: { pose: CatPose; tick: number }) {
   const sequence = SPRITE_SEQUENCES[pose];
   const column = sequence.frames[tick % sequence.frames.length];
+  const verticalPosition = sequence.verticalPosition ?? (sequence.row / 7) * 100;
 
   return (
     <span
       className="pixel-cat-sprite"
       role="img"
       aria-label={`A cute black pixel cat performing ${pose}`}
-      style={{ backgroundPosition: `${(column / 7) * 100}% ${(sequence.row / 7) * 100}%` }}
+      style={{ backgroundPosition: `${(column / 7) * 100}% ${verticalPosition}%` }}
     />
   );
 }

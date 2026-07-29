@@ -1,6 +1,8 @@
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
+import { Currently } from "@/components/Currently";
 import { Footer } from "@/components/Footer";
+import { GitHubActivity } from "@/components/GitHubActivity";
 import { Hero } from "@/components/Hero";
 import { Navigation } from "@/components/Navigation";
 import { PixelCatCompanion } from "@/components/PixelCatCompanion";
@@ -12,11 +14,13 @@ export default function Home() {
     <>
       <Navigation />
       <PixelCatCompanion />
-      <main className="page-shell">
+      <main id="main-content" className="page-shell" tabIndex={-1}>
         <Hero />
         <About />
         <Projects />
         <TechStack />
+        <GitHubActivity />
+        <Currently />
         <Contact />
       </main>
       <Footer />

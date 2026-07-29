@@ -1,18 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowUpRight, Facebook, Github, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
 
 const socials = [
-  { label: "GitHub", icon: Github, href: "https://github.com/zhyronnebatican" },
-  { label: "LinkedIn", icon: Linkedin, href: "https://linkedin.com/in/zhyronnebatican" },
+  { label: "GitHub", icon: Github, href: "https://github.com/Enzizy" },
+  { label: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/zhyronne-batican-5458a53aa/" },
+  { label: "Facebook", icon: Facebook, href: "https://www.facebook.com/Hakdog.Hakplas.Haler" },
   { label: "Email", icon: Mail, href: "mailto:zhyronnebatican@gmail.com" },
 ];
 
 export function Hero() {
   return (
-    <section id="top" className="hero" aria-labelledby="hero-title" data-cat-zone-root="top">
+    <section id="hero" className="hero" aria-labelledby="hero-title" data-cat-zone-root="top">
       <motion.div
         className="hero-copy"
         initial={false}

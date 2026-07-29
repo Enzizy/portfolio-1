@@ -30,6 +30,7 @@ export function PixelCatCompanion() {
   const interactionActiveRef = useRef(false);
   const interactionTravelingRef = useRef(false);
   const interactionLockedRef = useRef(false);
+  const menuOpenRef = useRef(false);
   const travelToRef = useRef<TravelTo>(() => undefined);
   const [isReady, setIsReady] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -41,10 +42,41 @@ export function PixelCatCompanion() {
   const [position, setPosition] = useState<CatPosition>({ x: -80, y: 100, facing: 1 });
   const [jumpOrigin, setJumpOrigin] = useState<CatPosition>({ x: -80, y: 100, facing: 1 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [isReacting, setIsReacting] = useState(false);
   const [interactionPose, setInteractionPose] = useState<CatPose | null>(null);
   const [speechMessage, setSpeechMessage] = useState("Hire me!");
+
+  useEffect(() => {
+    try {
+      setIsHidden(localStorage.getItem("portfolio-cat-hidden") === "true");
+    } catch {
+      setIsHidden(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const toggleCat = () => {
+      setIsHidden((hidden) => {
+        const nextHidden = !hidden;
+        setIsMenuOpen(false);
+        try {
+          if (nextHidden) localStorage.setItem("portfolio-cat-hidden", "true");
+          else localStorage.removeItem("portfolio-cat-hidden");
+        } catch {
+          // The in-memory preference still applies when storage is unavailable.
+        }
+        return nextHidden;
+      });
+    };
+    window.addEventListener("portfolio:toggle-cat", toggleCat);
+    return () => window.removeEventListener("portfolio:toggle-cat", toggleCat);
+  }, []);
+
+  useEffect(() => {
+    menuOpenRef.current = isMenuOpen;
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -204,6 +236,16 @@ export function PixelCatCompanion() {
       }, delay);
       animationTimersRef.current.push(timer);
     };
+    const scheduleAutomatic = (callback: () => void, delay: number) => {
+      const runWhenMenuClosed = () => {
+        if (menuOpenRef.current) {
+          schedule(runWhenMenuClosed, 450);
+          return;
+        }
+        callback();
+      };
+      schedule(runWhenMenuClosed, delay);
+    };
 
     const readPath = () => {
       const zoom = Number.parseFloat(getComputedStyle(document.body).zoom) || 1;
@@ -328,27 +370,27 @@ export function PixelCatCompanion() {
 
     const startCycle = () => {
       if (isCancelled || pointsRef.current.length < 4) return;
-      schedule(() => moveTo(1, "walk"), 1500);
-      schedule(() => moveTo(2, "walk"), 5000);
-      schedule(() => moveTo(3, "jump"), 8500);
-      schedule(() => setPose("yarn"), 12000);
-      schedule(() => setPose("idle"), 17800);
-      schedule(() => setPose("curious"), 19500);
-      schedule(() => setPose("idle"), 24000);
-      schedule(() => moveTo(4), 27000);
-      schedule(() => moveTo(5), 31500);
-      schedule(() => moveTo(6), 36000);
-      schedule(() => moveTo(7), 40500);
-      schedule(() => moveTo(8), 45000);
-      schedule(() => setPose("hide"), 48000);
-      schedule(() => setPose("idle"), 53000);
-      schedule(() => setPose("stretch"), 54500);
-      schedule(() => setPose("idle"), 59000);
-      schedule(() => setPose("sleep"), 61000);
-      schedule(() => setPose("wake"), 69000);
-      schedule(() => setPose("idle"), 70800);
-      schedule(() => moveTo(0, "jump"), 72000);
-      schedule(startCycle, 76500);
+      scheduleAutomatic(() => moveTo(1, "walk"), 1500);
+      scheduleAutomatic(() => moveTo(2, "walk"), 5000);
+      scheduleAutomatic(() => moveTo(3, "jump"), 8500);
+      scheduleAutomatic(() => setPose("yarn"), 12000);
+      scheduleAutomatic(() => setPose("idle"), 17800);
+      scheduleAutomatic(() => setPose("curious"), 19500);
+      scheduleAutomatic(() => setPose("idle"), 24000);
+      scheduleAutomatic(() => moveTo(4), 27000);
+      scheduleAutomatic(() => moveTo(5), 31500);
+      scheduleAutomatic(() => moveTo(6), 36000);
+      scheduleAutomatic(() => moveTo(7), 40500);
+      scheduleAutomatic(() => moveTo(8), 45000);
+      scheduleAutomatic(() => setPose("hide"), 48000);
+      scheduleAutomatic(() => setPose("idle"), 53000);
+      scheduleAutomatic(() => setPose("stretch"), 54500);
+      scheduleAutomatic(() => setPose("idle"), 59000);
+      scheduleAutomatic(() => setPose("sleep"), 61000);
+      scheduleAutomatic(() => setPose("wake"), 69000);
+      scheduleAutomatic(() => setPose("idle"), 70800);
+      scheduleAutomatic(() => moveTo(0, "jump"), 72000);
+      scheduleAutomatic(startCycle, 76500);
     };
 
     const initialize = async () => {
@@ -441,6 +483,7 @@ export function PixelCatCompanion() {
   }, [prefersReducedMotion, renderedPose]);
 
   const handlePet = () => {
+    setIsMenuOpen(false);
     if (interactionTimerRef.current) window.clearTimeout(interactionTimerRef.current);
     interactionTokenRef.current += 1;
     interactionActiveRef.current = true;
@@ -453,6 +496,30 @@ export function PixelCatCompanion() {
       setInteractionPose(null);
       interactionTimerRef.current = null;
     }, 2600);
+  };
+
+  const handlePlayRunner = () => {
+    setIsMenuOpen(false);
+    window.dispatchEvent(new Event("portfolio:open-game"));
+  };
+
+  const handleHideCat = () => {
+    setIsMenuOpen(false);
+    setIsHidden(true);
+    try {
+      localStorage.setItem("portfolio-cat-hidden", "true");
+    } catch {
+      // The in-memory preference still applies when storage is unavailable.
+    }
+  };
+
+  const handleShowCat = () => {
+    setIsHidden(false);
+    try {
+      localStorage.removeItem("portfolio-cat-hidden");
+    } catch {
+      // The in-memory preference still applies when storage is unavailable.
+    }
   };
 
   const isArcJump = travelMode === "jumping" && !prefersReducedMotion;
@@ -478,6 +545,14 @@ export function PixelCatCompanion() {
         ? { duration: actionDuration, ease: [0.4, 0, 0.2, 1] }
         : { duration: 0.12, ease: "easeOut" };
 
+  if (isHidden) {
+    return (
+      <button className="pixel-cat-show" type="button" onClick={handleShowCat}>
+        <span aria-hidden="true">🐾</span> Show cat
+      </button>
+    );
+  }
+
   return (
     <>
       <span className={`pixel-cat-spotlight ${isDarkMode ? "pixel-cat-spotlight--visible" : ""}`} aria-hidden="true" />
@@ -487,6 +562,7 @@ export function PixelCatCompanion() {
         tabIndex={isReady ? 0 : -1}
         aria-label="Open the cat companion menu"
         aria-expanded={isMenuOpen}
+        aria-haspopup="true"
         className={`pixel-cat-companion ${isReady ? "pixel-cat-companion--ready" : ""} ${isDarkDocked ? "pixel-cat-companion--dark" : ""} ${isCelebrating ? "pixel-cat-companion--celebrating" : ""} ${isReacting ? "pixel-cat-companion--reacting" : ""} ${isMenuOpen ? "pixel-cat-companion--menu-open" : ""} pixel-cat-companion--${travelMode} pixel-cat-companion--pose-${renderedPose} pixel-cat-companion--facing-${position.facing === 1 ? "right" : "left"}`}
         onClick={() => setIsMenuOpen((open) => !open)}
         onKeyDown={(event) => {
@@ -511,7 +587,7 @@ export function PixelCatCompanion() {
           {isMenuOpen && (
             <motion.div
               className="pixel-cat-menu"
-              role="menu"
+              role="group"
               aria-label="Cat companion shortcuts"
               initial={{ opacity: 0, y: 5, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -520,10 +596,11 @@ export function PixelCatCompanion() {
               onClick={(event) => event.stopPropagation()}
             >
               <span>CAT SHORTCUTS</span>
-              <a role="menuitem" href="/projects">View projects</a>
-              <a role="menuitem" href="/#contact">Say hello</a>
-              <button role="menuitem" type="button" onClick={() => window.dispatchEvent(new Event("portfolio:open-game"))}>Play runner</button>
-              <button role="menuitem" type="button" onClick={handlePet}>Give a pet</button>
+              <a href="/projects" onClick={() => setIsMenuOpen(false)}>View projects</a>
+              <a href="/#contact" onClick={() => setIsMenuOpen(false)}>Say hello</a>
+              <button type="button" onClick={handlePlayRunner}>Play runner</button>
+              <button type="button" onClick={handlePet}>Give a pet</button>
+              <button type="button" onClick={handleHideCat}>Hide cat</button>
             </motion.div>
           )}
         </AnimatePresence>

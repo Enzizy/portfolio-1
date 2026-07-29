@@ -15,7 +15,7 @@ export default function AllProjectsPage() {
   return (
     <>
       <Navigation />
-      <main id="top" className="page-shell projects-page">
+      <main id="main-content" className="page-shell projects-page" tabIndex={-1}>
         <header className="projects-page__hero">
           <div>
             <p className="eyebrow">// SELECTED WORK</p>
@@ -38,7 +38,7 @@ export default function AllProjectsPage() {
           </div>
           <div className="projects-page__grid">
             {projects.map((project) => (
-              <ProjectCard key={project.number} project={project} contactHref="/#contact" />
+              <ProjectCard key={project.number} project={project} />
             ))}
           </div>
         </section>

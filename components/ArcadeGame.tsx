@@ -2,8 +2,9 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, RotateCcw, Sprout, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useDialogFocusTrap } from "@/hooks/useDialogFocusTrap";
 
 type GameStatus = "ready" | "playing" | "paused" | "lost";
 type Obstacle = { id: number; x: number; kind: "plant" | "rock" };
@@ -46,10 +47,19 @@ function getScore(world: RunnerWorld) {
   return Math.floor(world.distance) + world.bonus;
 }
 
-export function ArcadeGame({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export function ArcadeGame({
+  isOpen,
+  onClose,
+  returnFocusRef,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  returnFocusRef: RefObject<HTMLElement | null>;
+}) {
   const worldRef = useRef<RunnerWorld>(createWorld());
   const lastFrameRef = useRef(0);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [game, setGame] = useState<RunnerWorld>(() => createWorld());
   const [bestScore, setBestScore] = useState(0);
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
@@ -96,13 +106,12 @@ export function ArcadeGame({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
   useEffect(() => {
     if (!isOpen) return;
-    closeButtonRef.current?.focus();
     setBestScore(Number.parseInt(localStorage.getItem("cat-runner-best") ?? "0", 10) || 0);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") return onClose();
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      const isControlFocused = Boolean(target?.closest("button, a, input, select, textarea"));
       if ([" ", "ArrowUp", "w", "W"].includes(event.key)) {
+        if (isControlFocused && !target?.classList.contains("runner-board")) return;
         event.preventDefault();
         jump();
       }
@@ -111,9 +120,10 @@ export function ArcadeGame({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
     };
-  }, [isOpen, jump, onClose, togglePause]);
+  }, [isOpen, jump, togglePause]);
+
+  useDialogFocusTrap(isOpen, dialogRef, closeButtonRef, onClose, returnFocusRef);
 
   useEffect(() => {
     if (!isOpen || game.status !== "playing") return;
@@ -188,19 +198,22 @@ export function ArcadeGame({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     <AnimatePresence>
       {isOpen && (
         <motion.div className="game-overlay" role="presentation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-          <motion.div className="game-dialog runner-dialog" role="dialog" aria-modal="true" aria-labelledby="game-title" initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.98 }} transition={{ duration: 0.22 }}>
+          <motion.div ref={dialogRef} className="game-dialog runner-dialog" role="dialog" aria-modal="true" aria-labelledby="game-title" tabIndex={-1} initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.98 }} transition={{ duration: 0.22 }}>
             <header className="game-header">
               <div><span>// MINI ARCADE</span><h2 id="game-title">CAT RUNNER</h2><p>Chase the horizon</p></div>
               <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close game"><X size={20} /></button>
             </header>
 
-            <div className="runner-stats" aria-live="polite">
+            <div className="runner-stats">
               <span>Score <b>{score.toString().padStart(5, "0")}</b></span>
               <span>Best <b>{bestScore.toString().padStart(5, "0")}</b></span>
               <span>Speed <b>{speedLabel}</b></span>
             </div>
 
-            <button className="runner-board" type="button" onClick={jump} aria-label={`Cat runner game. Score ${score}. Tap or press space to jump.`}>
+            <p className="sr-only" role="status" aria-live="polite">
+              {game.status === "lost" ? `Run ended with a score of ${score}.` : game.status === "paused" ? "Game paused." : game.status === "ready" ? "Game ready." : ""}
+            </p>
+            <button className="runner-board" type="button" onClick={jump} aria-label="Cat runner play area. Tap or press Space to jump.">
               <span className="runner-cloud runner-cloud--one" />
               <span className="runner-cloud runner-cloud--two" />
               <span className="runner-hill" />
