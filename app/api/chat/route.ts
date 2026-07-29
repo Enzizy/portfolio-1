@@ -19,6 +19,13 @@ type GeminiResponse = {
   promptFeedback?: { blockReason?: string };
 };
 
+type GeminiAttempt = {
+  model: string;
+  response: Response;
+  result: GeminiResponse;
+  answer: string;
+};
+
 const PORTFOLIO_CONTEXT = `
 You are Zhyronne Batican's friendly black pixel-cat portfolio assistant.
 Your job is to help visitors learn about Zhyronne and decide whether to hire or contact him.
@@ -73,6 +80,44 @@ function ensureCatSignOff(text: string) {
   return `${cleaned} nyaaa.`;
 }
 
+async function requestGemini(
+  apiKey: string,
+  model: string,
+  messages: Array<{ role: ChatRole; text: string }>,
+): Promise<GeminiAttempt> {
+  const isGemini3 = /^gemini-3(?:\.|[-])/i.test(model);
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
+      },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: PORTFOLIO_CONTEXT }] },
+        contents: messages.map((message) => ({
+          role: message.role,
+          parts: [{ text: message.text }],
+        })),
+        generationConfig: {
+          maxOutputTokens: 512,
+          thinkingConfig: isGemini3
+            ? { thinkingLevel: "minimal" }
+            : { thinkingBudget: 0 },
+        },
+      }),
+      signal: AbortSignal.timeout(20_000),
+    },
+  );
+  const result = await response.json() as GeminiResponse;
+  const answer = result.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text ?? "")
+    .join("")
+    .trim() ?? "";
+  return { model, response, result, answer };
+}
+
 export async function POST(request: NextRequest) {
   const identifier = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   if (isRateLimited(identifier)) {
@@ -102,50 +147,50 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash-lite";
+  const configuredModel = process.env.GEMINI_MODEL?.trim() || "gemini-3.1-flash-lite";
+  const models = [...new Set([
+    configuredModel,
+    "gemini-3.1-flash-lite",
+    "gemini-2.5-flash-lite",
+  ])];
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: PORTFOLIO_CONTEXT }] },
-          contents: messages.map((message) => ({
-            role: message.role,
-            parts: [{ text: message.text }],
-          })),
-          generationConfig: { maxOutputTokens: 300 },
-        }),
-        signal: AbortSignal.timeout(20_000),
-      },
+    for (const model of models) {
+      const attempt = await requestGemini(apiKey, model, messages);
+      if (attempt.response.ok && attempt.answer) {
+        return NextResponse.json({ message: ensureCatSignOff(attempt.answer) });
+      }
+
+      if (attempt.result.promptFeedback?.blockReason) {
+        return NextResponse.json(
+          { message: "I cannot help with that request, but I can answer questions about Zhyronne's work, nyaaa." },
+          { status: 400 },
+        );
+      }
+
+      console.error(
+        "Gemini chat attempt failed:",
+        attempt.model,
+        attempt.response.status,
+        attempt.result.error?.message ?? attempt.result.candidates?.[0]?.finishReason ?? "empty response",
+      );
+      if (attempt.response.status === 401 || attempt.response.status === 403) {
+        return NextResponse.json(
+          { message: "My Gemini key is not authorized. Please check the key and Gemini API access, nyaaa." },
+          { status: 502 },
+        );
+      }
+      if (attempt.response.status === 429) {
+        return NextResponse.json(
+          { message: "My free Gemini quota is resting. Please try again shortly, nyaaa." },
+          { status: 429 },
+        );
+      }
+    }
+
+    return NextResponse.json(
+      { message: "Gemini could not return an answer. Please try again shortly, nyaaa." },
+      { status: 502 },
     );
-    const result = await response.json() as GeminiResponse;
-    if (!response.ok) {
-      console.error("Gemini chat request failed:", response.status, result.error?.message);
-      const status = response.status === 429 ? 429 : 502;
-      return NextResponse.json(
-        { message: status === 429 ? "I am thinking too hard right now. Please try again shortly, nyaaa." : "I could not answer that just now. Please try again, nyaaa." },
-        { status },
-      );
-    }
-
-    const answer = result.candidates?.[0]?.content?.parts
-      ?.map((part) => part.text ?? "")
-      .join("")
-      .trim();
-    if (!answer) {
-      const wasBlocked = Boolean(result.promptFeedback?.blockReason);
-      return NextResponse.json(
-        { message: wasBlocked ? "I cannot help with that request, but I can answer questions about Zhyronne's work, nyaaa." : "I lost my train of thought. Please ask me again, nyaaa." },
-        { status: wasBlocked ? 400 : 502 },
-      );
-    }
-
-    return NextResponse.json({ message: ensureCatSignOff(answer) });
   } catch (error) {
     console.error("Gemini chat connection failed:", error instanceof Error ? error.message : error);
     return NextResponse.json(
