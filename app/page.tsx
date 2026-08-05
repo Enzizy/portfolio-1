@@ -1,6 +1,5 @@
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
-import { Currently } from "@/components/Currently";
 import { Footer } from "@/components/Footer";
 import { GitHubActivity } from "@/components/GitHubActivity";
 import { Hero } from "@/components/Hero";
@@ -20,7 +19,6 @@ export default function Home() {
         <Projects />
         <TechStack />
         <GitHubActivity />
-        <Currently />
         <Contact />
       </main>
       <Footer />

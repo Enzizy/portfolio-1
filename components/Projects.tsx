@@ -8,6 +8,7 @@ import { SectionHeading } from "./SectionHeading";
 const featuredProjectHrefs = [
   "/projects/joyno-hr",
   "/projects/localaid",
+  "/projects/bookvoice",
   "/projects/roarly",
 ] as const;
 

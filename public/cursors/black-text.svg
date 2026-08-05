@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24">
+  <path
+    d="M8 2h8v2h-3v16h3v2H8v-2h3V4H8V2Z"
+    fill="#050505"
+    stroke="#fff"
+    stroke-width="2"
+    stroke-linejoin="round"
+    paint-order="stroke fill"
+  />
+</svg>

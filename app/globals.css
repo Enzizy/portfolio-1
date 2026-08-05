@@ -536,3 +536,34 @@ html[data-theme="dark"] .theme-toggle--mobile { border-color: var(--page-border)
 @keyframes cat-chat-dot { 0%,70%,100% { opacity: .35; transform: translateY(0); } 35% { opacity: 1; transform: translateY(-3px); } }
 @media (max-width: 767px) { .cat-chat { right: 12px; bottom: 12px; }.pixel-cat-spotlight { right: -14px; }.cat-chat__panel { width: min(360px, calc(100vw - 24px)); }.cat-chat__messages { height: min(285px, 38vh); }.cat-chat__launcher { min-height: 40px; } }
 @media (forced-colors: active) { .cat-chat__launcher, .cat-chat__panel, .cat-chat__message { border: 1px solid CanvasText; } }
+
+@media (hover: hover) and (pointer: fine) {
+  *,
+  *::before,
+  *::after { cursor: url("/cursors/black-arrow.svg") 3 2, default; }
+
+  a,
+  button:not(:disabled),
+  select:not(:disabled),
+  option,
+  summary,
+  input[type="button"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  input[type="reset"]:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="range"]:not(:disabled),
+  input[type="file"]:not(:disabled),
+  [role="button"] { cursor: url("/cursors/black-pointer.svg") 9 2, pointer; }
+
+  input:not([type]),
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  [contenteditable="true"] { cursor: url("/cursors/black-text.svg") 10 10, text; }
+}
