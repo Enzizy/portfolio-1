@@ -650,38 +650,53 @@ html[data-theme="dark"] .theme-toggle--mobile { border-color: var(--page-border)
   .portfolio-splash__progress span { animation: none; }
 }
 
-/* Lightweight pixel reveal over the existing page; no cloned full-screen scene. */
-.theme-pixel-transition {
-  position: fixed;
-  z-index: 99998;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
+/* The outgoing page snapshot is punched away in scattered squares, revealing
+   the fully rendered incoming theme underneath (including text and icons). */
+html[data-theme-transitioning]::view-transition-group(root),
+html[data-theme-transitioning]::view-transition-image-pair(root) {
+  animation: none;
+}
+
+html[data-theme-transitioning]::view-transition-image-pair(root) {
   isolation: isolate;
 }
 
-.theme-pixel-transition__tile {
-  position: absolute;
-  display: block;
-  background: #fafafa;
-  transform: scale(1.06);
-  transform-origin: center;
-  will-change: transform, opacity;
+html[data-theme-transitioning]::view-transition-old(root),
+html[data-theme-transitioning]::view-transition-new(root) {
+  mix-blend-mode: normal;
 }
 
-.theme-pixel-transition--dark .theme-pixel-transition__tile { background: #0b0d10; }
-
-.theme-pixel-transition.is-running .theme-pixel-transition__tile {
-  animation: theme-pixel-reveal var(--tile-duration) cubic-bezier(.65,0,.35,1) var(--tile-delay) both;
+html[data-theme-transitioning]::view-transition-new(root) {
+  z-index: 1;
+  animation: none;
 }
 
-@keyframes theme-pixel-reveal {
-  0% { opacity: 1; transform: scale(1.06); }
-  32% { opacity: 1; transform: scale(.94); }
-  100% { opacity: 0; transform: scale(.06) rotate(5deg); }
+html[data-theme-transitioning]::view-transition-old(root) {
+  z-index: 2;
+  animation: theme-pixel-snapshot-hold var(--theme-pixel-duration, 1080ms) linear both;
+  -webkit-mask-image: var(--theme-pixel-mask);
+  mask-image: var(--theme-pixel-mask);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
-@media (prefers-reduced-motion: reduce), (forced-colors: active) { .theme-pixel-transition { display: none; } }
+html[data-theme-transition-capture] .target-cursor {
+  opacity: 0 !important;
+}
+
+@keyframes theme-pixel-snapshot-hold {
+  from,
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  html[data-theme-transitioning]::view-transition-old(root),
+  html[data-theme-transitioning]::view-transition-new(root) { animation-duration: 1ms; }
+}
 
 .target-cursor {
   position: fixed;
