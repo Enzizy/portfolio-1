@@ -1,28 +1,15 @@
 export type ThemeOrigin = { x: number; y: number };
-
-type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => { finished: Promise<void> };
-};
+export type ThemeName = "light" | "dark";
+export type ThemeRequestDetail = { theme: ThemeName; origin?: ThemeOrigin };
 
 export function toggleDocumentTheme(origin?: ThemeOrigin) {
   const root = document.documentElement;
+  if (root.dataset.themeTransitioning === "true") return;
   const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-  root.style.setProperty("--theme-x", `${origin?.x ?? window.innerWidth / 2}px`);
-  root.style.setProperty("--theme-y", `${origin?.y ?? 32}px`);
-
-  const applyTheme = () => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     root.dataset.theme = nextTheme;
-    localStorage.setItem("portfolio-theme", nextTheme);
-  };
-
-  root.dataset.themeTransitioning = "true";
-  const viewTransitionDocument = document as ViewTransitionDocument;
-  if (viewTransitionDocument.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const transition = viewTransitionDocument.startViewTransition(applyTheme);
-    void transition.finished.finally(() => delete root.dataset.themeTransitioning);
+    try { localStorage.setItem("portfolio-theme", nextTheme); } catch { /* Keep the current-session theme. */ }
     return;
   }
-
-  applyTheme();
-  window.setTimeout(() => delete root.dataset.themeTransitioning, 650);
+  window.dispatchEvent(new CustomEvent<ThemeRequestDetail>("portfolio:theme-request", { detail: { theme: nextTheme, origin } }));
 }

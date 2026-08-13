@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { GeistSans } from "geist/font/sans";
 import { CatChat } from "@/components/CatChat";
+import { PortfolioSplash } from "@/components/PortfolioSplash";
+import { TargetCursor } from "@/components/TargetCursor";
+import { ThemeTransition } from "@/components/ThemeTransition";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -43,6 +46,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body id="top" className={GeistSans.className}>
+        <PortfolioSplash />
+        <TargetCursor />
+        <ThemeTransition />
         <a className="skip-link" href="#main-content">Skip to main content</a>
         {children}
         <CatChat />
