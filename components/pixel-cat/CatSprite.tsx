@@ -15,6 +15,7 @@ export type CatPose =
   | "yarn"
   | "inspect"
   | "celebrate"
+  | "arrested"
   | "hide";
 
 type SpriteSequence = {
@@ -40,6 +41,7 @@ const SPRITE_SEQUENCES: Record<CatPose, SpriteSequence> = {
   wake: { row: 4, frames: [3, 4, 5, 6, 7], duration: 360 },
   yarn: { row: 5, frames: [0, 1, 2, 3, 4, 5, 6, 7], duration: 260 },
   inspect: { row: 6, frames: [0, 1, 2, 3, 4, 5, 6, 7], duration: 330, verticalPosition: 84 },
+  arrested: { row: 0, frames: [0], duration: 600 },
   // The artwork in the last atlas row is taller than its nominal cell and
   // extends upward. Shift the crop so ears and props remain inside the frame.
   celebrate: { row: 7, frames: [0, 1, 2, 1, 0, 2, 3], duration: 250, verticalPosition: 96.43 },
@@ -54,13 +56,20 @@ export function CatSprite({ pose, tick }: { pose: CatPose; tick: number }) {
   const sequence = SPRITE_SEQUENCES[pose];
   const column = sequence.frames[tick % sequence.frames.length];
   const verticalPosition = sequence.verticalPosition ?? (sequence.row / 7) * 100;
+  const isStandaloneSprite = pose === "arrested";
 
   return (
     <span
       className={`pixel-cat-sprite pixel-cat-sprite--${pose}`}
       role="img"
-      aria-label={`A cute black pixel cat performing ${pose}`}
-      style={{ backgroundPosition: `${(column / 7) * 100}% ${verticalPosition}%` }}
+      aria-label={pose === "arrested" ? "A cute black pixel cat holding both paws up" : `A cute black pixel cat performing ${pose}`}
+      style={isStandaloneSprite
+        ? {
+            backgroundImage: "url('/images/cat-hands-up.png')",
+            backgroundPosition: "center",
+            backgroundSize: "contain",
+          }
+        : { backgroundPosition: `${(column / 7) * 100}% ${verticalPosition}%` }}
     />
   );
 }

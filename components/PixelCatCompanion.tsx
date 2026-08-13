@@ -1,11 +1,18 @@
 "use client";
 
 import { motion, type Transition, useReducedMotion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { playCatSound } from "@/lib/catAudio";
 import { DARK_RESTING_RIGHT_OFFSET, JUMP_DURATION_SECONDS, MOBILE_DARK_RESTING_RIGHT_OFFSET, PERCH_OFFSETS, type CatPosition, type TravelMode, type TravelTo, WALK_DURATION_SECONDS } from "./pixel-cat/cat-config";
 import { CatCompanionMenu } from "./pixel-cat/CatCompanionMenu";
 import { CatSprite, getCatFrameDuration, type CatPose } from "./pixel-cat/CatSprite";
+
+type PausedCatMovement = {
+  target: CatPosition;
+  mode: TravelMode;
+  pose: CatPose;
+};
+
 export function PixelCatCompanion() {
   const prefersReducedMotion = useReducedMotion();
   const pointsRef = useRef<CatPosition[]>([]);
@@ -22,6 +29,10 @@ export function PixelCatCompanion() {
   const interactionActiveRef = useRef(false);
   const interactionTravelingRef = useRef(false);
   const interactionLockedRef = useRef(false);
+  const arrestedRef = useRef(false);
+  const pausedMovementRef = useRef<PausedCatMovement | null>(null);
+  const getRenderedPositionRef = useRef<() => CatPosition>(() => currentPositionRef.current);
+  const restartCycleRef = useRef<() => void>(() => undefined);
   const menuOpenRef = useRef(false);
   const menuScrollPositionRef = useRef({ x: 0, y: 0 });
   const travelToRef = useRef<TravelTo>(() => undefined);
@@ -37,6 +48,7 @@ export function PixelCatCompanion() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const [isArrested, setIsArrested] = useState(false);
   const [isReacting, setIsReacting] = useState(false);
   const [interactionPose, setInteractionPose] = useState<CatPose | null>(null);
   const [speechMessage, setSpeechMessage] = useState("Hire me!");
@@ -231,7 +243,7 @@ export function PixelCatCompanion() {
     };
     const scheduleAutomatic = (callback: () => void, delay: number) => {
       const runWhenMenuClosed = () => {
-        if (menuOpenRef.current) {
+        if (menuOpenRef.current || arrestedRef.current) {
           schedule(runWhenMenuClosed, 450);
           return;
         }
@@ -279,12 +291,14 @@ export function PixelCatCompanion() {
       };
     };
 
+    getRenderedPositionRef.current = getRenderedPosition;
+
     const jumpToTarget = (baseTarget: CatPosition, onSettled?: () => void, originOverride?: CatPosition, interactive = false) => {
       const origin = originOverride ?? currentPositionRef.current;
       const facing: 1 | -1 = baseTarget.x >= origin.x ? 1 : -1;
       const target = { ...baseTarget, facing };
       const orientedOrigin = { ...origin, facing };
-      const canApply = () => interactive || !interactionActiveRef.current;
+      const canApply = () => !arrestedRef.current && (interactive || !interactionActiveRef.current);
       currentPositionRef.current = target;
       setJumpOrigin(orientedOrigin);
       setPosition(orientedOrigin);
@@ -335,7 +349,7 @@ export function PixelCatCompanion() {
         setPose("walk");
         setTravelMode("walking");
         schedule(() => {
-          if (!interactive && interactionActiveRef.current) return;
+          if (arrestedRef.current || (!interactive && interactionActiveRef.current)) return;
           setPose("idle");
           setTravelMode("idle");
           onSettled?.();
@@ -384,6 +398,8 @@ export function PixelCatCompanion() {
       scheduleAutomatic(() => moveTo(0, "jump"), 72000);
       scheduleAutomatic(startCycle, 76500);
     };
+
+    restartCycleRef.current = startCycle;
 
     const initialize = async () => {
       await document.fonts.ready;
@@ -459,10 +475,12 @@ export function PixelCatCompanion() {
       animationTimersRef.current.forEach((timer) => window.clearTimeout(timer));
       animationTimersRef.current = [];
       travelToRef.current = () => undefined;
+      getRenderedPositionRef.current = () => currentPositionRef.current;
+      restartCycleRef.current = () => undefined;
     };
   }, [isDarkMode, prefersReducedMotion]);
 
-  const renderedPose = interactionPose ?? pose;
+  const renderedPose = isArrested ? "arrested" : interactionPose ?? pose;
 
   useEffect(() => {
     setFrameTick(0);
@@ -524,6 +542,46 @@ export function PixelCatCompanion() {
     }
   };
 
+  const handleCatPointerEnter = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!isReady || event.pointerType === "touch" || arrestedRef.current) return;
+
+    const renderedPosition = getRenderedPositionRef.current();
+    pausedMovementRef.current = {
+      target: currentPositionRef.current,
+      mode: travelMode,
+      pose,
+    };
+    animationTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    animationTimersRef.current = [];
+    arrestedRef.current = true;
+    currentPositionRef.current = renderedPosition;
+    setPosition(renderedPosition);
+    setJumpOrigin(renderedPosition);
+    setTravelMode("idle");
+    setIsArrested(true);
+  };
+
+  const handleCatPointerLeave = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "touch" || !arrestedRef.current) return;
+
+    const pausedMovement = pausedMovementRef.current;
+    arrestedRef.current = false;
+    pausedMovementRef.current = null;
+    setIsArrested(false);
+
+    if (!pausedMovement) return;
+    if (pausedMovement.mode === "walking" || pausedMovement.mode === "jumping") {
+      travelToRef.current(
+        pausedMovement.target,
+        pausedMovement.mode === "walking" ? "walk" : "jump",
+        isDarkMode ? undefined : restartCycleRef.current,
+      );
+      return;
+    }
+    setPose(pausedMovement.pose);
+    if (!isDarkMode) restartCycleRef.current();
+  };
+
   const isArcJump = travelMode === "jumping" && !prefersReducedMotion;
   const jumpDistance = Math.hypot(position.x - jumpOrigin.x, position.y - jumpOrigin.y);
   const jumpHeight = Math.min(104, Math.max(54, 54 + jumpDistance * 0.08));
@@ -566,6 +624,8 @@ export function PixelCatCompanion() {
         aria-expanded={isMenuOpen}
         aria-haspopup="true"
         className={`pixel-cat-companion ${isReady ? "pixel-cat-companion--ready" : ""} ${isDarkDocked ? "pixel-cat-companion--dark" : ""} ${isCelebrating ? "pixel-cat-companion--celebrating" : ""} ${isReacting ? "pixel-cat-companion--reacting" : ""} ${isMenuOpen ? "pixel-cat-companion--menu-open" : ""} pixel-cat-companion--${travelMode} pixel-cat-companion--pose-${renderedPose} pixel-cat-companion--facing-${position.facing === 1 ? "right" : "left"}`}
+        onPointerEnter={handleCatPointerEnter}
+        onPointerLeave={handleCatPointerLeave}
         onClick={toggleMenu}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
