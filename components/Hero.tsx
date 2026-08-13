@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight, Facebook, Github, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
+import { TextType } from "@/components/TextType";
 
 const socials = [
   { label: "GitHub", icon: Github, href: "https://github.com/Enzizy" },
@@ -10,6 +11,8 @@ const socials = [
   { label: "Facebook", icon: Facebook, href: "https://www.facebook.com/Hakdog.Hakplas.Haler" },
   { label: "Email", icon: Mail, href: "mailto:zhyronnebatican@gmail.com" },
 ];
+
+const roles = ["Full Stack Developer", "AI Engineer", "UI/UX Designer"];
 
 export function Hero() {
   return (
@@ -23,9 +26,19 @@ export function Hero() {
         <p className="eyebrow">// HELLO, I&apos;M</p>
         <h1 id="hero-title" data-cat-perch data-cat-zone="top" data-cat-kind="hero">Zhyronne<br />Batican</h1>
         <div className="roles">
-          <span>Full Stack Developer</span>
-          <span>AI Engineer</span>
-          <span>UI/UX Designer</span>
+          <span className="sr-only">Full Stack Developer, AI Engineer, and UI/UX Designer</span>
+          <TextType
+            text={roles}
+            as="span"
+            aria-hidden="true"
+            typingSpeed={58}
+            deletingSpeed={24}
+            initialDelay={2050}
+            pauseDuration={1800}
+            variableSpeed={{ min: 42, max: 74 }}
+            cursorCharacter="_"
+            cursorBlinkDuration={0.42}
+          />
         </div>
         <p className="hero-description">
           I build modern web applications, AI-powered tools, and digital experiences that are fast,

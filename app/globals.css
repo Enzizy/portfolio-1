@@ -138,7 +138,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hero { min-height: 556px; padding: 110px 0 54px; border-bottom: 1px solid #e5e5e5; display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; gap: 58px; }
 .eyebrow { margin: 0 0 12px; color: #555; font: 10px/1.2 monospace; letter-spacing: .04em; }
 .hero h1 { margin: 0; font-size: clamp(60px, 6.4vw, 72px); line-height: .88; letter-spacing: -.067em; font-weight: 700; }
-.roles { border-left: 2px solid #2563eb; display: grid; margin: 25px 0 23px; padding: 1px 0 1px 18px; font-size: 19px; line-height: 1.24; font-weight: 520; }
+.roles { border-left: 2px solid #2563eb; display: flex; align-items: center; min-height: 26px; margin: 25px 0 23px; padding: 1px 0 1px 18px; font-size: 19px; line-height: 1.24; font-weight: 520; }
+.text-type { display: inline-block; min-width: 20ch; white-space: pre-wrap; letter-spacing: -.02em; }
+.text-type__content { display: inline; }
+.text-type__cursor { display: inline-block; margin-left: 2px; color: #2563eb; font-family: monospace; opacity: 1; }
+.text-type__cursor--hidden { visibility: hidden; }
 .hero-description { color: #555; max-width: 340px; font-size: 13px; line-height: 1.65; margin: 0 0 20px; }
 .hero-actions { display: flex; gap: 14px; }
 .button { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 26px; padding: 0 18px; border: 1px solid #111; font-size: 11px; font-weight: 520; transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease; }
