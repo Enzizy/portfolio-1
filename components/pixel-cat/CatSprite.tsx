@@ -66,8 +66,8 @@ export function CatSprite({ pose, tick }: { pose: CatPose; tick: number }) {
       style={isStandaloneSprite
         ? {
             backgroundImage: "url('/images/cat-hands-up.png')",
-            backgroundPosition: "center",
-            backgroundSize: "contain",
+            backgroundPosition: "center bottom",
+            backgroundSize: "auto 86%",
           }
         : { backgroundPosition: `${(column / 7) * 100}% ${verticalPosition}%` }}
     />
