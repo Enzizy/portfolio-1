@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 
 type FocusRect = { x: number; y: number; width: number; height: number };
 
@@ -12,7 +11,6 @@ const EXIT_START_MS = 1540;
 const EXIT_DURATION_MS = 440;
 
 export function PortfolioSplash() {
-  const [portalReady, setPortalReady] = useState(false);
   const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -20,10 +18,7 @@ export function PortfolioSplash() {
   const containerRef = useRef<HTMLDivElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
-  useEffect(() => setPortalReady(true), []);
-
   useEffect(() => {
-    if (!portalReady) return;
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -65,10 +60,10 @@ export function PortfolioSplash() {
       window.clearTimeout(finishTimer);
       releasePage();
     };
-  }, [portalReady]);
+  }, []);
 
   useEffect(() => {
-    if (!portalReady || !visible) return;
+    if (!visible) return;
     const container = containerRef.current;
     const word = wordRefs.current[currentIndex];
     if (!container || !word) return;
@@ -94,11 +89,11 @@ export function PortfolioSplash() {
     observer.observe(word);
     document.fonts?.ready.then(measure).catch(() => undefined);
     return () => observer.disconnect();
-  }, [currentIndex, portalReady, visible]);
+  }, [currentIndex, visible]);
 
-  if (!portalReady || !visible) return null;
+  if (!visible) return null;
 
-  return createPortal((
+  return (
     <motion.div
       className="portfolio-splash"
       initial={{ opacity: 1 }}
@@ -155,5 +150,5 @@ export function PortfolioSplash() {
 
       <div className="portfolio-splash__progress" aria-hidden="true"><span /></div>
     </motion.div>
-  ), document.documentElement);
+  );
 }

@@ -64,6 +64,7 @@ export function TargetCursor({
 
   useEffect(() => {
     const cursor = cursorRef.current;
+    const dot = dotRef.current;
     if (!cursor || !portalReady || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -229,7 +230,7 @@ export function TargetCursor({
       clearSpinTimer();
       spinRef.current?.kill();
       gsap.ticker.remove(tick);
-      gsap.killTweensOf([cursor, dotRef.current, ...corners]);
+      gsap.killTweensOf([cursor, dot, ...corners]);
       window.removeEventListener("pointermove", handlePointerMove);
       document.documentElement.removeEventListener("pointerleave", handlePointerLeave);
       document.documentElement.removeEventListener("pointerenter", handlePointerEnter);

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title description">
+  <title id="title">CCR operations dashboard illustration</title>
+  <desc id="description">An illustrative operations workspace showing purchase orders, deliveries, receivables, and an audit assistant without business records.</desc>
+  <rect width="1200" height="640" fill="#17231d"/>
+  <text x="1140" y="30" text-anchor="end" fill="#d5e6d0" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="1">ILLUSTRATION · NOT A SCREENSHOT</text>
+  <circle cx="1010" cy="70" r="280" fill="#a8d08d" opacity=".08"/>
+  <circle cx="100" cy="590" r="250" fill="#a8d08d" opacity=".06"/>
+  <rect x="58" y="48" width="1084" height="544" rx="24" fill="#f6f8f4"/>
+  <rect x="58" y="48" width="230" height="544" rx="24" fill="#e7eee5"/>
+  <rect x="270" y="48" width="18" height="544" fill="#e7eee5"/>
+  <rect x="90" y="82" width="42" height="42" rx="12" fill="#294b34"/>
+  <text x="111" y="109" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="15" font-weight="700">C</text>
+  <text x="145" y="99" fill="#1a2d21" font-family="Arial,sans-serif" font-size="17" font-weight="700">CCR</text>
+  <text x="145" y="116" fill="#607265" font-family="Arial,sans-serif" font-size="10" letter-spacing="1">OPERATIONS</text>
+  <rect x="82" y="164" width="178" height="38" rx="9" fill="#c9ddbd"/>
+  <text x="104" y="188" fill="#24432c" font-family="Arial,sans-serif" font-size="13" font-weight="700">Overview</text>
+  <text x="104" y="246" fill="#586b5c" font-family="Arial,sans-serif" font-size="13">Purchase orders</text>
+  <text x="104" y="290" fill="#586b5c" font-family="Arial,sans-serif" font-size="13">Deliveries</text>
+  <text x="104" y="334" fill="#586b5c" font-family="Arial,sans-serif" font-size="13">Receivables</text>
+  <text x="104" y="378" fill="#586b5c" font-family="Arial,sans-serif" font-size="13">Expenses</text>
+  <text x="104" y="422" fill="#586b5c" font-family="Arial,sans-serif" font-size="13">Audit assistant</text>
+  <text x="324" y="100" fill="#6b786e" font-family="Arial,sans-serif" font-size="11" letter-spacing="2">BUSINESS WORKFLOW</text>
+  <text x="324" y="135" fill="#1e3024" font-family="Arial,sans-serif" font-size="27" font-weight="700">Orders to collections, in one view.</text>
+  <rect x="324" y="170" width="235" height="112" rx="16" fill="#fff" stroke="#dce5da"/>
+  <text x="346" y="200" fill="#6a7b6e" font-family="Arial,sans-serif" font-size="12">Purchase orders</text>
+  <rect x="346" y="221" width="149" height="13" rx="6" fill="#b9d2af"/>
+  <rect x="346" y="244" width="105" height="8" rx="4" fill="#e4ece0"/>
+  <rect x="576" y="170" width="235" height="112" rx="16" fill="#fff" stroke="#dce5da"/>
+  <text x="598" y="200" fill="#6a7b6e" font-family="Arial,sans-serif" font-size="12">Delivery progress</text>
+  <rect x="598" y="221" width="187" height="13" rx="6" fill="#e1eadb"/>
+  <rect x="598" y="221" width="129" height="13" rx="6" fill="#80b56e"/>
+  <rect x="598" y="244" width="120" height="8" rx="4" fill="#e4ece0"/>
+  <rect x="828" y="170" width="274" height="112" rx="16" fill="#fff" stroke="#dce5da"/>
+  <text x="850" y="200" fill="#6a7b6e" font-family="Arial,sans-serif" font-size="12">Accounts receivable</text>
+  <rect x="850" y="221" width="192" height="13" rx="6" fill="#c8dcbc"/>
+  <rect x="850" y="244" width="141" height="8" rx="4" fill="#e4ece0"/>
+  <rect x="324" y="304" width="487" height="244" rx="16" fill="#fff" stroke="#dce5da"/>
+  <text x="348" y="340" fill="#223a2a" font-family="Arial,sans-serif" font-size="17" font-weight="700">Workflow status</text>
+  <text x="348" y="366" fill="#738075" font-family="Arial,sans-serif" font-size="12">From commitment to delivery and payment</text>
+  <line x1="380" y1="462" x2="751" y2="462" stroke="#dde8d9" stroke-width="5"/>
+  <circle cx="382" cy="462" r="22" fill="#5e9b57"/>
+  <circle cx="507" cy="462" r="22" fill="#78ad6a"/>
+  <circle cx="632" cy="462" r="22" fill="#97c28a"/>
+  <circle cx="754" cy="462" r="22" fill="#c7dbc0"/>
+  <text x="352" y="515" fill="#617365" font-family="Arial,sans-serif" font-size="11">ORDER</text>
+  <text x="478" y="515" fill="#617365" font-family="Arial,sans-serif" font-size="11">DELIVER</text>
+  <text x="610" y="515" fill="#617365" font-family="Arial,sans-serif" font-size="11">BILL</text>
+  <text x="733" y="515" fill="#617365" font-family="Arial,sans-serif" font-size="11">COLLECT</text>
+  <rect x="828" y="304" width="274" height="244" rx="16" fill="#274832"/>
+  <text x="852" y="343" fill="#a8d08d" font-family="Arial,sans-serif" font-size="11" letter-spacing="1">AI AUDIT ASSISTANT</text>
+  <text x="852" y="384" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Ask about your</text>
+  <text x="852" y="411" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">operations.</text>
+  <rect x="852" y="454" width="224" height="48" rx="11" fill="#f0f5ed"/>
+  <text x="869" y="484" fill="#5f7565" font-family="Arial,sans-serif" font-size="12">Review a question...</text>
+</svg>

@@ -31,6 +31,7 @@ export function CatChat() {
   const [catTick, setCatTick] = useState(0);
   const nextIdRef = useRef(2);
   const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,7 +56,10 @@ export function CatChat() {
   useEffect(() => {
     if (!isOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsOpen(false);
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        launcherRef.current?.focus();
+      }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
@@ -134,7 +138,7 @@ export function CatChat() {
                 <strong>ZB&apos;s Cat</strong>
                 <i><span /> Online</i>
               </span>
-              <button type="button" onClick={() => setIsOpen(false)} aria-label="Minimize chat">
+              <button type="button" onClick={() => { setIsOpen(false); launcherRef.current?.focus(); }} aria-label="Minimize chat">
                 <Minus size={17} />
               </button>
             </header>
@@ -188,6 +192,7 @@ export function CatChat() {
       </AnimatePresence>
 
       <motion.button
+        ref={launcherRef}
         className="cat-chat__launcher"
         type="button"
         aria-controls="cat-chat-panel"

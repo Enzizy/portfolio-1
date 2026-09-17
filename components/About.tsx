@@ -11,7 +11,7 @@ export function About() {
         <p>From business websites to custom software and AI automation, I enjoy transforming ideas into products that are simple, efficient, and impactful.</p>
         <p>I continuously explore emerging technologies in artificial intelligence, automation, and interactive web experiences.</p>
       </div>
-      <div className="services">
+      <div id="services" className="services">
         <h3>What I Do</h3>
         {services.map(({ icon: Icon, title, description }) => (
           <div className="service-row" key={title}>

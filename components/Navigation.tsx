@@ -113,8 +113,7 @@ export function Navigation() {
 
         <div className="desktop-nav">
           {navItems.map((item) => {
-            const target = item === "Services" ? "about" : item === "Skills" ? "skills" : item.toLowerCase();
-            return <a key={item} href={sectionHref(target)}>/{item.toUpperCase()}</a>;
+            return <a key={item} href={sectionHref(item.toLowerCase())}>/{item.toUpperCase()}</a>;
           })}
           <button className="command-trigger" type="button" onClick={openCommands} aria-label="Open command menu"><Command size={13} />CTRL K</button>
           <ThemeToggle />
@@ -146,8 +145,7 @@ export function Navigation() {
             transition={{ duration: 0.2 }}
           >
             {navItems.map((item) => {
-              const target = item === "Services" ? "about" : item === "Skills" ? "skills" : item.toLowerCase();
-              return <a key={item} href={sectionHref(target)} onClick={() => setIsOpen(false)}>/{item.toUpperCase()}</a>;
+              return <a key={item} href={sectionHref(item.toLowerCase())} onClick={() => setIsOpen(false)}>/{item.toUpperCase()}</a>;
             })}
             <button className="mobile-command-button" type="button" onClick={openCommands}><Command size={16} />/COMMAND MENU <kbd>CTRL K</kbd></button>
             <ThemeToggle mobile />

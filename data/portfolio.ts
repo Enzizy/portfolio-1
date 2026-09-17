@@ -59,12 +59,36 @@ export const projects = [
     visual: "roarly" as const,
     href: "/projects/roarly",
   },
+  {
+    number: "07",
+    title: "CCR",
+    description: "An internal operations system connecting purchase orders, deliveries, receivables, payments, expenses, and an AI assistant for audit guidance.",
+    technologies: ["Vue.js", "Supabase", "AI Assistant"],
+    visual: "ccr" as const,
+    href: "/projects/ccr",
+  },
+  {
+    number: "08",
+    title: "LifeDesk CRM",
+    description: "A personal prospecting workspace for discovering local businesses, reviewing AI-qualified leads, drafting outreach, and managing a sales pipeline.",
+    technologies: ["React", "Supabase", "Gemini"],
+    visual: "lifedesk-crm" as const,
+    href: "/projects/lifedesk-crm",
+  },
+  {
+    number: "09",
+    title: "LifeDesk",
+    description: "A local-first personal app for tasks, bills, budgets, investments, and review-before-save AI assistance.",
+    technologies: ["React Native", "Expo", "SQLite"],
+    visual: "lifedesk" as const,
+    href: "/projects/lifedesk",
+  },
 ] as const;
 
 export const stackGroups = [
-  { title: "Frontend", items: ["Vue.js", "React", "Flutter", "HTML", "CSS", "JavaScript", "TypeScript"] },
+  { title: "Frontend", items: ["Vue.js", "React", "React Native", "Expo", "Flutter", "HTML", "CSS", "JavaScript", "TypeScript"] },
   { title: "Backend", items: ["Node.js", "Express", "Python"] },
-  { title: "Database", items: ["Supabase", "Firebase", "MySQL"] },
+  { title: "Database", items: ["Supabase", "PostgreSQL", "SQLite", "Firebase", "MySQL"] },
   { title: "AI & Tools", items: ["OpenAI API", "Ollama", "ComfyUI", "Local LLMs", "Prompt Engineering"] },
   { title: "Tools & Others", items: ["Git", "Docker", "Figma", "WordPress", "Elementor"] },
 ] as const;

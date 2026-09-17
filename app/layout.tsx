@@ -46,6 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body id="top" className={GeistSans.className}>
+        <noscript><style>{".portfolio-splash{display:none!important}"}</style></noscript>
         <PortfolioSplash />
         <TargetCursor />
         <ThemeTransition />

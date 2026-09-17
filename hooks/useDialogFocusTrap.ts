@@ -27,6 +27,7 @@ export function useDialogFocusTrap(
     const previouslyFocused = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
+    const returnFocus = returnFocusRef?.current;
     const scrollPosition = { x: window.scrollX, y: window.scrollY };
     const previousRootOverflow = document.documentElement.style.overflow;
     const previousOverflow = document.body.style.overflow;
@@ -83,7 +84,7 @@ export function useDialogFocusTrap(
       document.body.style.top = previousTop;
       document.body.style.left = previousLeft;
       document.body.style.width = previousWidth;
-      (returnFocusRef?.current ?? previouslyFocused)?.focus({ preventScroll: true });
+      (returnFocus ?? previouslyFocused)?.focus({ preventScroll: true });
       window.scrollTo(scrollPosition.x, scrollPosition.y);
     };
   }, [dialogRef, initialFocusRef, isOpen, returnFocusRef]);

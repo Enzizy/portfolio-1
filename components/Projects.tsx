@@ -6,10 +6,10 @@ import { ProjectCard } from "./ProjectCard";
 import { SectionHeading } from "./SectionHeading";
 
 const featuredProjectHrefs = [
+  "/projects/ccr",
+  "/projects/lifedesk-crm",
+  "/projects/lifedesk",
   "/projects/joyno-hr",
-  "/projects/localaid",
-  "/projects/bookvoice",
-  "/projects/roarly",
 ] as const;
 
 export function Projects() {

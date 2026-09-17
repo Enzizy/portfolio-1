@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type ProjectVisualProps = {
-  variant: "dashboard" | "localaid" | "streetkings" | "furniture" | "bookvoice" | "roarly";
+  variant: "dashboard" | "localaid" | "streetkings" | "furniture" | "bookvoice" | "roarly" | "ccr" | "lifedesk-crm" | "lifedesk";
 };
 
 function LocalAidVisual() {
@@ -50,6 +50,9 @@ function WebsiteVisual({ src, alt, position = "center" }: { src: string; alt: st
 export function ProjectVisual({ variant }: ProjectVisualProps) {
   if (variant === "dashboard") return <DashboardVisual />;
   if (variant === "localaid") return <LocalAidVisual />;
+  if (variant === "ccr") return <WebsiteVisual src="/images/projects/ccr.svg" alt="Illustration of the CCR order-to-payment workflow" />;
+  if (variant === "lifedesk-crm") return <WebsiteVisual src="/images/projects/lifedesk-crm.png" alt="LifeDesk CRM empty-state workspace, with no prospect records" position="center top" />;
+  if (variant === "lifedesk") return <WebsiteVisual src="/images/projects/lifedesk.svg" alt="Illustration of LifeDesk's task, money, and AI assistance areas" />;
   if (variant === "streetkings") {
     return <WebsiteVisual src="/images/projects/street.png" alt="StreetKings PH automotive website home page" />;
   }
