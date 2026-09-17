@@ -70,6 +70,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .desktop-nav a { position: relative; padding: 8px 0; }
 .desktop-nav a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 2px; height: 1px; background: #111; transition: right 220ms ease; }
 .desktop-nav a:hover::after { right: 0; }
+.portfolio-version-switch { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid var(--page-border); border-radius: 999px; background: var(--surface); }
+.portfolio-version-switch a { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; min-height: 25px; padding: 3px 6px; border-radius: 999px; color: var(--muted-text); font: 10px/1 monospace; text-decoration: none; }
+.portfolio-version-switch a[aria-current="page"] { background: var(--page-text); color: var(--page-bg); }
+.desktop-nav .portfolio-version-switch a::after { display: none; }
+.portfolio-version-switch--mobile { display: none; }
 .menu-button { display: none; border: 0; background: transparent; padding: 8px; color: #111; }
 .play-button { display: inline-flex; align-items: center; gap: 6px; height: 29px; padding: 0 11px; border: 1px solid #d8d8d8; border-radius: 99px; background: transparent; color: #111; font: inherit; cursor: pointer; transition: 180ms ease; }
 .play-button:hover { color: #2563eb; border-color: #2563eb; transform: translateY(-1px); }
@@ -418,6 +423,7 @@ html[data-theme="dark"] .theme-toggle--mobile { border-color: var(--page-border)
   .page-shell, .nav-shell { width: min(100% - 36px, 540px); }
   .site-header { height: 66px; }
   .desktop-nav { display: none; }.menu-button { display: block; }
+  .portfolio-version-switch--mobile { display: block; margin-left: auto; margin-right: 8px; }
   .mobile-nav { display: grid; position: absolute; inset: 66px 0 auto; background: rgba(250,250,250,.97); border-bottom: 1px solid #e5e5e5; padding: 18px; gap: 0; backdrop-filter: blur(14px); }
   html[data-theme="dark"] .mobile-nav { border-color: var(--page-border); background: rgba(11,13,16,.97); }
   .mobile-nav a { padding: 14px; text-align: center; font-size: 13px; }

@@ -8,6 +8,7 @@ import { navItems } from "@/data/portfolio";
 import { unlockCatAudio } from "@/lib/catAudio";
 import { ArcadeGame } from "./ArcadeGame";
 import { CommandPalette } from "./CommandPalette";
+import { PortfolioVersionSwitch } from "./PortfolioVersionSwitch";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Navigation() {
@@ -115,10 +116,13 @@ export function Navigation() {
           {navItems.map((item) => {
             return <a key={item} href={sectionHref(item.toLowerCase())}>/{item.toUpperCase()}</a>;
           })}
+          <PortfolioVersionSwitch version={1} />
           <button className="command-trigger" type="button" onClick={openCommands} aria-label="Open command menu"><Command size={13} />CTRL K</button>
           <ThemeToggle />
           <button className="play-button" type="button" onClick={openGame}><Gamepad2 size={14} />PLAY</button>
         </div>
+
+        <div className="portfolio-version-switch--mobile"><PortfolioVersionSwitch version={1} /></div>
 
         <button
           ref={menuButtonRef}
