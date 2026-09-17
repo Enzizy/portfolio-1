@@ -1,13 +1,14 @@
-import { Bot, Code2, PenTool, Smartphone, TrendingUp } from "lucide-react";
+import { Bot, Code2, LayoutTemplate, PenTool, Smartphone, TrendingUp } from "lucide-react";
 
 export const navItems = ["About", "Projects", "Services", "Skills", "Contact"] as const;
 
 export const services = [
-  { icon: Code2, title: "Web Development", description: "Modern, responsive websites and web applications." },
-  { icon: Bot, title: "AI Solutions", description: "AI chatbots, automation, and local AI integrations." },
-  { icon: Smartphone, title: "Mobile Apps", description: "Cross-platform apps built with Flutter." },
-  { icon: PenTool, title: "UI/UX Design", description: "Clean, user-focused interfaces and experiences." },
-  { icon: TrendingUp, title: "SEO & Performance", description: "Fast, optimized websites built for search engines." },
+  { icon: Code2, title: "Web Development", previewTitle: "Web Apps", description: "Modern, responsive websites and web applications." },
+  { icon: LayoutTemplate, title: "WordPress & Landing Pages", previewTitle: "WordPress", description: "Business sites and focused pages designed to turn visits into inquiries." },
+  { icon: Bot, title: "AI Solutions", previewTitle: "AI Tools", description: "AI chatbots, automation, and local AI integrations." },
+  { icon: Smartphone, title: "Mobile Apps", previewTitle: "Mobile Apps", description: "Native and cross-platform apps built with React Native, Flutter, and Kotlin." },
+  { icon: PenTool, title: "UI/UX Design", previewTitle: "UI/UX Design", description: "Clean, user-focused interfaces and experiences." },
+  { icon: TrendingUp, title: "SEO & Performance", previewTitle: "SEO & Speed", description: "Fast, optimized websites built for search engines." },
 ] as const;
 
 export const projects = [
@@ -71,7 +72,7 @@ export const projects = [
     number: "08",
     title: "LifeDesk CRM",
     description: "A personal prospecting workspace for discovering local businesses, reviewing AI-qualified leads, drafting outreach, and managing a sales pipeline.",
-    technologies: ["React", "Supabase", "Gemini"],
+    technologies: ["React", "Supabase", "AI workflows"],
     visual: "lifedesk-crm" as const,
     href: "/projects/lifedesk-crm",
   },
@@ -86,9 +87,9 @@ export const projects = [
 ] as const;
 
 export const stackGroups = [
-  { title: "Frontend", items: ["Vue.js", "React", "React Native", "Expo", "Flutter", "HTML", "CSS", "JavaScript", "TypeScript"] },
-  { title: "Backend", items: ["Node.js", "Express", "Python"] },
-  { title: "Database", items: ["Supabase", "PostgreSQL", "SQLite", "Firebase", "MySQL"] },
-  { title: "AI & Tools", items: ["OpenAI API", "Ollama", "ComfyUI", "Local LLMs", "Prompt Engineering"] },
-  { title: "Tools & Others", items: ["Git", "Docker", "Figma", "WordPress", "Elementor"] },
+  { title: "Web", items: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Vue", "Tailwind CSS", "Vite"] },
+  { title: "Mobile", items: ["React Native", "Expo", "Flutter", "Dart", "Kotlin"] },
+  { title: "Backend & Data", items: ["Node.js", "Express", "Python", "REST APIs", "PostgreSQL", "Supabase", "Firebase Firestore", "SQLite"] },
+  { title: "AI Tools", items: ["AI APIs", "Local AI", "ComfyUI", "LM Studio", "Ollama"] },
+  { title: "CMS & Workflow", items: ["WordPress", "Elementor", "Figma", "Git", "GitHub", "Docker"] },
 ] as const;

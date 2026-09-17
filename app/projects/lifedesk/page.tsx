@@ -33,7 +33,7 @@ const project: PrivateProjectDetails = {
   architecture: [
     { label: "Mobile", value: "Expo SDK 57, React Native, and Expo Router" },
     { label: "Storage", value: "On-device SQLite with monetary amounts stored in integer centavos" },
-    { label: "Assistant", value: "Gemini-backed suggestions reviewed before saving" },
+    { label: "Assistant", value: "AI suggestions reviewed before saving" },
     { label: "Market data", value: "Optional Twelve Data quotes with recorded source and update time" },
   ],
   href: "/projects/lifedesk",

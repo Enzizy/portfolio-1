@@ -80,6 +80,7 @@ export function ContactForm() {
           <option>AI solution</option>
           <option>Mobile application</option>
           <option>Business website</option>
+          <option>WordPress site or landing page</option>
           <option>UI/UX design</option>
           <option>Something else</option>
         </select>

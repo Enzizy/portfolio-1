@@ -12,8 +12,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Zhyronne Batican — Full Stack Developer",
   description:
-    "Full stack developer, AI engineer, and UI/UX designer building purposeful digital products.",
-  keywords: ["Full Stack Developer", "AI Engineer", "UI/UX Designer", "Zhyronne Batican"],
+    "Full stack developer building web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
+  keywords: ["Full Stack Developer", "WordPress Developer", "Landing Pages", "AI Engineer", "UI/UX Designer", "Zhyronne Batican"],
   alternates: {
     canonical: "/",
   },
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Zhyronne Batican — Full Stack Developer",
-    description: "Modern web applications, AI-powered tools, and thoughtful digital experiences.",
+    description: "Web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
     type: "website",
     url: "/",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Zhyronne Batican portfolio" }],
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Zhyronne Batican — Full Stack Developer",
-    description: "Modern web applications, AI-powered tools, and thoughtful digital experiences.",
+    description: "Web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
     images: ["/opengraph-image"],
   },
 };

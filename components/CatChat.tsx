@@ -186,7 +186,7 @@ export function CatChat() {
                 <ArrowUp size={17} />
               </button>
             </form>
-            <p className="cat-chat__note">Powered by Gemini · Answers may be imperfect</p>
+            <p className="cat-chat__note">AI assistant · Answers may be imperfect</p>
           </motion.section>
         )}
       </AnimatePresence>

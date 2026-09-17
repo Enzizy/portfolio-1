@@ -8,7 +8,7 @@ const project: PrivateProjectDetails = {
   introduction: "A personal CRM that turns local business discovery into a reviewed prospect list and organized outreach workflow.",
   role: "Full-stack product development",
   platform: "Private web application",
-  coreStack: "React · Supabase · Gemini",
+  coreStack: "React · Supabase · AI workflows",
   image: "/images/projects/lifedesk-crm.png",
   imageAlt: "LifeDesk CRM empty-state home page with example searches and no prospect records",
   imageNote: "Current app screenshot from its empty-state development preview. No prospect or contact records are shown.",
@@ -30,7 +30,7 @@ const project: PrivateProjectDetails = {
     { label: "Interface", value: "React 19, TypeScript, and Vite" },
     { label: "Data", value: "Supabase Postgres with row-level security" },
     { label: "Discovery", value: "Geoapify candidate search and Google Places enrichment" },
-    { label: "AI", value: "Gemini through Supabase Edge Functions, with human approval in the workflow" },
+    { label: "AI", value: "AI assistance through secure server functions, with human approval in the workflow" },
   ],
   href: "/projects/lifedesk-crm",
 };

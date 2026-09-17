@@ -4,40 +4,40 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
+  Atom,
+  Braces,
   Code2,
+  Database,
   Facebook,
   Folder,
   Github,
-  Home,
+  Globe,
   Layers3,
   Linkedin,
   Mail,
   MapPin,
   MessageCircle,
+  Palette,
+  Server,
   Sparkles,
+  Smartphone,
   UserRound,
+  Wind,
+  Zap,
 } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { PortfolioVersionSwitch } from "@/components/PortfolioVersionSwitch";
 import { ProjectVisual } from "@/components/ProjectVisual";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { projects, services, stackGroups } from "@/data/portfolio";
+import { V2SectionNav } from "./V2SectionNav";
 import "./v2.css";
 
 export const metadata: Metadata = {
   title: "Zhyronne Batican — Portfolio V2",
-  description: "A second way to explore Zhyronne Batican's software, AI, mobile, and design work.",
+  description: "Explore Zhyronne Batican's web apps, WordPress sites, landing pages, mobile tools, and AI-assisted work.",
   alternates: { canonical: "/v2" },
 };
-
-const nav = [
-  { label: "Home", href: "#home", icon: Home },
-  { label: "Projects", href: "#projects", icon: Folder },
-  { label: "Services", href: "#services", icon: Layers3 },
-  { label: "Skills", href: "#skills", icon: Code2 },
-  { label: "About", href: "#about", icon: UserRound },
-  { label: "Contact", href: "#contact", icon: MessageCircle },
-] as const;
 
 const socials = [
   { label: "GitHub", href: "https://github.com/Enzizy", icon: Github },
@@ -46,7 +46,26 @@ const socials = [
   { label: "Email", href: "mailto:zhyronnebatican@gmail.com", icon: Mail },
 ] as const;
 
-const dailyTools = ["React", "Vue", "TypeScript", "Supabase", "Expo", "Gemini", "Figma"];
+const featuredTools = [
+  { label: "HTML", icon: Code2 },
+  { label: "CSS", icon: Palette },
+  { label: "JavaScript", icon: Braces },
+  { label: "TypeScript", icon: Braces },
+  { label: "React", icon: Atom },
+  { label: "Vue", icon: Layers3 },
+  { label: "React Native", icon: Smartphone },
+  { label: "Flutter", icon: Smartphone },
+  { label: "Tailwind CSS", icon: Wind },
+  { label: "Vite", icon: Zap },
+  { label: "Node.js", icon: Server },
+  { label: "Python", icon: Code2 },
+  { label: "WordPress", icon: Globe },
+  { label: "PostgreSQL", icon: Database },
+  { label: "Supabase", icon: Database },
+  { label: "Firebase", icon: Database },
+  { label: "GitHub", icon: Github },
+  { label: "AI workflows", icon: Sparkles },
+] as const;
 
 function V2Sidebar() {
   return (
@@ -68,13 +87,7 @@ function V2Sidebar() {
         <PortfolioVersionSwitch version={2} />
       </div>
 
-      <nav className="v2-side-nav" aria-label="Version 2 sections">
-        {nav.map(({ label, href, icon: Icon }, index) => (
-          <a key={label} href={href} className={index === 0 ? "v2-side-nav__home" : undefined}>
-            <Icon size={18} aria-hidden="true" /><span>{label}</span>
-          </a>
-        ))}
-      </nav>
+      <V2SectionNav placement="sidebar" />
       <div className="v2-sidebar-footer">
         <span className="v2-status-dot" aria-hidden="true" /> Open to selected freelance work
         <small>© {new Date().getFullYear()} Zhyronne Batican</small>
@@ -95,25 +108,22 @@ function V2MobileHeader() {
   );
 }
 
-function V2MobileNav() {
-  const items = [nav[0], nav[1], nav[5], nav[3], nav[4]];
-  return (
-    <nav className="v2-bottom-nav" aria-label="Version 2 mobile navigation">
-      {items.map(({ label, href, icon: Icon }) => (
-        <a key={label} href={href} className={label === "Contact" ? "v2-bottom-nav__contact" : undefined}>
-          <Icon size={20} aria-hidden="true" /><span>{label === "Projects" ? "Work" : label}</span>
-        </a>
-      ))}
-    </nav>
-  );
-}
-
 function V2ToolBar() {
   return (
     <div className="v2-tool-bar" aria-label="Tools I work with">
-      <div className="v2-tool-bar__label"><span>DAILY DRIVERS</span><strong>Tools I work with</strong></div>
-      <div className="v2-tool-bar__track">
-        {dailyTools.map((tool) => <span key={tool}><i aria-hidden="true" />{tool}</span>)}
+      <div className="v2-tool-bar__label"><span>BUILT WITH</span><strong>My working stack</strong></div>
+      <div className="v2-tool-bar__track" role="list">
+        <div className="v2-tool-bar__marquee">
+          {[false, true].map((duplicate) => (
+            <div className="v2-tool-bar__set" key={String(duplicate)} aria-hidden={duplicate || undefined}>
+              {featuredTools.map(({ label, icon: Icon }) => (
+                <span className="v2-tool-bar__item" role={duplicate ? undefined : "listitem"} key={label}>
+                  <Icon size={19} strokeWidth={1.9} aria-hidden="true" />{label}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -124,9 +134,9 @@ function V2Dashboard() {
     <section id="home" className="v2-dashboard" aria-labelledby="v2-headline">
       <div className="v2-intro">
         <div>
-          <span className="v2-eyebrow">FULL STACK DEVELOPMENT · AI · PRODUCT DESIGN</span>
+          <span className="v2-eyebrow">FULL STACK DEVELOPMENT · WORDPRESS · AI</span>
           <h2 id="v2-headline">Useful software.{" "}<br /><em>Thoughtfully built.</em></h2>
-          <p>I turn practical problems into clear web apps, mobile tools, and AI-assisted workflows.</p>
+          <p>I build web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.</p>
         </div>
         <a className="v2-pill-button" href="#contact">Get in touch <ArrowUpRight size={17} /></a>
       </div>
@@ -158,20 +168,20 @@ function V2Dashboard() {
         <a href="#skills" className="v2-card v2-card--ai">
           <span className="v2-card__heading"><span className="v2-card__icon"><Sparkles size={19} /></span><strong>AI Builds</strong><ArrowUpRight size={16} /></span>
           <p>Assistance that fits the work, with people in control of important decisions.</p>
-          <span className="v2-ai-chips"><span>Gemini apps</span><span>Local AI</span><span>Workflow helpers</span></span>
+          <span className="v2-ai-chips"><span>AI-assisted apps</span><span>Local AI</span><span>Workflow helpers</span></span>
         </a>
 
         <a href="#skills" className="v2-card v2-card--stack">
           <span className="v2-card__heading"><span className="v2-card__icon"><Code2 size={19} /></span><strong>Toolbox</strong><ArrowUpRight size={16} /></span>
           <p>Modern tools, chosen to suit the product.</p>
-          <span className="v2-stack-mark"><Code2 size={36} /><small>React · Vue · Expo</small></span>
+          <span className="v2-stack-mark"><Code2 size={36} /><small>Web · Mobile · Data</small></span>
         </a>
 
         <a href="#services" className="v2-card v2-card--services">
           <span className="v2-card__heading"><span className="v2-card__icon"><Layers3 size={19} /></span><strong>Services</strong><ArrowUpRight size={16} /></span>
           <p>What I can build with you.</p>
           <span className="v2-service-list">
-            {services.map(({ title }, index) => <span key={title}><i>{String(index + 1).padStart(2, "0")}</i>{title}</span>)}
+            {services.map(({ title, previewTitle }, index) => <span key={title}><i>{String(index + 1).padStart(2, "0")}</i>{previewTitle}</span>)}
           </span>
         </a>
 
@@ -191,7 +201,7 @@ function V2Dashboard() {
             <strong>Products with a purpose</strong><small>See the systems I&apos;ve built.</small>
           </a>
           <a href="#services" className="v2-explore-card v2-explore-card--services">
-            <span>02 SERVICES</span><Layers3 size={62} /><strong>What I can build</strong><small>Web, mobile, AI, and design.</small>
+            <span>02 SERVICES</span><Layers3 size={62} /><strong>What I can build</strong><small>Web, WordPress, mobile, AI, and design.</small>
           </a>
           <a href="#about" className="v2-explore-card v2-explore-card--about">
             <span>03 ABOUT</span><Image src="/images/me.jpg" alt="" fill sizes="240px" /><strong>Meet Zhyronne</strong><small>How I think and work.</small>
@@ -261,7 +271,7 @@ export default function PortfolioV2Page() {
         <V2Dashboard />
         <V2Sections />
       </main>
-      <V2MobileNav />
+      <V2SectionNav placement="mobile" />
     </div>
   );
 }

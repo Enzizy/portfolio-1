@@ -41,8 +41,7 @@ export function Hero() {
           />
         </div>
         <p className="hero-description">
-          I build modern web applications, AI-powered tools, and digital experiences that are fast,
-          scalable, and designed with purpose.
+          I build custom web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.
         </p>
         <div className="hero-actions">
           <a className="button button--dark" href="#projects" data-cat-perch data-cat-zone="top" data-cat-kind="button">View Projects <ArrowUpRight size={15} /></a>
