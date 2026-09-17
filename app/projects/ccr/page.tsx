@@ -9,9 +9,9 @@ const project: PrivateProjectDetails = {
   role: "Full-stack product development",
   platform: "Private web application",
   coreStack: "Vue 3 · Supabase · AI assistant",
-  image: "/images/projects/ccr.svg",
-  imageAlt: "Illustration of CCR's order, delivery, billing, and payment workflow; no business records are shown",
-  imageNote: "Illustrative workflow, not a screenshot. Business records are private.",
+  image: "/images/projects/ccr.png",
+  imageAlt: "CCR's actual dashboard running with a fresh local database and no business records",
+  imageNote: "Actual CCR dashboard, captured in local demo mode with an empty database. No business records are shown.",
   overview: [
     "CCR brings daily business operations into one connected workflow so an order can be followed through fulfillment and collection.",
     "It links purchase orders to partial deliveries and delivery receipts, then to statements of account and payments. The system also covers expenses, trips, payroll advances, delivery issues, and financial summaries.",

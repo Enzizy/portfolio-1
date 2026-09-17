@@ -11,7 +11,7 @@ const project: PrivateProjectDetails = {
   coreStack: "React · Supabase · Gemini",
   image: "/images/projects/lifedesk-crm.png",
   imageAlt: "LifeDesk CRM empty-state home page with example searches and no prospect records",
-  imageNote: "Actual empty-state screenshot. No prospect or contact records are shown.",
+  imageNote: "Current app screenshot from its empty-state development preview. No prospect or contact records are shown.",
   imageFit: "cover",
   overview: [
     "LifeDesk CRM helps me find businesses in a chosen area, assess whether they fit my services, and prepare useful context for a personal sales conversation.",

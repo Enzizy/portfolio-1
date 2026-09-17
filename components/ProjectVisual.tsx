@@ -33,6 +33,20 @@ function DashboardVisual() {
   );
 }
 
+function LifeDeskVisual() {
+  return (
+    <div className="visual visual--lifedesk">
+      <Image
+        src="/images/projects/lifedesk-home.png"
+        alt="LifeDesk home screen with an empty local wallet and pinned actions"
+        width={430}
+        height={930}
+        sizes="(max-width: 767px) 42vw, 180px"
+      />
+    </div>
+  );
+}
+
 function WebsiteVisual({ src, alt, position = "center" }: { src: string; alt: string; position?: string }) {
   return (
     <div className="visual visual--website">
@@ -50,9 +64,9 @@ function WebsiteVisual({ src, alt, position = "center" }: { src: string; alt: st
 export function ProjectVisual({ variant }: ProjectVisualProps) {
   if (variant === "dashboard") return <DashboardVisual />;
   if (variant === "localaid") return <LocalAidVisual />;
-  if (variant === "ccr") return <WebsiteVisual src="/images/projects/ccr.svg" alt="Illustration of the CCR order-to-payment workflow" />;
+  if (variant === "ccr") return <WebsiteVisual src="/images/projects/ccr.png" alt="CCR local demo dashboard with empty business records" />;
   if (variant === "lifedesk-crm") return <WebsiteVisual src="/images/projects/lifedesk-crm.png" alt="LifeDesk CRM empty-state workspace, with no prospect records" position="center top" />;
-  if (variant === "lifedesk") return <WebsiteVisual src="/images/projects/lifedesk.svg" alt="Illustration of LifeDesk's task, money, and AI assistance areas" />;
+  if (variant === "lifedesk") return <LifeDeskVisual />;
   if (variant === "streetkings") {
     return <WebsiteVisual src="/images/projects/street.png" alt="StreetKings PH automotive website home page" />;
   }

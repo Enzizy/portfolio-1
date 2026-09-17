@@ -17,12 +17,7 @@ export function ProjectCard({ project }: { project: Project }) {
         <h3>{project.title}</h3>
         <p>{project.description}</p>
       </div>
-      <div className="project-image">
-        <ProjectVisual variant={project.visual} />
-        {(project.visual === "ccr" || project.visual === "lifedesk") && (
-          <span className="project-image__note">Illustration</span>
-        )}
-      </div>
+      <div className="project-image"><ProjectVisual variant={project.visual} /></div>
       <div className="project-footer">
         <div>{project.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div>
         <ArrowRight size={20} aria-hidden="true" />

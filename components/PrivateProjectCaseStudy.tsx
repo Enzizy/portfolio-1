@@ -16,7 +16,8 @@ export type PrivateProjectDetails = {
   image: string;
   imageAlt: string;
   imageNote: string;
-  imageFit?: "contain" | "cover";
+  imageFit?: "contain" | "cover" | "mobile";
+  additionalImages?: readonly { src: string; alt: string }[];
   overview: readonly string[];
   features: readonly string[];
   architecture: readonly { label: string; value: string }[];
@@ -25,6 +26,7 @@ export type PrivateProjectDetails = {
 
 export function PrivateProjectCaseStudy({ project }: { project: PrivateProjectDetails }) {
   const sectionId = project.href.split("/").at(-1);
+  const screenshots = [{ src: project.image, alt: project.imageAlt }, ...(project.additionalImages ?? [])];
 
   return (
     <>
@@ -49,15 +51,23 @@ export function PrivateProjectCaseStudy({ project }: { project: PrivateProjectDe
           </dl>
         </header>
 
-        <figure className={`case-study__hero case-study__hero--captioned${project.imageFit === "cover" ? " case-study__hero--screenshot" : ""}`}>
-          <Image
-            src={project.image}
-            alt={project.imageAlt}
-            width={1200}
-            height={640}
-            sizes="(max-width: 948px) calc(100vw - 48px), 900px"
-            priority
-          />
+        <figure className={`case-study__hero case-study__hero--captioned${project.imageFit === "cover" ? " case-study__hero--screenshot" : ""}${project.imageFit === "mobile" ? " case-study__hero--mobile-screens" : ""}`}>
+          {project.imageFit === "mobile" ? (
+            <div className="case-study__mobile-shots">
+              {screenshots.map(({ src, alt }, index) => (
+                <Image key={src} src={src} alt={alt} width={430} height={930} sizes="(max-width: 640px) 72vw, 280px" priority={index === 0} />
+              ))}
+            </div>
+          ) : (
+            <Image
+              src={project.image}
+              alt={project.imageAlt}
+              width={1200}
+              height={640}
+              sizes="(max-width: 948px) calc(100vw - 48px), 900px"
+              priority
+            />
+          )}
           <figcaption>{project.imageNote}</figcaption>
         </figure>
 

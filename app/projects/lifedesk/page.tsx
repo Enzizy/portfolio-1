@@ -9,9 +9,14 @@ const project: PrivateProjectDetails = {
   role: "Mobile product development",
   platform: "Personal Android application",
   coreStack: "React Native · Expo · SQLite",
-  image: "/images/projects/lifedesk.svg",
-  imageAlt: "Illustration of LifeDesk's tasks, money, investments, and AI assistant; no personal records are shown",
-  imageNote: "Illustrative feature overview, not an app screenshot. Personal records are private.",
+  image: "/images/projects/lifedesk-home.png",
+  imageAlt: "Actual LifeDesk home screen in an empty local web session",
+  imageNote: "Actual LifeDesk home, wallet, and tasks screens captured from the web build with empty local records.",
+  imageFit: "mobile",
+  additionalImages: [
+    { src: "/images/projects/lifedesk-wallet.png", alt: "LifeDesk wallet screen with no transactions or investment positions" },
+    { src: "/images/projects/lifedesk-tasks.png", alt: "LifeDesk tasks screen with no saved tasks" },
+  ],
   overview: [
     "LifeDesk is my local-first personal command center for staying on top of what I need to do and where my money stands.",
     "It brings tasks, reminders, projects, income, expenses, bills, budgets, and recorded investment positions into one app. Investment values are estimates with a source and timestamp, rather than brokerage account balances.",
