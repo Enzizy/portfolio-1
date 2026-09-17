@@ -96,6 +96,9 @@ html[data-theme="dark"] .v2-shell {
 .v2-tool-bar__set { display: flex; flex: 0 0 auto; align-items: center; }
 .v2-tool-bar__item { display: inline-flex; align-items: center; flex: 0 0 auto; gap: 9px; min-height: 46px; padding: 0 18px; border-right: 1px solid var(--v2-border); font-size: 13px; font-weight: 700; white-space: nowrap; }
 .v2-tool-bar__item svg { flex: 0 0 auto; color: var(--v2-accent-text); }
+.v2-tool-bar__logo { display: block; flex: 0 0 auto; width: 19px; height: 19px; object-fit: contain; }
+html[data-theme="dark"] .v2-tool-bar__logo--github,
+html[data-theme="dark"] .v2-tool-bar__logo--wordpress { filter: brightness(0) invert(1); }
 @keyframes v2-stack-scroll { to { transform: translateX(-50%); } }
 
 .v2-bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: 290px 265px; gap: 14px; padding: 18px; border: 1px solid color-mix(in srgb, var(--v2-accent) 22%, var(--v2-border)); border-radius: 28px; background: linear-gradient(125deg, var(--v2-surface) 15%, var(--v2-accent-soft)); box-shadow: 0 25px 45px -36px rgba(20,36,58,.38); }
@@ -201,6 +204,26 @@ html[data-theme="dark"] .v2-shell ~ .cat-chat .cat-chat__prompts button:hover { 
   .v2-work-grid, .v2-detail-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 
+@media (min-width: 768px) and (max-height: 820px) {
+  .v2-sidebar { min-height: 0; padding-block: 18px 20px; }
+  .v2-portrait { width: 118px; height: 118px; margin: 10px auto; }
+  .v2-identity > p { margin-bottom: 12px; }
+  .v2-socials { gap: 7px; }
+  .v2-socials a, .v2-shell .theme-toggle { width: 36px; height: 36px; }
+  .v2-identity .portfolio-version-switch { margin-top: 11px; }
+  .v2-side-nav { margin-top: 18px; padding-top: 12px; }
+  .v2-side-nav a { gap: 14px; min-height: 42px; }
+  .v2-sidebar-footer { padding-top: 14px; }
+}
+
+@media (min-width: 768px) and (max-height: 680px) {
+  .v2-sidebar { padding-block: 12px; }
+  .v2-portrait { width: 92px; height: 92px; margin: 6px auto; }
+  .v2-side-nav { margin-top: 10px; padding-top: 8px; }
+  .v2-side-nav a { min-height: 36px; }
+  .v2-sidebar-footer { padding-top: 8px; }
+}
+
 @media (max-width: 767px) {
   .v2-shell { display: block; min-height: 100dvh; padding-bottom: 110px; }
   .v2-sidebar { display: none; }
@@ -233,6 +256,7 @@ html[data-theme="dark"] .v2-shell ~ .cat-chat .cat-chat__prompts button:hover { 
   .v2-tool-bar__track { min-height: 40px; margin-top: 9px; }
   .v2-tool-bar__item { min-height: 38px; padding-inline: 13px; font-size: 11px; }
   .v2-tool-bar__item svg { width: 16px; height: 16px; }
+  .v2-tool-bar__logo { width: 16px; height: 16px; }
   .v2-bento { display: none; }
   .v2-mobile-explore { display: block; }
   .v2-mobile-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 13px; }

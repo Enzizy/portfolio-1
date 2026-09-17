@@ -4,26 +4,17 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
-  Atom,
-  Braces,
   Code2,
-  Database,
   Facebook,
   Folder,
   Github,
-  Globe,
   Layers3,
   Linkedin,
   Mail,
   MapPin,
   MessageCircle,
-  Palette,
-  Server,
   Sparkles,
-  Smartphone,
   UserRound,
-  Wind,
-  Zap,
 } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { PortfolioVersionSwitch } from "@/components/PortfolioVersionSwitch";
@@ -47,24 +38,24 @@ const socials = [
 ] as const;
 
 const featuredTools = [
-  { label: "HTML", icon: Code2 },
-  { label: "CSS", icon: Palette },
-  { label: "JavaScript", icon: Braces },
-  { label: "TypeScript", icon: Braces },
-  { label: "React", icon: Atom },
-  { label: "Vue", icon: Layers3 },
-  { label: "React Native", icon: Smartphone },
-  { label: "Flutter", icon: Smartphone },
-  { label: "Tailwind CSS", icon: Wind },
-  { label: "Vite", icon: Zap },
-  { label: "Node.js", icon: Server },
-  { label: "Python", icon: Code2 },
-  { label: "WordPress", icon: Globe },
-  { label: "PostgreSQL", icon: Database },
-  { label: "Supabase", icon: Database },
-  { label: "Firebase", icon: Database },
-  { label: "GitHub", icon: Github },
-  { label: "AI workflows", icon: Sparkles },
+  { label: "HTML", logo: "html5" },
+  { label: "CSS", logo: "css3" },
+  { label: "JavaScript", logo: "javascript" },
+  { label: "TypeScript", logo: "typescript" },
+  { label: "React", logo: "react" },
+  { label: "Vue", logo: "vuejs" },
+  { label: "React Native", logo: "reactnative" },
+  { label: "Flutter", logo: "flutter" },
+  { label: "Tailwind CSS", logo: "tailwindcss" },
+  { label: "Vite", logo: "vitejs" },
+  { label: "Node.js", logo: "nodejs" },
+  { label: "Python", logo: "python" },
+  { label: "WordPress", logo: "wordpress" },
+  { label: "PostgreSQL", logo: "postgresql" },
+  { label: "Supabase", logo: "supabase" },
+  { label: "Firebase", logo: "firebase" },
+  { label: "GitHub", logo: "github" },
+  { label: "AI workflows", logo: null },
 ] as const;
 
 function V2Sidebar() {
@@ -116,9 +107,9 @@ function V2ToolBar() {
         <div className="v2-tool-bar__marquee">
           {[false, true].map((duplicate) => (
             <div className="v2-tool-bar__set" key={String(duplicate)} aria-hidden={duplicate || undefined}>
-              {featuredTools.map(({ label, icon: Icon }) => (
+              {featuredTools.map(({ label, logo }) => (
                 <span className="v2-tool-bar__item" role={duplicate ? undefined : "listitem"} key={label}>
-                  <Icon size={19} strokeWidth={1.9} aria-hidden="true" />{label}
+                  {logo ? <Image className={`v2-tool-bar__logo v2-tool-bar__logo--${logo}`} src={`/icons/stacks/${logo}.svg`} width={19} height={19} alt="" loading="eager" /> : <Sparkles size={19} strokeWidth={1.9} aria-hidden="true" />}{label}
                 </span>
               ))}
             </div>
