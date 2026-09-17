@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Check, ExternalLink } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { CaseStudyStory } from "@/components/CaseStudyStory";
 import { Navigation } from "@/components/Navigation";
 import { ProjectNavigation } from "@/components/ProjectNavigation";
 import { createProjectMetadata } from "@/lib/metadata";
@@ -76,29 +77,11 @@ export default function LocalAidPage() {
           />
         </figure>
 
-        <section className="case-study__overview" aria-labelledby="localaid-overview">
-          <div>
-            <span>// 01</span>
-            <h2 id="localaid-overview">Overview</h2>
-          </div>
-          <div>
-            <p className="case-study__lead">
-              LocalAid turns informal community support into a clear request,
-              response, conversation, and fulfillment workflow.
-            </p>
-            <p>
-              Residents can publish time-sensitive needs with categories, urgency,
-              duration, and barangay-level location information. Other users can
-              discover relevant requests, offer assistance, and coordinate directly
-              through request-linked conversations.
-            </p>
-            <p>
-              The experience builds trust through profile verification, ratings,
-              help points, and a leaderboard while Firebase services keep requests,
-              conversations, media, and notifications synchronized.
-            </p>
-          </div>
-        </section>
+        <CaseStudyStory id="localaid-story" story={{
+          challenge: "When someone nearby needs help, a general social post can be hard to find, assess, and follow through. The app needed to connect local requests with people able to respond while supporting trust.",
+          decisions: "I organized requests by urgency, category, duration, and barangay, then linked each offer of help to a direct conversation. Verification, ratings, and a fulfillment state make the exchange more accountable.",
+          result: "LocalAid gives residents a place to request assistance, discover nearby needs, coordinate in real time, and mark a request complete with feedback for the helper.",
+        }} />
 
         <section className="case-study__features" aria-labelledby="localaid-features">
           <div className="case-study__section-heading">

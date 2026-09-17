@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { CaseStudyStory } from "@/components/CaseStudyStory";
 import { Navigation } from "@/components/Navigation";
 import { ProjectNavigation } from "@/components/ProjectNavigation";
 import { createProjectMetadata } from "@/lib/metadata";
@@ -76,28 +77,11 @@ export default function BookVoicePage() {
           />
         </figure>
 
-        <section className="case-study__overview" aria-labelledby="bookvoice-overview">
-          <div>
-            <span>// 01</span>
-            <h2 id="bookvoice-overview">Overview</h2>
-          </div>
-          <div>
-            <p className="case-study__lead">
-              BookVoice combines document preparation, local speech synthesis, and
-              audio arrangement in one privacy-conscious desktop workflow.
-            </p>
-            <p>
-              I worked across the Electron interface, secure renderer-to-system bridge,
-              persistent Python speech pipeline, first-run runtime provisioning,
-              chapter-oriented generation, and three-track audio editor.
-            </p>
-            <p>
-              Source documents and narration stay on the user&apos;s workstation. After
-              initial engine and model downloads, the core workflow can run offline
-              without accounts, a database, or a hosted backend.
-            </p>
-          </div>
-        </section>
+        <CaseStudyStory id="bookvoice-story" story={{
+          challenge: "Turning a long document into an audiobook usually means moving between text cleanup, speech generation, and audio editing tools. I wanted a private workflow that could handle all three on one computer.",
+          decisions: "I split generation by chapter so long jobs can show progress, recover partial work, and be revised. An Electron interface coordinates a local Python speech worker and a three-track editor for narration, ambience, and effects.",
+          result: "BookVoice can take a document through local narration and audio arrangement to an exportable MP3. After the initial model download, the core workflow runs without an account or hosted backend.",
+        }} />
 
         <section className="case-study__features" aria-labelledby="bookvoice-features">
           <div className="case-study__section-heading">

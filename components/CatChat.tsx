@@ -23,6 +23,15 @@ const QUICK_PROMPTS = [
   "How can I hire him?",
 ] as const;
 
+function focusChatTrigger(launcher: HTMLButtonElement | null) {
+  const mobileTrigger = document.querySelector<HTMLButtonElement>(".v2-bottom-nav__chat");
+  if (mobileTrigger && window.matchMedia("(max-width: 767px)").matches) {
+    mobileTrigger.focus();
+  } else {
+    launcher?.focus();
+  }
+}
+
 export function CatChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_MESSAGE]);
@@ -46,7 +55,9 @@ export function CatChat() {
   }, []);
 
   useEffect(() => {
-    if (isOpen) window.setTimeout(() => inputRef.current?.focus(), 220);
+    if (!isOpen) return;
+    const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 220);
+    return () => window.clearTimeout(focusTimer);
   }, [isOpen]);
 
   useEffect(() => {
@@ -58,7 +69,7 @@ export function CatChat() {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
-        launcherRef.current?.focus();
+        focusChatTrigger(launcherRef.current);
       }
     };
     window.addEventListener("keydown", closeOnEscape);
@@ -138,7 +149,7 @@ export function CatChat() {
                 <strong>ZB&apos;s Cat</strong>
                 <i><span /> Online</i>
               </span>
-              <button type="button" onClick={() => { setIsOpen(false); launcherRef.current?.focus(); }} aria-label="Minimize chat">
+              <button type="button" onClick={() => { setIsOpen(false); focusChatTrigger(launcherRef.current); }} aria-label="Minimize chat">
                 <Minus size={17} />
               </button>
             </header>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Check, ExternalLink } from "lucide-react";
 import { Footer } from "./Footer";
+import { CaseStudyStory, type CaseStudyStoryDetails } from "./CaseStudyStory";
 import { Navigation } from "./Navigation";
 import { ProjectNavigation } from "./ProjectNavigation";
 
@@ -16,7 +17,7 @@ type ClientWebsiteCaseStudyProps = {
   imageAlt: string;
   liveUrl: string;
   currentHref: string;
-  overview: readonly string[];
+  story: CaseStudyStoryDetails;
   features: readonly string[];
   details: readonly CaseStudyItem[];
 };
@@ -30,7 +31,7 @@ export function ClientWebsiteCaseStudy({
   imageAlt,
   liveUrl,
   currentHref,
-  overview,
+  story,
   features,
   details,
 }: ClientWebsiteCaseStudyProps) {
@@ -68,19 +69,7 @@ export function ClientWebsiteCaseStudy({
           />
         </figure>
 
-        <section className="case-study__overview" aria-labelledby={`${number}-overview`}>
-          <div>
-            <span>// 01</span>
-            <h2 id={`${number}-overview`}>Overview</h2>
-          </div>
-          <div>
-            {overview.map((paragraph, index) => (
-              <p className={index === 0 ? "case-study__lead" : undefined} key={paragraph}>
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </section>
+        <CaseStudyStory id={`${number}-story`} story={story} />
 
         <section className="case-study__features" aria-labelledby={`${number}-features`}>
           <div className="case-study__section-heading">

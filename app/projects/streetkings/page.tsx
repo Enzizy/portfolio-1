@@ -20,11 +20,11 @@ export default function StreetKingsPage() {
       imageAlt="StreetKings PH automotive painting and detailing website home page"
       liveUrl="https://streetkingsph.com/"
       currentHref="/projects/streetkings"
-      overview={[
-        "StreetKings PH needed a strong online presence for its auto painting, refinishing, protection, repair, and detailing services in Bacoor, Cavite.",
-        "The website organizes a broad service catalog into clear categories while supporting customer decision-making with process explanations, completed work, before-and-after content, reviews, and frequently asked questions.",
-        "Prominent calls to action connect visitors to consultation, booking, directions, phone contact, and Messenger without obscuring the visual impact of the brand’s automotive work.",
-      ]}
+      story={{
+        challenge: "StreetKings offers several automotive services, but a visitor needs to know quickly which one fits their car and whether the shop can deliver the finish they want.",
+        decisions: "I organized the service catalog around customer needs, then paired each path with completed work, process explanations, reviews, and answers to common questions. Consultation, booking, directions, phone, and Messenger remain close to the relevant content.",
+        result: "The WordPress site gives customers a clear way to compare services, inspect the shop's work, and choose how to contact or visit StreetKings.",
+      }}
       features={[
         "Structured paint protection, detailing, painting, and refinishing service pages",
         "Service-focused landing page with strong automotive brand presentation",

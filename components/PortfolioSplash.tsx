@@ -20,6 +20,10 @@ export function PortfolioSplash() {
 
   useEffect(() => {
     const root = document.documentElement;
+    if (root.dataset.portfolioSplash !== "show") {
+      setVisible(false);
+      return;
+    }
     const previousOverflow = root.style.overflow;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let released = false;

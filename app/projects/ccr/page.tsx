@@ -12,11 +12,11 @@ const project: PrivateProjectDetails = {
   image: "/images/projects/ccr.png",
   imageAlt: "CCR's actual dashboard running with a fresh local database and no business records",
   imageNote: "Actual CCR dashboard, captured in local demo mode with an empty database. No business records are shown.",
-  overview: [
-    "CCR brings daily business operations into one connected workflow so an order can be followed through fulfillment and collection.",
-    "It links purchase orders to partial deliveries and delivery receipts, then to statements of account and payments. The system also covers expenses, trips, payroll advances, delivery issues, and financial summaries.",
-    "An internal AI assistant helps answer workflow and audit questions. It provides guidance but cannot create or change business records.",
-  ],
+  story: {
+    challenge: "Purchase orders, deliveries, and collections are easy to lose track of when each step lives in a different record. The team needed a clear view of what was fulfilled, what was billed, and what was still owed.",
+    decisions: "I connected the order lifecycle from purchase order to partial delivery, receipt, statement, and payment. I kept expenses and delivery issues close to that flow, while limiting the internal AI assistant to read-only guidance for audit questions.",
+    result: "CCR provides one place to trace an order through fulfillment and collection, review outstanding balances, and investigate operational questions without giving the assistant permission to alter business records.",
+  },
   features: [
     "Track purchase orders and partial deliveries",
     "Create delivery receipts and statements of account",

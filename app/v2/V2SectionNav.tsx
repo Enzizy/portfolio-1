@@ -47,24 +47,31 @@ export function V2SectionNav({ placement }: { placement: "sidebar" | "mobile" })
     };
   }, []);
 
-  const items = placement === "mobile"
-    ? [sections[0], sections[1], sections[5], sections[3], sections[4]]
-    : sections;
+  const renderItem = ({ id, label, icon: Icon }: (typeof sections)[number]) => (
+    <a
+      key={id}
+      href={`#${id}`}
+      aria-current={activeSection === id ? "location" : undefined}
+      onClick={() => setActiveSection(id)}
+    >
+      <Icon size={placement === "mobile" ? 20 : 18} aria-hidden="true" />
+      <span>{placement === "mobile" && id === "projects" ? "Work" : label}</span>
+    </a>
+  );
 
   return (
     <nav className={placement === "mobile" ? "v2-bottom-nav" : "v2-side-nav"} aria-label={`Version 2 ${placement === "mobile" ? "mobile" : "sections"} navigation`}>
-      {items.map(({ id, label, icon: Icon }) => (
-        <a
-          key={id}
-          href={`#${id}`}
-          className={placement === "mobile" && id === "contact" ? "v2-bottom-nav__contact" : undefined}
-          aria-current={activeSection === id ? "location" : undefined}
-          onClick={() => setActiveSection(id)}
-        >
-          <Icon size={placement === "mobile" ? 20 : 18} aria-hidden="true" />
-          <span>{placement === "mobile" && id === "projects" ? "Work" : label}</span>
-        </a>
-      ))}
+      {placement === "mobile" ? (
+        <>
+          {renderItem(sections[0])}
+          {renderItem(sections[1])}
+          <button type="button" className="v2-bottom-nav__chat" aria-label="Open portfolio assistant" aria-controls="cat-chat-panel" onClick={() => window.dispatchEvent(new Event("portfolio:open-chat"))}>
+            <MessageCircle size={20} aria-hidden="true" /><span>Chat</span>
+          </button>
+          {renderItem(sections[4])}
+          {renderItem(sections[5])}
+        </>
+      ) : sections.map(renderItem)}
     </nav>
   );
 }

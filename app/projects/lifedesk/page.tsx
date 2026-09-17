@@ -17,11 +17,11 @@ const project: PrivateProjectDetails = {
     { src: "/images/projects/lifedesk-wallet.png", alt: "LifeDesk wallet screen with no transactions or investment positions" },
     { src: "/images/projects/lifedesk-tasks.png", alt: "LifeDesk tasks screen with no saved tasks" },
   ],
-  overview: [
-    "LifeDesk is my local-first personal command center for staying on top of what I need to do and where my money stands.",
-    "It brings tasks, reminders, projects, income, expenses, bills, budgets, and recorded investment positions into one app. Investment values are estimates with a source and timestamp, rather than brokerage account balances.",
-    "The AI assistant helps organize plans and suggestions. Changes to local records require review before saving, and the app supports local JSON export and restore.",
-  ],
+  story: {
+    challenge: "Tasks, bills, budgets, and investment notes were competing for attention across separate tools. I wanted one daily view that made upcoming obligations and financial context easy to understand without handing over my personal records.",
+    decisions: "I built an Android-first, local-first workspace with tasks and money side by side. Investment values are shown as sourced estimates, and AI suggestions must be reviewed before they can change saved data.",
+    result: "LifeDesk brings daily planning, payments, budgets, and recorded stock and crypto positions into one personal app. Local export and restore keep the information portable.",
+  },
   features: [
     "Manage tasks, reminders, and projects",
     "Record income, spending, bills, and monthly budgets",

@@ -20,11 +20,11 @@ export default function BwFurniturePage() {
       imageAlt="B&W Customized Furnitures WordPress website home page"
       liveUrl="https://bwcustomizedfurniture.com/"
       currentHref="/projects/bw-furniture"
-      overview={[
-        "B&W Customized Furnitures needed a website capable of presenting a wide range of made-to-measure furniture and modular interior work without losing clarity.",
-        "The experience separates kitchens, closets, TV consoles, wardrobes, dining sets, sala sets, storage beds, loft beds, and ottomans into understandable service categories supported by extensive project galleries.",
-        "Brand messaging, a collaborative four-step process, social channels, and inquiry paths help turn visual inspiration into a practical customer conversation.",
-      ]}
+      story={{
+        challenge: "Custom furniture is easier to understand when customers can see both the range of work and the details of finished spaces. A single gallery would make kitchens, cabinetry, storage, and living pieces hard to navigate.",
+        decisions: "I separated the portfolio into recognizable furniture categories and used project galleries as the main proof. Service descriptions and a four-step process explain how an idea becomes a made-to-measure piece.",
+        result: "Visitors can explore relevant work, understand the consultation-to-installation process, and start an inquiry with a clearer idea of what B&W can make for their space.",
+      }}
       features={[
         "Category-led catalog for custom furniture and modular cabinetry",
         "Dedicated galleries for kitchens, storage, living, dining, and bedroom work",

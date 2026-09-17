@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { CaseStudyStory, type CaseStudyStoryDetails } from "@/components/CaseStudyStory";
 import { Navigation } from "@/components/Navigation";
 import { ProjectNavigation } from "@/components/ProjectNavigation";
 
@@ -18,7 +19,7 @@ export type PrivateProjectDetails = {
   imageNote: string;
   imageFit?: "contain" | "cover" | "mobile";
   additionalImages?: readonly { src: string; alt: string }[];
-  overview: readonly string[];
+  story: CaseStudyStoryDetails;
   features: readonly string[];
   architecture: readonly { label: string; value: string }[];
   href: string;
@@ -71,14 +72,7 @@ export function PrivateProjectCaseStudy({ project }: { project: PrivateProjectDe
           <figcaption>{project.imageNote}</figcaption>
         </figure>
 
-        <section className="case-study__overview" aria-labelledby={`${sectionId}-overview`}>
-          <div><span>// 01</span><h2 id={`${sectionId}-overview`}>Overview</h2></div>
-          <div>
-            {project.overview.map((paragraph, index) => (
-              <p className={index === 0 ? "case-study__lead" : undefined} key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-        </section>
+        <CaseStudyStory id={`${sectionId}-story`} story={project.story} />
 
         <section className="case-study__features" aria-labelledby={`${sectionId}-features`}>
           <div className="case-study__section-heading">

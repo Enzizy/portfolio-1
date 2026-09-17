@@ -79,10 +79,6 @@ function V2Sidebar() {
       </div>
 
       <V2SectionNav placement="sidebar" />
-      <div className="v2-sidebar-footer">
-        <span className="v2-status-dot" aria-hidden="true" /> Open to selected freelance work
-        <small>© {new Date().getFullYear()} Zhyronne Batican</small>
-      </div>
     </aside>
   );
 }
@@ -136,6 +132,11 @@ function V2Dashboard() {
         <span><strong>{projects.length}</strong><small>PROJECTS</small></span>
         <span><strong>3</strong><small>FOCUS AREAS</small></span>
         <span><strong>PH</strong><small>BASED</small></span>
+      </div>
+
+      <div className="v2-mobile-featured">
+        <div className="v2-mobile-section-head"><h3>Featured work</h3><a href="#projects">All projects <ArrowUpRight size={14} /></a></div>
+        <a href="/projects/lifedesk-crm" className="v2-featured-link"><span className="v2-featured-link__image"><Image src="/images/projects/lifedesk-crm.png" alt="" fill sizes="90px" /></span><span><small>AI-ASSISTED PROSPECTING</small><strong>LifeDesk CRM</strong><em>Discover, review, and organize prospects.</em></span><ArrowUpRight size={17} /></a>
       </div>
 
       <V2ToolBar />
@@ -201,8 +202,6 @@ function V2Dashboard() {
             <span>04 CONTACT</span><Mail size={62} /><strong>Let&apos;s talk</strong><small>Tell me about your idea.</small>
           </a>
         </div>
-        <div className="v2-mobile-section-head v2-mobile-section-head--focus"><h3>Featured work</h3><a href="#projects">All projects <ArrowUpRight size={14} /></a></div>
-        <a href="/projects/lifedesk-crm" className="v2-featured-link"><span className="v2-featured-link__image"><Image src="/images/projects/lifedesk-crm.png" alt="" fill sizes="90px" /></span><span><small>AI-ASSISTED PROSPECTING</small><strong>LifeDesk CRM</strong><em>Discover, review, and organize prospects.</em></span><ArrowUpRight size={17} /></a>
       </div>
     </section>
   );

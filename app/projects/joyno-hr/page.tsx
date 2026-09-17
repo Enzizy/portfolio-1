@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { CaseStudyStory } from "@/components/CaseStudyStory";
 import { Navigation } from "@/components/Navigation";
 import { ProjectNavigation } from "@/components/ProjectNavigation";
 import { createProjectMetadata } from "@/lib/metadata";
@@ -83,29 +84,11 @@ export default function JoynoHrPage() {
           />
         </figure>
 
-        <section className="case-study__overview" aria-labelledby="joyno-overview">
-          <div>
-            <span>// 01</span>
-            <h2 id="joyno-overview">Overview</h2>
-          </div>
-          <div>
-            <p className="case-study__lead">
-              I worked across the frontend, API, and database layers to translate HR
-              policies into reliable digital workflows.
-            </p>
-            <p>
-              Key challenges included calculating paid and unpaid leave based on tenure
-              and credits, excluding weekends and Philippine holidays, supporting
-              approval conversations, and safely processing requests to move or cancel
-              future approved leave.
-            </p>
-            <p>
-              The platform also includes role-based access, transactional credit refunds,
-              in-app and email notifications, scheduled retention jobs, audit logs, and
-              management reporting.
-            </p>
-          </div>
-        </section>
+        <CaseStudyStory id="joyno-story" story={{
+          challenge: "Leave requests affect payroll, staffing, and employee trust. HR needed one workflow that could apply different policies consistently and keep approvals visible to everyone involved.",
+          decisions: "I translated tenure, leave credits, weekends, and Philippine holidays into explicit calculation rules. Role-based workspaces, approval conversations, and transactional refunds keep changes to approved leave accountable.",
+          result: "Joyno HR brings employee records, leave decisions, workforce calendars, notifications, audit history, and management reports into one operations platform.",
+        }} />
 
         <section className="case-study__features" aria-labelledby="joyno-features">
           <div className="case-study__section-heading">

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Check, ExternalLink } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { CaseStudyStory } from "@/components/CaseStudyStory";
 import { Navigation } from "@/components/Navigation";
 import { ProjectNavigation } from "@/components/ProjectNavigation";
 import { createProjectMetadata } from "@/lib/metadata";
@@ -76,30 +77,11 @@ export default function RoarlyPage() {
           />
         </figure>
 
-        <section className="case-study__overview" aria-labelledby="roarly-overview">
-          <div>
-            <span>// 01</span>
-            <h2 id="roarly-overview">Overview</h2>
-          </div>
-          <div>
-            <p className="case-study__lead">
-              Roarly combines a warm, story-led marketing experience with a
-              secure account and payment prototype for an AI animation product.
-            </p>
-            <p>
-              I designed and implemented the public website, sample galleries,
-              authentication flow, pricing experience, checkout interface, and
-              account billing dashboard. The frontend can remain useful as a
-              static product preview while the Node service enables full account
-              and payment behavior.
-            </p>
-            <p>
-              Paid access is never granted from a browser redirect alone. The
-              backend activates credits only after a signed PayMongo webhook
-              confirms the expected user, plan, currency, and payment amount.
-            </p>
-          </div>
-        </section>
+        <CaseStudyStory id="roarly-story" story={{
+          challenge: "An AI animation product needs more than a visual landing page: visitors need to understand the creative possibilities, choose a plan, and trust what happens after payment.",
+          decisions: "I paired story-led previews with account and pricing flows, then kept billing authority on the server. Credits activate only after a signed PayMongo webhook confirms the expected payment details.",
+          result: "Roarly presents a coherent path from product discovery to checkout and account access, while its static preview can still explain the concept when the backend is unavailable.",
+        }} />
 
         <section className="case-study__features" aria-labelledby="roarly-features">
           <div className="case-study__section-heading">
