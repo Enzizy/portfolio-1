@@ -1,14 +1,14 @@
 .v2-shell {
   --v2-ink: #14243a;
-  --v2-muted: #665d63;
-  --v2-accent: #8a3d4d;
-  --v2-accent-text: var(--v2-accent);
-  --v2-accent-soft: #f5eaed;
-  --v2-on-accent: #fff;
+  --v2-muted: #5f666e;
+  --v2-accent: #ff7a1a;
+  --v2-accent-text: #a63e00;
+  --v2-accent-soft: #fff0e2;
+  --v2-on-accent: #172033;
   --v2-surface: #fff;
-  --v2-background: #faf8f5;
-  --v2-border: #e3dfda;
-  --v2-bottom-nav-bg: #2e272b;
+  --v2-background: #f8f7f2;
+  --v2-border: #e5ded2;
+  --v2-bottom-nav-bg: #0b1e3f;
   display: grid;
   grid-template-columns: 312px minmax(0, 1fr);
   min-height: 100dvh;
@@ -18,29 +18,6 @@
 }
 
 html[data-theme="dark"] .v2-shell {
-  --v2-ink: #f5f0ee;
-  --v2-muted: #b8adb0;
-  --v2-accent: #e4a9b2;
-  --v2-accent-soft: #3a272e;
-  --v2-on-accent: #1b191a;
-  --v2-surface: #252123;
-  --v2-background: #1b191a;
-  --v2-border: #4d4144;
-}
-
-html[data-v2-palette="orange"] .v2-shell {
-  --v2-ink: #14243a;
-  --v2-muted: #5f666e;
-  --v2-accent: #ff7a1a;
-  --v2-accent-text: #a63e00;
-  --v2-accent-soft: #fff0e2;
-  --v2-on-accent: #172033;
-  --v2-background: #f8f7f2;
-  --v2-border: #e5ded2;
-  --v2-bottom-nav-bg: #0b1e3f;
-}
-
-html[data-theme="dark"][data-v2-palette="orange"] .v2-shell {
   --v2-ink: #f5f0e9;
   --v2-muted: #b4ada7;
   --v2-accent: #ff9b53;
@@ -86,13 +63,6 @@ html[data-theme="dark"][data-v2-palette="orange"] .v2-shell {
 .v2-shell .portfolio-version-switch a[aria-current="page"] { background: var(--v2-ink); color: var(--v2-surface); }
 .v2-shell .portfolio-version-switch a:hover:not([aria-current="page"]) { color: var(--v2-accent-text); }
 .v2-identity .portfolio-version-switch { margin-top: 17px; }
-.v2-palette-picker { display: grid; gap: 8px; margin-top: 16px; text-align: left; }
-.v2-palette-picker__label { color: var(--v2-muted); font: 10px/1.2 monospace; letter-spacing: .1em; text-transform: uppercase; }
-.v2-palette-picker__options { display: flex; gap: 7px; }
-.v2-palette-picker__option { display: inline-flex; align-items: center; justify-content: center; gap: 7px; flex: 1; min-height: 34px; padding: 5px 8px; border: 1px solid var(--v2-border); border-radius: 9px; background: var(--v2-surface); color: var(--v2-muted); font-size: 11px; font-weight: 650; cursor: pointer; }
-.v2-palette-picker__option:hover, .v2-palette-picker__option[aria-pressed="true"] { border-color: var(--v2-accent-text); background: var(--v2-accent-soft); color: var(--v2-ink); }
-.v2-palette-picker__swatch { width: 13px; height: 13px; flex: 0 0 13px; border-radius: 50%; background: #8a3d4d; }
-.v2-palette-picker__option--orange .v2-palette-picker__swatch { background: #ff7a1a; }
 .v2-side-nav { display: grid; gap: 3px; margin-top: 27px; padding-top: 22px; border-top: 1px solid var(--v2-border); }
 .v2-side-nav a { display: flex; align-items: center; gap: 17px; min-height: 47px; padding: 0 16px; border-radius: 10px; color: var(--v2-muted); font-size: 15px; font-weight: 600; transition: background .2s ease, color .2s ease, transform .2s ease; }
 .v2-side-nav a:hover { color: var(--v2-accent-text); transform: translateX(3px); }
@@ -209,10 +179,8 @@ html[data-theme="dark"][data-v2-palette="orange"] .v2-shell {
 .v2-contact-section .contact-form .button { border-radius: 999px; background: var(--v2-ink); color: var(--v2-surface); }
 .v2-footer { display: flex; justify-content: space-between; gap: 18px; padding: 30px 0 45px; border-top: 1px solid var(--v2-border); color: var(--v2-muted); font-size: 12px; }
 .v2-footer a:hover { color: var(--v2-accent-text); }
-.v2-shell ~ .cat-chat .cat-chat__prompts button:hover { border-color: #8a3d4d; color: #8a3d4d; }
-html[data-theme="dark"] .v2-shell ~ .cat-chat .cat-chat__prompts button:hover { border-color: #e4a9b2; color: #e4a9b2; }
-html[data-v2-palette="orange"] .v2-shell ~ .cat-chat .cat-chat__prompts button:hover { border-color: #a63e00; color: #a63e00; }
-html[data-theme="dark"][data-v2-palette="orange"] .v2-shell ~ .cat-chat .cat-chat__prompts button:hover { border-color: #ffb47d; color: #ffb47d; }
+.v2-shell ~ .cat-chat .cat-chat__prompts button:hover { border-color: #a63e00; color: #a63e00; }
+html[data-theme="dark"] .v2-shell ~ .cat-chat .cat-chat__prompts button:hover { border-color: #ffb47d; color: #ffb47d; }
 
 .v2-mobile-header, .v2-mobile-stats, .v2-mobile-explore, .v2-bottom-nav { display: none; }
 
@@ -246,8 +214,6 @@ html[data-theme="dark"][data-v2-palette="orange"] .v2-shell ~ .cat-chat .cat-cha
   .v2-mobile-actions { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; }
   .v2-mobile-actions .theme-toggle { width: 35px; height: 35px; }
   .v2-mobile-header { flex-wrap: wrap; }
-  .v2-mobile-header .v2-palette-picker { display: flex; align-items: center; justify-content: space-between; flex: 0 0 100%; margin-top: 5px; }
-  .v2-mobile-header .v2-palette-picker__options { width: min(240px, 72%); }
   .v2-dashboard { min-height: 0; padding: 29px 20px 49px; overflow: hidden; }
   .v2-dashboard::before { top: -600px; right: -80px; }
   .v2-dashboard::after { bottom: -670px; right: -450px; }
@@ -307,10 +273,8 @@ html[data-theme="dark"][data-v2-palette="orange"] .v2-shell ~ .cat-chat .cat-cha
   .v2-contact-grid { grid-template-columns: 1fr; gap: 30px; }
   .v2-footer { flex-wrap: wrap; padding-bottom: 20px; }
   .v2-shell ~ .cat-chat { bottom: 96px; }
-  .v2-shell ~ .cat-chat .cat-chat__launcher { justify-content: center; width: 42px; min-height: 42px; padding: 0; border-color: #8a3d4d; background: #8a3d4d; color: #fff; }
-  html[data-theme="dark"] .v2-shell ~ .cat-chat .cat-chat__launcher { border-color: #e4a9b2; background: #e4a9b2; color: #1b191a; }
-  html[data-v2-palette="orange"] .v2-shell ~ .cat-chat .cat-chat__launcher { border-color: #ff7a1a; background: #ff7a1a; color: #172033; }
-  html[data-theme="dark"][data-v2-palette="orange"] .v2-shell ~ .cat-chat .cat-chat__launcher { border-color: #ff9b53; background: #ff9b53; color: #1b191a; }
+  .v2-shell ~ .cat-chat .cat-chat__launcher { justify-content: center; width: 42px; min-height: 42px; padding: 0; border-color: #ff7a1a; background: #ff7a1a; color: #172033; }
+  html[data-theme="dark"] .v2-shell ~ .cat-chat .cat-chat__launcher { border-color: #ff9b53; background: #ff9b53; color: #1b191a; }
   .v2-shell ~ .cat-chat .cat-chat__launcher span { display: none; }
 }
 

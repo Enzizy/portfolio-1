@@ -30,7 +30,6 @@ import { PortfolioVersionSwitch } from "@/components/PortfolioVersionSwitch";
 import { ProjectVisual } from "@/components/ProjectVisual";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { projects, services, stackGroups } from "@/data/portfolio";
-import { V2PalettePicker } from "./V2PalettePicker";
 import { V2SectionNav } from "./V2SectionNav";
 import "./v2.css";
 
@@ -86,7 +85,6 @@ function V2Sidebar() {
           <ThemeToggle />
         </div>
         <PortfolioVersionSwitch version={2} />
-        <V2PalettePicker />
       </div>
 
       <V2SectionNav placement="sidebar" />
@@ -106,7 +104,6 @@ function V2MobileHeader() {
         <span><strong>Zhyronne Batican</strong><small>Full Stack · AI · Design</small></span>
       </a>
       <div className="v2-mobile-actions"><PortfolioVersionSwitch version={2} /><ThemeToggle /></div>
-      <V2PalettePicker />
     </header>
   );
 }

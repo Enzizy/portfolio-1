@@ -41,7 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var saved=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=saved==='dark'?'dark':'light';document.documentElement.dataset.v2Palette=localStorage.getItem('portfolio-v2-palette')==='orange'?'orange':'oxblood'}catch(e){document.documentElement.dataset.theme='light';document.documentElement.dataset.v2Palette='oxblood'}})();`,
+            __html: `(function(){try{var saved=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=saved==='dark'?'dark':'light'}catch(e){document.documentElement.dataset.theme='light'}})();`,
           }}
         />
       </head>
