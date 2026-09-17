@@ -146,6 +146,8 @@ export default async function TitlePage({ params, searchParams }: Props) {
               title={isTv ? `${title.title} season ${season} episode ${episode}` : title.title}
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
+              // No allow-popups / allow-top-navigation: blocks the pop-under ads and redirects these players trigger.
+              sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
               referrerPolicy="origin"
               loading="lazy"
             />
