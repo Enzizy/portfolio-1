@@ -265,8 +265,8 @@ html[data-theme="dark"] .v2-shell ~ .cat-chat .cat-chat__prompts button:hover { 
   .v2-explore-card > strong { position: relative; z-index: 2; font-size: 17px; letter-spacing: -.04em; }
   .v2-explore-card > small { position: relative; z-index: 2; margin-top: 4px; color: var(--v2-muted); font-size: 12px; line-height: 1.4; }
   .v2-explore-card--projects img { top: 0 !important; bottom: auto !important; width: 100% !important; height: 64% !important; object-fit: cover; object-position: top center; }
-  .v2-explore-card--services, .v2-explore-card--contact { background: linear-gradient(150deg, var(--v2-surface), var(--v2-accent-soft)); }
-  .v2-explore-card--services > svg, .v2-explore-card--contact > svg { position: absolute; top: 64px; right: 24px; color: var(--v2-accent-text); }
+  .v2-explore-card--services, .v2-explore-card--contact, .v2-explore-card--movies { background: linear-gradient(150deg, var(--v2-surface), var(--v2-accent-soft)); }
+  .v2-explore-card--services > svg, .v2-explore-card--contact > svg, .v2-explore-card--movies > svg { position: absolute; top: 64px; right: 24px; color: var(--v2-accent-text); }
   .v2-explore-card--about img { top: 0 !important; bottom: auto !important; width: 100% !important; height: 65% !important; object-fit: cover; object-position: center 28%; }
   .v2-featured-link { display: flex; align-items: center; gap: 11px; padding: 11px; border: 1px solid var(--v2-border); border-radius: 18px; background: var(--v2-surface); }
   .v2-featured-link__image { position: relative; flex: 0 0 68px; height: 64px; overflow: hidden; border-radius: 11px; background: var(--v2-accent-soft); }

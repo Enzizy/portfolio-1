@@ -1,6 +1,7 @@
 "use client";
 
-import { Code2, Folder, Home, Layers3, MessageCircle, UserRound } from "lucide-react";
+import { Clapperboard, Code2, Folder, Home, Layers3, MessageCircle, UserRound } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const sections = [
@@ -71,7 +72,7 @@ export function V2SectionNav({ placement }: { placement: "sidebar" | "mobile" })
           {renderItem(sections[4])}
           {renderItem(sections[5])}
         </>
-      ) : sections.map(renderItem)}
+      ) : <>{sections.map(renderItem)}<Link href="/movies"><Clapperboard size={18} aria-hidden="true" /><span>Movies</span></Link></>}
     </nav>
   );
 }

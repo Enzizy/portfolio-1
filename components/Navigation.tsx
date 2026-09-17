@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Command, Gamepad2, Menu, X } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { navItems } from "@/data/portfolio";
@@ -116,6 +117,7 @@ export function Navigation() {
           {navItems.map((item) => {
             return <a key={item} href={sectionHref(item.toLowerCase())}>/{item.toUpperCase()}</a>;
           })}
+          <Link href="/movies">/MOVIES</Link>
           <PortfolioVersionSwitch version={1} />
           <button className="command-trigger" type="button" onClick={openCommands} aria-label="Open command menu"><Command size={13} />CTRL K</button>
           <ThemeToggle />
@@ -151,6 +153,7 @@ export function Navigation() {
             {navItems.map((item) => {
               return <a key={item} href={sectionHref(item.toLowerCase())} onClick={() => setIsOpen(false)}>/{item.toUpperCase()}</a>;
             })}
+            <Link href="/movies" onClick={() => setIsOpen(false)}>/MOVIES</Link>
             <button className="mobile-command-button" type="button" onClick={openCommands}><Command size={16} />/COMMAND MENU <kbd>CTRL K</kbd></button>
             <ThemeToggle mobile />
             <button className="mobile-play-button" type="button" onClick={openGame}><Gamepad2 size={16} />/PLAY</button>
