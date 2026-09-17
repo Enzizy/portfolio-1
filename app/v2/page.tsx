@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
+  ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   Atom,
@@ -26,7 +27,6 @@ import {
   Zap,
 } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
-import { PortfolioVersionSwitch } from "@/components/PortfolioVersionSwitch";
 import { ProjectVisual } from "@/components/ProjectVisual";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { projects, services, stackGroups } from "@/data/portfolio";
@@ -84,7 +84,7 @@ function V2Sidebar() {
           ))}
           <ThemeToggle />
         </div>
-        <PortfolioVersionSwitch version={2} />
+        <Link href="/" className="v2-return-link"><ArrowLeft size={17} aria-hidden="true" />Back to V1 portfolio</Link>
       </div>
 
       <V2SectionNav placement="sidebar" />
@@ -103,7 +103,7 @@ function V2MobileHeader() {
         <span className="v2-mobile-portrait"><Image src="/images/me.jpg" alt="" fill sizes="48px" /></span>
         <span><strong>Zhyronne Batican</strong><small>Full Stack · AI · Design</small></span>
       </a>
-      <div className="v2-mobile-actions"><PortfolioVersionSwitch version={2} /><ThemeToggle /></div>
+      <div className="v2-mobile-actions"><Link href="/" className="v2-return-link" aria-label="Back to V1 portfolio"><ArrowLeft size={15} aria-hidden="true" />Back to V1</Link><ThemeToggle /></div>
     </header>
   );
 }
