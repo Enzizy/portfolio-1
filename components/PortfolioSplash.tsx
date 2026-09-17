@@ -69,17 +69,13 @@ export function PortfolioSplash() {
     if (!container || !word) return;
 
     const measure = () => {
-      const parentRect = container.getBoundingClientRect();
-      const activeRect = word.getBoundingClientRect();
-      // Desktop presentation uses CSS zoom. DOM rectangles are returned in
-      // visual pixels, while Framer Motion translates in pre-zoom CSS pixels.
-      // Normalize once so later words are not pushed and stretched by 110%.
-      const zoom = Number.parseFloat(window.getComputedStyle(document.body).zoom) || 1;
+      // Offset coordinates and Framer Motion transforms use the same CSS pixel
+      // space, including when desktop zoom is applied to the page.
       setFocusRect({
-        x: (activeRect.left - parentRect.left) / zoom,
-        y: (activeRect.top - parentRect.top) / zoom,
-        width: activeRect.width / zoom,
-        height: activeRect.height / zoom,
+        x: word.offsetLeft,
+        y: word.offsetTop,
+        width: word.offsetWidth,
+        height: word.offsetHeight,
       });
     };
 
@@ -138,7 +134,7 @@ export function PortfolioSplash() {
               height: focusRect.height,
               opacity: focusRect.width ? 1 : 0,
             }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: currentIndex === 0 ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="portfolio-splash__corner portfolio-splash__corner--tl" />
             <span className="portfolio-splash__corner portfolio-splash__corner--tr" />
