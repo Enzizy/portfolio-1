@@ -136,8 +136,19 @@ export function TargetCursor({
       spinRef.current = null;
       gsap.killTweensOf(cursor, "rotation");
       gsap.set(cursor, { rotation: 0 });
-      setCornerColor(cursorColorOnTarget);
+      const v2Accent = target.closest(".v2-shell")
+        ? getComputedStyle(target).getPropertyValue("--v2-accent-text").trim()
+        : "";
+      setCornerColor(v2Accent || cursorColorOnTarget);
     };
+
+    const syncV2Palette = () => {
+      const target = activeTargetRef.current;
+      if (!target?.closest(".v2-shell")) return;
+      setCornerColor(getComputedStyle(target).getPropertyValue("--v2-accent-text").trim() || cursorColorOnTarget);
+    };
+    const paletteObserver = new MutationObserver(syncV2Palette);
+    paletteObserver.observe(root, { attributes: true, attributeFilter: ["data-v2-palette", "data-theme"] });
 
     const elementAtPointer = () => document.elementFromPoint(pointerRef.current.x, pointerRef.current.y);
     const targetAtPointer = () => {
@@ -227,6 +238,7 @@ export function TargetCursor({
 
     return () => {
       delete root.dataset.targetCursor;
+      paletteObserver.disconnect();
       clearSpinTimer();
       spinRef.current?.kill();
       gsap.ticker.remove(tick);

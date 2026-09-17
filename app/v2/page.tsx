@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   Atom,
@@ -27,9 +26,11 @@ import {
   Zap,
 } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
+import { PortfolioVersionSwitch } from "@/components/PortfolioVersionSwitch";
 import { ProjectVisual } from "@/components/ProjectVisual";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { projects, services, stackGroups } from "@/data/portfolio";
+import { V2PalettePicker } from "./V2PalettePicker";
 import { V2SectionNav } from "./V2SectionNav";
 import "./v2.css";
 
@@ -74,7 +75,7 @@ function V2Sidebar() {
         <div className="v2-portrait">
           <Image src="/images/me.jpg" alt="Zhyronne Batican" fill sizes="180px" priority />
         </div>
-        <h1>Zhyronne Batican <span aria-label="Available for projects" title="Available for projects">✦</span></h1>
+        <h1>Zhyronne Batican</h1>
         <p>@enzizy · Full Stack Developer</p>
         <div className="v2-socials" aria-label="Social links">
           {socials.map(({ label, href, icon: Icon }) => (
@@ -84,7 +85,8 @@ function V2Sidebar() {
           ))}
           <ThemeToggle />
         </div>
-        <Link href="/" className="v2-return-link"><ArrowLeft size={17} aria-hidden="true" />Back to V1 portfolio</Link>
+        <PortfolioVersionSwitch version={2} />
+        <V2PalettePicker />
       </div>
 
       <V2SectionNav placement="sidebar" />
@@ -103,7 +105,8 @@ function V2MobileHeader() {
         <span className="v2-mobile-portrait"><Image src="/images/me.jpg" alt="" fill sizes="48px" /></span>
         <span><strong>Zhyronne Batican</strong><small>Full Stack · AI · Design</small></span>
       </a>
-      <div className="v2-mobile-actions"><Link href="/" className="v2-return-link" aria-label="Back to V1 portfolio"><ArrowLeft size={15} aria-hidden="true" />Back to V1</Link><ThemeToggle /></div>
+      <div className="v2-mobile-actions"><PortfolioVersionSwitch version={2} /><ThemeToggle /></div>
+      <V2PalettePicker />
     </header>
   );
 }
@@ -257,7 +260,7 @@ function V2Sections() {
         <div className="v2-section-heading"><span>05 / CONTACT</span><h2 id="v2-contact-title">Let&apos;s make something useful.</h2><p>Share the problem, the people it affects, and what a good result would look like.</p></div>
         <div className="v2-contact-grid"><div><span className="v2-contact-icon"><Mail size={30} /></span><h3>Start a conversation.</h3><p>Available for selected freelance projects and thoughtful collaborations.</p><a href="mailto:zhyronnebatican@gmail.com">zhyronnebatican@gmail.com <ArrowUpRight size={17} /></a><div className="v2-contact-socials">{socials.filter(({ href }) => href.startsWith("http")).map(({ label, href, icon: Icon }) => <a key={label} href={href} aria-label={label} target="_blank" rel="noreferrer"><Icon size={18} /></a>)}</div></div><ContactForm /></div>
       </section>
-      <footer className="v2-footer"><span>© {new Date().getFullYear()} Zhyronne Batican</span><a href="#home">Back to top ↑</a><Link href="/">View V1 portfolio</Link></footer>
+      <footer className="v2-footer"><span>© {new Date().getFullYear()} Zhyronne Batican</span><a href="#home">Back to top ↑</a></footer>
     </div>
   );
 }
