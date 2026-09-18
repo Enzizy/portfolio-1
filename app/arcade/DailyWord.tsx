@@ -76,9 +76,9 @@ export function DailyWord() {
 
   async function shareResult() {
     if (!daily) return;
-    const grid = guesses.map((guess) => scoreGuess(guess, daily.answer).map((result) => result === "correct" ? "🟩" : result === "present" ? "🟨" : "⬛").join("")).join("\n");
+    const grid = guesses.map((guess) => scoreGuess(guess, daily.answer).map((result) => result === "correct" ? "🟦" : result === "present" ? "🟨" : "⬛").join("")).join("\n");
     try {
-      await navigator.clipboard.writeText(`Five-Letter Guess ${daily.date} ${won ? guesses.length : "X"}/6\n${grid}\n${window.location.origin}/arcade`);
+      await navigator.clipboard.writeText(`Five-Letter Guess ${daily.date} ${won ? guesses.length : "X"}/6\n${grid}\n${window.location.origin}/arcade#word`);
       setMessage("Result copied. The answer stays hidden.");
     } catch { setMessage("Could not copy the result on this browser."); }
   }
@@ -87,7 +87,7 @@ export function DailyWord() {
 
   return (
     <div className="word-game">
-      <div className="word-game__intro"><p>Guess today&apos;s five-letter word in six tries. Green means the right spot; gold means the letter belongs elsewhere. Any five letters can be entered.</p><span>UTC DAILY / {daily.date}</span></div>
+      <div className="word-game__intro"><p>Guess today&apos;s five-letter word in six tries. Blue means the right spot; gold means the letter belongs elsewhere. Any five letters can be entered.</p><span>UTC DAILY / {daily.date}</span></div>
       <div ref={boardRef} className="word-game__board" tabIndex={0} aria-label="Word puzzle. Type on your keyboard or use the keys below.">
         {Array.from({ length: 6 }, (_, row) => {
           const guess = guesses[row];

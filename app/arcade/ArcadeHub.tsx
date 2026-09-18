@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Cat, Keyboard, LetterText, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Cat, Keyboard, LetterText } from "lucide-react";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DailyWord } from "./DailyWord";
 import { TypingSprint } from "./TypingSprint";
 
@@ -18,21 +18,39 @@ export function ArcadeHub() {
   const [activeGame, setActiveGame] = useState<Game | null>(null);
   const panelRef = useRef<HTMLElement>(null);
 
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash !== "typing" && hash !== "word") return;
+    const frame = window.requestAnimationFrame(() => setActiveGame(hash));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    if (!activeGame) return;
+    const frame = window.requestAnimationFrame(() => panelRef.current?.scrollIntoView({ behavior: "instant", block: "start" }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeGame]);
+
   function openGame(id: (typeof games)[number]["id"]) {
     if (id === "runner") {
       window.dispatchEvent(new Event("portfolio:open-game"));
       return;
     }
+    window.history.replaceState(null, "", `#${id}`);
     setActiveGame(id);
-    window.requestAnimationFrame(() => panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+
+  function closeGame() {
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    setActiveGame(null);
   }
 
   return (
     <div className="arcade-shell">
-      <div className="arcade-topline"><Link href="/"><ArrowLeft size={16} aria-hidden="true" /> Back to portfolio</Link><span>ZH / 001 — PLAYGROUND</span></div>
+      <div className="arcade-topline"><Link href="/"><ArrowLeft size={16} aria-hidden="true" /> Back to portfolio</Link><span>PORTFOLIO / ARCADE</span></div>
       <header className="arcade-hero">
-        <div><span className="arcade-eyebrow"><Sparkles size={14} aria-hidden="true" /> A little off the clock</span><h1>Take a<br /><em>play break.</em></h1><p>Three small games for curious visitors. Pick one, chase a score, and stay as long as you like.</p></div>
-        <div className="arcade-hero__badge" aria-hidden="true"><span>PLAY</span><span>↗</span><small>03 / GAMES</small></div>
+        <div><span className="arcade-eyebrow">// A LITTLE OFF THE CLOCK</span><h1>Take a play break<span>.</span></h1><p>Three small games for curious visitors. Pick one, chase a score, and stay as long as you like.</p></div>
+        <div className="arcade-hero__meta" aria-hidden="true"><strong>03</strong><span>GAMES TO TRY</span></div>
       </header>
 
       <section className="arcade-collection" aria-labelledby="arcade-games-title">
@@ -50,7 +68,7 @@ export function ArcadeHub() {
       </section>
 
       {activeGame && <section ref={panelRef} className="arcade-play-area" aria-labelledby="arcade-current-title">
-        <div className="arcade-play-area__heading"><div><span className="arcade-eyebrow">NOW PLAYING / {activeGame === "typing" ? "01" : "02"}</span><h2 id="arcade-current-title">{activeGame === "typing" ? "Typing Sprint" : "Five-Letter Guess"}</h2></div><button type="button" onClick={() => setActiveGame(null)}>Close game</button></div>
+        <div className="arcade-play-area__heading"><div><span className="arcade-eyebrow">NOW PLAYING / {activeGame === "typing" ? "01" : "02"}</span><h2 id="arcade-current-title">{activeGame === "typing" ? "Typing Sprint" : "Five-Letter Guess"}</h2></div><button type="button" onClick={closeGame}>Close game</button></div>
         {activeGame === "typing" ? <TypingSprint /> : <DailyWord />}
       </section>}
     </div>

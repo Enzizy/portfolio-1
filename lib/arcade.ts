@@ -1,5 +1,20 @@
 export type LetterResult = "correct" | "present" | "absent";
 
+export function wrapTypingLines(text: string, columns: number): { start: number; end: number }[] {
+  const lines: { start: number; end: number }[] = [];
+  const width = Math.max(1, Math.floor(columns));
+  for (let start = 0; start < text.length;) {
+    let end = Math.min(start + width, text.length);
+    if (end < text.length) {
+      const space = text.lastIndexOf(" ", end - 1);
+      if (space > start) end = space + 1;
+    }
+    lines.push({ start, end });
+    start = end;
+  }
+  return lines;
+}
+
 const DAILY_WORDS = [
   "APPLE", "BEACH", "BLOOM", "BRAVE", "BREAD", "BRICK", "BRUSH", "CANDY", "CHAIR", "CHARM",
   "CHESS", "CLOUD", "CORAL", "CRANE", "DANCE", "DREAM", "EARTH", "FLAME", "FLOAT", "FROST",
