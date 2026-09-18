@@ -66,6 +66,7 @@ export function CommandPalette({ isOpen, onClose, onOpenGame, returnFocusRef }: 
       { title: "Open LinkedIn", description: "Professional profile and experience", icon: Linkedin, keywords: "social professional", run: () => window.open("https://www.linkedin.com/in/zhyronne-batican-5458a53aa/", "_blank", "noopener,noreferrer") },
       { title: "Open Facebook", description: "Visit my Facebook profile", icon: Facebook, keywords: "social profile", run: () => window.open("https://www.facebook.com/Hakdog.Hakplas.Haler", "_blank", "noopener,noreferrer") },
       { title: "Play Cat Runner", description: "Take a quick interactive break", icon: Gamepad2, keywords: "game arcade", run: onOpenGame },
+      { title: "Open Arcade", description: "Typing Sprint, daily word puzzle, and Cat Runner", icon: Gamepad2, keywords: "games play typing word puzzle", run: () => router.push("/arcade") },
       { title: "Toggle cat companion", description: "Hide or show the roaming portfolio cat", icon: Cat, keywords: "pet hide show accessibility", run: () => window.dispatchEvent(new Event("portfolio:toggle-cat")) },
       { title: "Toggle theme", description: "Switch between light and dark mode", icon: MoonStar, keywords: "appearance dark light", run: () => toggleDocumentTheme({ x: window.innerWidth / 2, y: 72 }) },
     ];

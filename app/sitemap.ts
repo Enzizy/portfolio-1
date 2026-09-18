@@ -36,6 +36,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.6,
     },
+    {
+      url: `${siteUrl}/arcade`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     ...projectPages,
   ];
 }

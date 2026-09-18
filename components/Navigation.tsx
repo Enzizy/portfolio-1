@@ -98,16 +98,6 @@ export function Navigation() {
     setIsGameOpen(false);
     setIsCommandOpen(true);
   };
-  const openGame = () => {
-    void unlockCatAudio();
-    modalReturnFocusRef.current = isOpen
-      ? menuButtonRef.current
-      : document.activeElement instanceof HTMLElement ? document.activeElement : menuButtonRef.current;
-    setIsOpen(false);
-    setIsCommandOpen(false);
-    setIsGameOpen(true);
-  };
-
   return (
     <header className={`site-header ${isScrolled ? "site-header--scrolled" : ""}`}>
       <nav className="nav-shell" aria-label="Primary navigation">
@@ -121,7 +111,7 @@ export function Navigation() {
           <PortfolioVersionSwitch version={1} />
           <button className="command-trigger" type="button" onClick={openCommands} aria-label="Open command menu"><Command size={13} />CTRL K</button>
           <ThemeToggle />
-          <button className="play-button" type="button" onClick={openGame}><Gamepad2 size={14} />PLAY</button>
+          <Link className="play-button" href="/arcade"><Gamepad2 size={14} />PLAY</Link>
         </div>
 
         <div className="portfolio-version-switch--mobile"><PortfolioVersionSwitch version={1} /></div>
@@ -156,7 +146,7 @@ export function Navigation() {
             <Link href="/movies" onClick={() => setIsOpen(false)}>/MOVIES</Link>
             <button className="mobile-command-button" type="button" onClick={openCommands}><Command size={16} />/COMMAND MENU <kbd>CTRL K</kbd></button>
             <ThemeToggle mobile />
-            <button className="mobile-play-button" type="button" onClick={openGame}><Gamepad2 size={16} />/PLAY</button>
+            <Link className="mobile-play-button" href="/arcade" onClick={() => setIsOpen(false)}><Gamepad2 size={16} />/PLAY</Link>
           </motion.nav>
         )}
       </AnimatePresence>
