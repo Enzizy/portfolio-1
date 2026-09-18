@@ -5,7 +5,8 @@ import { ArrowLeft, ArrowUpRight, Clapperboard, Clock3, Play, Star, Tv } from "l
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
-import { getDetails, getRecommendations, getSeason, isMediaType, mediaTypeLabel, tmdbImage, type MediaType, type TmdbDetails, type TmdbEpisode, vidsrcEmbedUrl } from "@/lib/tmdb";
+import { cinesrcEmbedUrl, getDetails, getRecommendations, getSeason, isMediaType, mediaTypeLabel, tmdbImage, type MediaType, type TmdbDetails, type TmdbEpisode, vidsrcEmbedUrl } from "@/lib/tmdb";
+import { MoviePlayer } from "../../MoviePlayer";
 import { TitleCard } from "../../TitleCard";
 import "../../movies.css";
 
@@ -91,7 +92,8 @@ export default async function TitlePage({ params, searchParams }: Props) {
   const episode = isTv ? (episodeNumbers.includes(parseIndex(query.e, 1)) ? parseIndex(query.e, 1) : episodeNumbers[0] ?? 1) : 1;
   const currentEpisode = episodes.find((item) => item.episode_number === episode);
 
-  const embedUrl = vidsrcEmbedUrl(mediaType, title.id, season, episode);
+  const vidsrcUrl = vidsrcEmbedUrl(mediaType, title.id, season, episode);
+  const cinesrcUrl = cinesrcEmbedUrl(mediaType, title.id, season, episode);
   const recommendations = await getRecommendations(mediaType, title.id);
   const backdrop = tmdbImage(title.backdrop_path, "w1280");
   const poster = tmdbImage(title.poster_path, "w500");
@@ -136,22 +138,10 @@ export default async function TitlePage({ params, searchParams }: Props) {
       <section id="player" className="movies-player" aria-labelledby="movies-player-title">
         <div className="movies-section-heading">
           <div><span className="movies-kicker">Now playing</span><h2 id="movies-player-title">{isTv ? `S${season} E${episode}${currentEpisode ? ` · ${currentEpisode.name}` : ""}` : title.title}</h2></div>
-          <p>{isTv && currentEpisode?.overview ? currentEpisode.overview : "If the stream stalls, use the server switcher inside the player or reload the page."}</p>
+          <p>{isTv && currentEpisode?.overview ? currentEpisode.overview : "If the stream stalls, use the server switch above the player."}</p>
         </div>
 
-        <div className="movies-player__frame">
-            <iframe
-              key={embedUrl}
-              src={embedUrl}
-              title={isTv ? `${title.title} season ${season} episode ${episode}` : title.title}
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-              allowFullScreen
-              // No allow-popups / allow-top-navigation: blocks the pop-under ads and redirects these players trigger.
-              sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-              referrerPolicy="origin"
-              loading="lazy"
-            />
-          </div>
+        <MoviePlayer key={vidsrcUrl} title={isTv ? `${title.title} season ${season} episode ${episode}` : title.title} vidsrcUrl={vidsrcUrl} cinesrcUrl={cinesrcUrl} />
         <p className="movies-player__source-note">Playback quality varies by available server. A verified HD or CAM label is not available for this stream.</p>
 
         {isTv && (previousEpisode || nextEpisode) && <nav className="movies-pagination" aria-label="Episode navigation">
@@ -204,7 +194,7 @@ export default async function TitlePage({ params, searchParams }: Props) {
         </section>
       )}
 
-      <div className="movies-credit"><span><Clapperboard size={15} aria-hidden="true" /> Screen Room</span><p>Title data and artwork from <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB <ArrowUpRight size={13} /></a>. Playback is embedded from VidSrc; this site does not host any video.</p></div>
+      <div className="movies-credit"><span><Clapperboard size={15} aria-hidden="true" /> Screen Room</span><p>Title data and artwork from <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB <ArrowUpRight size={13} /></a>. Playback is embedded from VidSrc or CineSrc; this site does not host any video.</p></div>
     </Shell>
   );
 }

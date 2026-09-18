@@ -123,7 +123,7 @@ export default async function MoviesPage({ searchParams }: Props) {
             </section>}
           </section>
 
-          <div className="movies-credit"><span><Clapperboard size={15} aria-hidden="true" /> Screen Room</span><p>Title data and artwork from <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB <ArrowUpRight size={13} /></a>. This product uses the TMDB API but is not endorsed or certified by TMDB. Playback is embedded from VidSrc; stream quality depends on the available source.</p></div>
+          <div className="movies-credit"><span><Clapperboard size={15} aria-hidden="true" /> Screen Room</span><p>Title data and artwork from <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB <ArrowUpRight size={13} /></a>. This product uses the TMDB API but is not endorsed or certified by TMDB. Playback is embedded from VidSrc or CineSrc; stream quality depends on the available source.</p></div>
         </div>
       </main>
       <Footer />

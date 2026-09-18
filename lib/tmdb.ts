@@ -213,3 +213,13 @@ export function vidsrcEmbedUrl(type: MediaType, id: number, season?: number, epi
   const path = type === "movie" ? `movie/${id}` : `tv/${id}/${season ?? 1}/${episode ?? 1}`;
   return new URL(path, VIDSRC_BASE).href;
 }
+
+// CineSrc uses the same TMDB ids, with query parameters for TV episodes.
+export function cinesrcEmbedUrl(type: MediaType, id: number, season?: number, episode?: number) {
+  const url = new URL(`https://cinesrc.st/embed/${type}/${id}`);
+  if (type === "tv") {
+    url.searchParams.set("s", String(season ?? 1));
+    url.searchParams.set("e", String(episode ?? 1));
+  }
+  return url.href;
+}
