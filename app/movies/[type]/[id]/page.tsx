@@ -152,6 +152,7 @@ export default async function TitlePage({ params, searchParams }: Props) {
               loading="lazy"
             />
           </div>
+        <p className="movies-player__source-note">Playback quality varies by available server. A verified HD or CAM label is not available for this stream.</p>
 
         {isTv && (previousEpisode || nextEpisode) && <nav className="movies-pagination" aria-label="Episode navigation">
           {previousEpisode ? <Link href={watchHref(mediaType, title.id, season, previousEpisode)}><ArrowLeft size={16} /> Episode {previousEpisode}</Link> : <span />}
