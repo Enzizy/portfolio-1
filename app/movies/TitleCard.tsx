@@ -3,18 +3,20 @@ import Link from "next/link";
 import { Clapperboard, Play, Star } from "lucide-react";
 import { mediaTypeLabel, tmdbImage, type TmdbTitle } from "@/lib/tmdb";
 
-export function TitleCard({ title, index, layout = "poster" }: { title: TmdbTitle; index?: number; layout?: "poster" | "landscape" }) {
-  const poster = tmdbImage(layout === "landscape" ? title.backdrop_path ?? title.poster_path : title.poster_path, layout === "landscape" ? "w780" : "w342");
+// Always the TMDB poster (2:3). Backdrops are film stills, not covers, so they never go on a card.
+export function TitleCard({ title, index, sizes = "(max-width: 700px) 45vw, (max-width: 1100px) 24vw, 200px" }: { title: TmdbTitle; index?: number; sizes?: string }) {
+  const poster = tmdbImage(title.poster_path, "w342");
   return (
-    <Link className={`movies-card movies-card--${layout}`} href={`/movies/${title.media_type}/${title.id}`}>
+    <Link className="movies-card" href={`/movies/${title.media_type}/${title.id}`}>
       <span className="movies-card__poster">
-        {poster ? <Image src={poster} alt="" width={layout === "landscape" ? 780 : 342} height={layout === "landscape" ? 439 : 513} sizes={layout === "landscape" ? "(max-width: 700px) 72vw, 300px" : "(max-width: 700px) 45vw, (max-width: 980px) 30vw, 220px"} /> : <span className="movies-card__placeholder"><Clapperboard size={30} aria-hidden="true" /></span>}
+        {poster ? <Image src={poster} alt="" width={342} height={513} sizes={sizes} /> : <span className="movies-card__placeholder"><Clapperboard size={30} aria-hidden="true" /></span>}
+        {title.vote_average > 0 && <span className="movies-card__rating"><Star size={10} fill="currentColor" aria-hidden="true" /> {title.vote_average.toFixed(1)}</span>}
+        {index != null && <span className="movies-card__index" aria-hidden="true">{index}</span>}
         <span className="movies-card__play"><Play size={20} fill="currentColor" aria-hidden="true" /></span>
-        {index != null && <small className="movies-card__index">{String(index).padStart(2, "0")}</small>}
       </span>
       <span className="movies-card__meta">
         <strong>{title.title}</strong>
-        <span><span>{title.year ?? "TBA"} / {mediaTypeLabel(title.media_type).toUpperCase()}</span>{title.vote_average > 0 && <span><Star size={11} fill="currentColor" aria-hidden="true" /> {title.vote_average.toFixed(1)}</span>}</span>
+        <span>{title.year ?? "TBA"} · {mediaTypeLabel(title.media_type)}</span>
       </span>
     </Link>
   );

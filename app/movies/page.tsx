@@ -49,74 +49,81 @@ export default async function MoviesPage({ searchParams }: Props) {
   const totalPages = listing?.total_pages ?? 1;
   const totalResults = listing?.total_results ?? 0;
   const unavailable = primaryResult.status === "rejected";
-  const lead = !query ? titles.find((title) => title.backdrop_path) ?? titles[0] : null;
+  const lead = !query ? titles.find((title) => title.backdrop_path && title.poster_path) ?? titles[0] : null;
   const leadBackdrop = lead ? tmdbImage(lead.backdrop_path, "w1280") : null;
+  const leadPoster = lead ? tmdbImage(lead.poster_path, "w500") : null;
+  const typeLabel = type === "tv" ? "series" : "movies";
+  const listLabel = query ? `Results for “${query}”` : `${sort === "popular" ? "Popular" : "Trending"} ${typeLabel}`;
 
   return (
     <>
       <Navigation />
       <main id="main-content" className="movies-page" tabIndex={-1}>
         <div className="movies-shell">
-          <div className="movies-topline"><span><Clapperboard size={17} aria-hidden="true" /> ZB. SCREEN ROOM</span><span>FIND YOUR NEXT WATCH</span></div>
+          <div className="movies-topline"><span><Clapperboard size={16} aria-hidden="true" /> Screen Room</span><span>Movies &amp; series</span></div>
 
-          {!query && <header className="movies-hero">
+          {!query && lead && <header className="movies-hero">
             {leadBackdrop && <Image className="movies-hero__backdrop" src={leadBackdrop} alt="" fill priority sizes="100vw" />}
-            <div className="movies-hero__copy">
-              <span className="movies-kicker">FEATURED {type === "tv" ? "SERIES" : "MOVIE"} / {sort === "popular" ? "POPULAR NOW" : "TRENDING THIS WEEK"}</span>
-              <h1>{lead?.title ?? "Your next watch starts here."}</h1>
-              {lead && <div className="movies-hero__facts"><span>{lead.year ?? "COMING SOON"}</span><span>{type === "tv" ? "TV SERIES" : "MOVIE"}</span>{lead.vote_average > 0 && <span><Star size={15} fill="currentColor" aria-hidden="true" /> {lead.vote_average.toFixed(1)} / 10</span>}</div>}
-              <p>{lead?.overview || "Explore movies and series, then settle in for something good."}</p>
-              {lead && <div className="movies-hero__actions">
-                <Link className="movies-primary-link" href={`/movies/${lead.media_type}/${lead.id}#player`}><Play size={19} fill="currentColor" aria-hidden="true" /> Watch now</Link>
-                <Link className="movies-secondary-link" href={`/movies/${lead.media_type}/${lead.id}`}><Info size={19} aria-hidden="true" /> More details</Link>
-              </div>}
+            <div className="movies-hero__inner">
+              <div className="movies-hero__copy">
+                <span className="movies-kicker">{sort === "popular" ? "Popular now" : "Trending this week"}</span>
+                <h1>{lead.title}</h1>
+                <div className="movies-hero__facts">
+                  {lead.vote_average > 0 && <span className="movies-hero__score"><Star size={13} fill="currentColor" aria-hidden="true" /> {lead.vote_average.toFixed(1)}</span>}
+                  <span>{lead.year ?? "Coming soon"}</span>
+                  <span>{type === "tv" ? "TV series" : "Movie"}</span>
+                </div>
+                {lead.overview && <p>{lead.overview}</p>}
+                <div className="movies-hero__actions">
+                  <Link className="movies-primary-link" href={`/movies/${lead.media_type}/${lead.id}#player`}><Play size={17} fill="currentColor" aria-hidden="true" /> Watch now</Link>
+                  <Link className="movies-secondary-link" href={`/movies/${lead.media_type}/${lead.id}`}><Info size={17} aria-hidden="true" /> Details</Link>
+                </div>
+              </div>
+              {leadPoster && <Link className="movies-hero__poster" href={`/movies/${lead.media_type}/${lead.id}`} aria-label={`Open ${lead.title}`}><Image src={leadPoster} alt="" width={500} height={750} sizes="260px" priority /></Link>}
             </div>
-            <span className="movies-hero__credit">FEATURED FROM THE TMDB CATALOG</span>
           </header>}
 
           <section id="discover" className="movies-discover" aria-labelledby="movies-discover-title">
-            <div className="movies-section-heading">
-              <div><span className="movies-kicker">DISCOVER / 01</span>{query ? <h1 id="movies-discover-title">Search results</h1> : <h2 id="movies-discover-title">Explore the collection</h2>}</div>
-              <p>Find a favorite or discover something new.</p>
-            </div>
-
             <div className="movies-toolbar">
               <nav className="movies-tabs" aria-label="Catalog category">
                 <Link href={catalogHref("movie", query, 1, sort)} aria-current={type === "movie" ? "page" : undefined}>Movies</Link>
-                <Link href={catalogHref("tv", query, 1, sort)} aria-current={type === "tv" ? "page" : undefined}>TV series</Link>
+                <Link href={catalogHref("tv", query, 1, sort)} aria-current={type === "tv" ? "page" : undefined}>Series</Link>
               </nav>
               {!query && <nav className="movies-tabs" aria-label="Sort order">
                 <Link href={catalogHref(type, "", 1, "trending")} aria-current={sort === "trending" ? "page" : undefined}>Trending</Link>
                 <Link href={catalogHref(type, "", 1, "popular")} aria-current={sort === "popular" ? "page" : undefined}>Popular</Link>
               </nav>}
-            <form className="movies-search" action="/movies" method="get" role="search">
-              <input type="hidden" name="type" value={type} />
-              <Search size={21} aria-hidden="true" />
-              <label className="sr-only" htmlFor="movies-query">Search {type === "movie" ? "movies" : "TV series"}</label>
-              <input id="movies-query" name="q" type="search" defaultValue={query} placeholder={type === "movie" ? "Search movies" : "Search series"} maxLength={80} />
-              <button type="submit" aria-label="Search titles"><ArrowRight size={19} aria-hidden="true" /></button>
-            </form>
+              <form className="movies-search" action="/movies" method="get" role="search">
+                <input type="hidden" name="type" value={type} />
+                <Search size={18} aria-hidden="true" />
+                <label className="sr-only" htmlFor="movies-query">Search {type === "movie" ? "movies" : "TV series"}</label>
+                <input id="movies-query" name="q" type="search" defaultValue={query} placeholder={type === "movie" ? "Search movies" : "Search series"} maxLength={80} />
+                <button type="submit" aria-label="Search titles"><ArrowRight size={17} aria-hidden="true" /></button>
+              </form>
             </div>
 
-            <div className="movies-result-heading"><p>{query ? `Results for “${query}”` : `${sort === "popular" ? "Popular" : "Trending"} ${type === "movie" ? "movies" : "series"}`}</p><span>{(query ? totalResults : titles.length).toLocaleString()} TITLES</span></div>
+            <div className="movies-result-heading">
+              {query ? <h1 id="movies-discover-title">{listLabel}</h1> : <h2 id="movies-discover-title">{listLabel}</h2>}
+              <span>{(query ? totalResults : titles.length).toLocaleString()} titles</span>
+            </div>
 
             {unavailable ? <div className="movies-empty" role="status"><Clapperboard size={28} aria-hidden="true" /><h3>The catalog is unavailable.</h3><p>Check that TMDB_API_KEY is set, then try again in a moment.</p></div> : titles.length ? (
-              <div className={query ? "movies-grid" : "movies-rail"}>{titles.map((title) => <TitleCard key={title.id} title={title} layout={query ? "poster" : "landscape"} />)}</div>
-            ) : <div className="movies-empty"><Search size={28} aria-hidden="true" /><h3>No titles found.</h3><p>Try another title or switch between movies and TV series.</p></div>}
-
-            {!query && otherTitles.length > 0 && <section className="movies-extra" aria-label={sort === "popular" ? "Trending this week" : "Popular right now"}>
-              <div className="movies-result-heading"><p>{sort === "popular" ? "Trending this week" : "Popular right now"}</p><span>MORE TO DISCOVER</span></div>
-              <div className="movies-rail">{otherTitles.map((title) => <TitleCard key={title.id} title={title} layout="landscape" />)}</div>
-            </section>}
+              <div className="movies-grid">{titles.map((title, i) => <TitleCard key={title.id} title={title} index={query ? undefined : (page - 1) * 20 + i + 1} />)}</div>
+            ) : <div className="movies-empty"><Search size={28} aria-hidden="true" /><h3>No titles found.</h3><p>Try another title or switch between movies and series.</p></div>}
 
             {!unavailable && totalPages > 1 && <nav className="movies-pagination" aria-label="Catalog pages">
               {page > 1 ? <Link href={catalogHref(type, query, page - 1, sort)}><ArrowLeft size={16} /> Previous</Link> : <span />}
-              <span>PAGE {page} / {totalPages}</span>
+              <span>Page {page} of {totalPages}</span>
               {page < totalPages && <Link href={catalogHref(type, query, page + 1, sort)}>Next <ArrowRight size={16} /></Link>}
             </nav>}
+
+            {!query && otherTitles.length > 0 && <section className="movies-extra" aria-labelledby="movies-extra-title">
+              <div className="movies-result-heading"><h2 id="movies-extra-title">{sort === "popular" ? "Trending this week" : "Popular right now"}</h2><Link href={catalogHref(type, "", 1, sort === "popular" ? "trending" : "popular")}>See all <ArrowRight size={14} /></Link></div>
+              <div className="movies-rail">{otherTitles.map((title) => <TitleCard key={title.id} title={title} sizes="(max-width: 700px) 38vw, 170px" />)}</div>
+            </section>}
           </section>
 
-          <div className="movies-credit"><span><Clapperboard size={17} aria-hidden="true" /> SCREEN ROOM</span><p>Title data and artwork from <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB <ArrowUpRight size={13} /></a>. This product uses the TMDB API but is not endorsed or certified by TMDB. Playback is embedded from VidSrc; stream quality depends on the available source.</p></div>
+          <div className="movies-credit"><span><Clapperboard size={15} aria-hidden="true" /> Screen Room</span><p>Title data and artwork from <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB <ArrowUpRight size={13} /></a>. This product uses the TMDB API but is not endorsed or certified by TMDB. Playback is embedded from VidSrc; stream quality depends on the available source.</p></div>
         </div>
       </main>
       <Footer />
