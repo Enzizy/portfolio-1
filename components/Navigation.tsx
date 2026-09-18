@@ -105,13 +105,13 @@ export function Navigation() {
 
         <div className="desktop-nav">
           {navItems.map((item) => {
-            return <a key={item} href={sectionHref(item.toLowerCase())}>/{item.toUpperCase()}</a>;
+            return <a key={item} href={sectionHref(item.toLowerCase())}>/{item.toLowerCase()}</a>;
           })}
-          <Link href="/movies">/MOVIES</Link>
+          <Link href="/movies">/movies</Link>
           <PortfolioVersionSwitch version={1} />
-          <button className="command-trigger" type="button" onClick={openCommands} aria-label="Open command menu"><Command size={13} />CTRL K</button>
+          <button className="command-trigger" type="button" onClick={openCommands} aria-label="Open command menu"><Command size={13} />ctrl k</button>
           <ThemeToggle />
-          <Link className="play-button" href="/arcade"><Gamepad2 size={14} />PLAY</Link>
+          <Link className="play-button" href="/arcade"><Gamepad2 size={14} />play</Link>
         </div>
 
         <div className="portfolio-version-switch--mobile"><PortfolioVersionSwitch version={1} /></div>
@@ -141,12 +141,12 @@ export function Navigation() {
             transition={{ duration: 0.2 }}
           >
             {navItems.map((item) => {
-              return <a key={item} href={sectionHref(item.toLowerCase())} onClick={() => setIsOpen(false)}>/{item.toUpperCase()}</a>;
+              return <a key={item} href={sectionHref(item.toLowerCase())} onClick={() => setIsOpen(false)}>/{item.toLowerCase()}</a>;
             })}
-            <Link href="/movies" onClick={() => setIsOpen(false)}>/MOVIES</Link>
-            <button className="mobile-command-button" type="button" onClick={openCommands}><Command size={16} />/COMMAND MENU <kbd>CTRL K</kbd></button>
+            <Link href="/movies" onClick={() => setIsOpen(false)}>/movies</Link>
+            <button className="mobile-command-button" type="button" onClick={openCommands}><Command size={16} />/command menu <kbd>ctrl k</kbd></button>
             <ThemeToggle mobile />
-            <Link className="mobile-play-button" href="/arcade" onClick={() => setIsOpen(false)}><Gamepad2 size={16} />/PLAY</Link>
+            <Link className="mobile-play-button" href="/arcade" onClick={() => setIsOpen(false)}><Gamepad2 size={16} />/play</Link>
           </motion.nav>
         )}
       </AnimatePresence>
