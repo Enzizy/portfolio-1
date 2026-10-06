@@ -207,7 +207,7 @@ export function isMediaType(value: string): value is MediaType {
 }
 
 // VidSrc embeds a player for a TMDB id. No key required.
-const VIDSRC_BASE = "https://vidsrc.sbs/embed/";
+const VIDSRC_BASE = "https://vidsrc.to/embed/";
 
 export function vidsrcEmbedUrl(type: MediaType, id: number, season?: number, episode?: number) {
   const path = type === "movie" ? `movie/${id}` : `tv/${id}/${season ?? 1}/${episode ?? 1}`;
@@ -222,4 +222,10 @@ export function cinesrcEmbedUrl(type: MediaType, id: number, season?: number, ep
     url.searchParams.set("e", String(episode ?? 1));
   }
   return url.href;
+}
+
+// VidFast uses TMDB ids directly, without an /embed prefix.
+export function vidfastEmbedUrl(type: MediaType, id: number, season?: number, episode?: number) {
+  const path = type === "movie" ? `movie/${id}` : `tv/${id}/${season ?? 1}/${episode ?? 1}`;
+  return new URL(path, "https://vidfast.vc/").href;
 }
