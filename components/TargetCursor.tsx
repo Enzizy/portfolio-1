@@ -1,8 +1,10 @@
 "use client";
 
 import { gsap } from "gsap";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { CURSOR_TARGET_SELECTOR, CURSOR_TEXT_SELECTOR, cursorVariantFor } from "@/lib/cursor";
 
 export type TargetCursorProps = {
   targetSelector?: string;
@@ -16,18 +18,7 @@ export type TargetCursorProps = {
 
 type Point = { x: number; y: number };
 
-const TEXT_SELECTOR = [
-  "input:not([type])",
-  'input[type="text"]',
-  'input[type="email"]',
-  'input[type="search"]',
-  'input[type="url"]',
-  'input[type="tel"]',
-  'input[type="password"]',
-  'input[type="number"]',
-  "textarea",
-  '[contenteditable="true"]',
-].join(",");
+const TEXT_SELECTOR = CURSOR_TEXT_SELECTOR;
 
 const RESTING_CORNERS: Point[] = [
   { x: -18, y: -18 },
@@ -37,14 +28,17 @@ const RESTING_CORNERS: Point[] = [
 ];
 
 export function TargetCursor({
-  targetSelector = 'a, button:not(:disabled), select:not(:disabled), summary, [role="button"], .cursor-target',
+  targetSelector = CURSOR_TARGET_SELECTOR,
   spinDuration = 2.4,
   hideDefaultCursor = true,
   hoverDuration = 0.2,
   parallaxOn = true,
-  cursorColor = "var(--page-text)",
-  cursorColorOnTarget = "#2563eb",
+  // Dark-surface pages (Screen Room) override these so the brackets stay visible.
+  cursorColor = "var(--cursor-ink, var(--page-text))",
+  cursorColorOnTarget = "var(--cursor-ink-active, #2563eb)",
 }: TargetCursorProps) {
+  // V2 and V3 render their own pointer; this one would double up on them.
+  const isBracketRoute = cursorVariantFor(usePathname()) === "bracket";
   const cursorRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const cornerRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -65,7 +59,8 @@ export function TargetCursor({
   useEffect(() => {
     const cursor = cursorRef.current;
     const dot = dotRef.current;
-    if (!cursor || !portalReady || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (!cursor || !portalReady || !isBracketRoute) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const corners = cornerRefs.current.filter((corner): corner is HTMLDivElement => Boolean(corner));
@@ -136,19 +131,8 @@ export function TargetCursor({
       spinRef.current = null;
       gsap.killTweensOf(cursor, "rotation");
       gsap.set(cursor, { rotation: 0 });
-      const v2Accent = target.closest(".v2-shell")
-        ? getComputedStyle(target).getPropertyValue("--v2-accent-text").trim()
-        : "";
-      setCornerColor(v2Accent || cursorColorOnTarget);
+      setCornerColor(cursorColorOnTarget);
     };
-
-    const syncV2Accent = () => {
-      const target = activeTargetRef.current;
-      if (!target?.closest(".v2-shell")) return;
-      setCornerColor(getComputedStyle(target).getPropertyValue("--v2-accent-text").trim() || cursorColorOnTarget);
-    };
-    const themeObserver = new MutationObserver(syncV2Accent);
-    themeObserver.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
 
     const elementAtPointer = () => document.elementFromPoint(pointerRef.current.x, pointerRef.current.y);
     const targetAtPointer = () => {
@@ -238,7 +222,6 @@ export function TargetCursor({
 
     return () => {
       delete root.dataset.targetCursor;
-      themeObserver.disconnect();
       clearSpinTimer();
       spinRef.current?.kill();
       gsap.ticker.remove(tick);
@@ -251,9 +234,9 @@ export function TargetCursor({
       window.removeEventListener("scroll", handleViewportChange);
       window.removeEventListener("resize", handleViewportChange);
     };
-  }, [cursorColor, cursorColorOnTarget, hideDefaultCursor, hoverDuration, parallaxOn, portalReady, setCornerColor, spinDuration, targetSelector]);
+  }, [cursorColor, cursorColorOnTarget, hideDefaultCursor, hoverDuration, isBracketRoute, parallaxOn, portalReady, setCornerColor, spinDuration, targetSelector]);
 
-  if (!portalReady) return null;
+  if (!portalReady || !isBracketRoute) return null;
 
   return createPortal((
     <div ref={cursorRef} className="target-cursor" aria-hidden="true">

@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, Clapperboard, Info, Play, Search, 
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { getPopular, getTrending, searchTitles, tmdbImage, type MediaType, type TmdbTitle } from "@/lib/tmdb";
+import { MovieCurtain, MovieCurtainStage } from "./MovieCurtain";
 import { TitleCard } from "./TitleCard";
 import "./movies.css";
 
@@ -58,15 +59,19 @@ export default async function MoviesPage({ searchParams }: Props) {
   return (
     <>
       <Navigation />
+      <MovieCurtainStage />
+      <MovieCurtain />
       <main id="main-content" className="movies-page" tabIndex={-1}>
         <div className="movies-shell">
-          <div className="movies-topline"><span><Clapperboard size={16} aria-hidden="true" /> Screen Room</span><span>Movies &amp; series</span></div>
+          <div className="movies-topline"><span><Clapperboard size={16} aria-hidden="true" /> ZB. Screen Room</span><span>Reel 01 · Movies &amp; series</span></div>
+          <div className="movies-sprocket" aria-hidden="true" />
 
           {!query && lead && <header className="movies-hero">
+            <span className="movies-ticks" aria-hidden="true"><i /><i /><i /><i /></span>
             {leadBackdrop && <Image className="movies-hero__backdrop" src={leadBackdrop} alt="" fill priority sizes="100vw" />}
             <div className="movies-hero__inner">
               <div className="movies-hero__copy">
-                <span className="movies-kicker">{sort === "popular" ? "Popular now" : "Trending this week"}</span>
+                <span className="movies-kicker">01 / {sort === "popular" ? "Popular now" : "Trending this week"}</span>
                 <h1>{lead.title}</h1>
                 <div className="movies-hero__facts">
                   {lead.vote_average > 0 && <span className="movies-hero__score"><Star size={13} fill="currentColor" aria-hidden="true" /> {lead.vote_average.toFixed(1)}</span>}
@@ -103,7 +108,10 @@ export default async function MoviesPage({ searchParams }: Props) {
             </div>
 
             <div className="movies-result-heading">
-              {query ? <h1 id="movies-discover-title">{listLabel}</h1> : <h2 id="movies-discover-title">{listLabel}</h2>}
+              <div>
+                <span className="movies-kicker">{query ? "02 / Search" : "02 / Browse"}</span>
+                {query ? <h1 id="movies-discover-title">{listLabel}</h1> : <h2 id="movies-discover-title">{listLabel}</h2>}
+              </div>
               <span>{(query ? totalResults : titles.length).toLocaleString()} titles</span>
             </div>
 
@@ -118,7 +126,13 @@ export default async function MoviesPage({ searchParams }: Props) {
             </nav>}
 
             {!query && otherTitles.length > 0 && <section className="movies-extra" aria-labelledby="movies-extra-title">
-              <div className="movies-result-heading"><h2 id="movies-extra-title">{sort === "popular" ? "Trending this week" : "Popular right now"}</h2><Link href={catalogHref(type, "", 1, sort === "popular" ? "trending" : "popular")}>See all <ArrowRight size={14} /></Link></div>
+              <div className="movies-result-heading">
+                <div>
+                  <span className="movies-kicker">03 / More to watch</span>
+                  <h2 id="movies-extra-title">{sort === "popular" ? "Trending this week" : "Popular right now"}</h2>
+                </div>
+                <Link href={catalogHref(type, "", 1, sort === "popular" ? "trending" : "popular")}>See all <ArrowRight size={14} /></Link>
+              </div>
               <div className="movies-rail">{otherTitles.map((title) => <TitleCard key={title.id} title={title} sizes="(max-width: 700px) 38vw, 170px" />)}</div>
             </section>}
           </section>

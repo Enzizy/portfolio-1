@@ -816,3 +816,120 @@ html[data-theme-transition-capture] .target-cursor {
 @media (forced-colors: active) {
   .target-cursor { display: none; }
 }
+
+/* ---------------------------------------------------------------- cursor skins
+   Per-layout pointers (see components/CursorSkin.tsx). GSAP owns the transform of
+   .cursor-skin__lead / __tip; every rule below animates their children instead, so
+   the script and the stylesheet never write the same property. */
+
+.cursor-skin__lead,
+.cursor-skin__tip {
+  position: fixed;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 140ms ease;
+  will-change: transform;
+  /* A contrasting halo, so the pointer survives whatever it happens to be over. */
+  filter: drop-shadow(0 0 1.5px var(--cursor-halo, rgba(0, 0, 0, .45)));
+}
+.cursor-skin__lead[data-state="hidden"],
+.cursor-skin__tip[data-state="hidden"] { opacity: 0; }
+.cursor-skin__lead > i,
+.cursor-skin__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  transition: width 220ms cubic-bezier(.22, 1, .36, 1), height 220ms cubic-bezier(.22, 1, .36, 1),
+    background-color 180ms ease, border-color 180ms ease, transform 180ms ease, opacity 180ms ease;
+}
+
+/* V2 — a soft ring that trails a solid dot, matching the rounded dashboard. */
+.cursor-skin--ring .cursor-skin__lead > i {
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid color-mix(in srgb, var(--cursor-ink, currentColor) 38%, transparent);
+  border-radius: 50%;
+}
+.cursor-skin--ring .cursor-skin__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cursor-ink, currentColor);
+}
+.cursor-skin--ring .cursor-skin__lead[data-state="target"] > i {
+  width: 46px;
+  height: 46px;
+  border-color: var(--cursor-ink-active, #a63e00);
+  background: color-mix(in srgb, var(--cursor-ink-active, #a63e00) 11%, transparent);
+}
+.cursor-skin--ring .cursor-skin__tip[data-state="target"] .cursor-skin__dot { width: 0; height: 0; }
+.cursor-skin--ring .cursor-skin__lead[data-press="true"] > i { transform: translate(-50%, -50%) scale(.78); }
+.cursor-skin--ring .cursor-skin__tip[data-press="true"] .cursor-skin__dot { transform: translate(-50%, -50%) scale(.7); }
+
+/* V3 — a surveyor's reticle: fixed cross, thin sighting ring, no lag on the tip. */
+.cursor-skin--reticle .cursor-skin__lead > i {
+  width: 26px;
+  height: 26px;
+  border: 1px solid color-mix(in srgb, var(--cursor-ink, currentColor) 40%, transparent);
+  border-radius: 50%;
+}
+.cursor-skin--reticle .cursor-skin__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--cursor-ink, currentColor);
+}
+.cursor-skin__arms {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: transform 260ms cubic-bezier(.22, 1, .36, 1);
+}
+.cursor-skin__arm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--cursor-ink, currentColor);
+  transition: width 200ms ease, height 200ms ease, background-color 180ms ease;
+}
+.cursor-skin__arm--n { width: 1px; height: 8px; transform: translate(-50%, calc(-100% - 5px)); }
+.cursor-skin__arm--s { width: 1px; height: 8px; transform: translate(-50%, 5px); }
+.cursor-skin__arm--w { width: 8px; height: 1px; transform: translate(calc(-100% - 5px), -50%); }
+.cursor-skin__arm--e { width: 8px; height: 1px; transform: translate(5px, -50%); }
+
+/* The cross stays ink-coloured in every state: the accent is also the colour of V3's
+   primary buttons, and an amber reticle on an amber button reads as nothing at all.
+   Only the sighting ring takes the accent. */
+.cursor-skin--reticle .cursor-skin__lead[data-state="target"] > i {
+  width: 15px;
+  height: 15px;
+  border-width: 2px;
+  border-color: var(--cursor-ink-active, #ffb648);
+}
+.cursor-skin--reticle .cursor-skin__tip[data-state="target"] .cursor-skin__dot { width: 5px; height: 5px; }
+
+/* Panning the sheet — held space, a drag, or the middle button — turns the cross
+   into a move indicator and drops the sighting ring. */
+html[data-atlas-pan] .cursor-skin--reticle .cursor-skin__arms { transform: translate(-50%, -50%) rotate(45deg); }
+html[data-atlas-pan] .cursor-skin--reticle .cursor-skin__arm--n,
+html[data-atlas-pan] .cursor-skin--reticle .cursor-skin__arm--s { height: 11px; }
+html[data-atlas-pan] .cursor-skin--reticle .cursor-skin__arm--w,
+html[data-atlas-pan] .cursor-skin--reticle .cursor-skin__arm--e { width: 11px; }
+html[data-atlas-pan] .cursor-skin--reticle .cursor-skin__lead > i { opacity: 0; }
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-skin { display: none; }
+}
+@media (forced-colors: active) {
+  .cursor-skin { display: none; }
+}

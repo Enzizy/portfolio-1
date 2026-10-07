@@ -1,4 +1,10 @@
-/* Screen Room — a single dark cinema theme. The rest of the site's light/dark toggle does not apply here. */
+/*
+  Screen Room — deliberately the one always-dark surface on the site: a cinema should
+  not have its lights on. It earns its place in the family by borrowing the portfolio's
+  structural signatures instead of its palette — numbered sections, monospace accent
+  micro-labels, hairline rules, registration ticks — and adds a film material of its
+  own (grain, vignette, a sprocket rule) that V1/V2/V3 do not have.
+*/
 
 .movies-page {
   --movies-bg: #0a0b0f;
@@ -21,6 +27,8 @@
 .movies-page a:focus-visible, .movies-page button:focus-visible, .movies-page input:focus-visible { outline: 2px solid var(--movies-accent); outline-offset: 3px; }
 
 body:has(.movies-page) { background: #0a0b0f; color: #f5f6f8; }
+/* The pointer is portalled onto <html>, which never inherits from <body>. */
+html:has(.movies-page) { --cursor-ink: #f5f6f8; --cursor-ink-active: #f5a35c; }
 body:has(.movies-page) .site-header { background: rgba(10,11,15,.9); border-bottom: 1px solid #1f2229; backdrop-filter: blur(16px); }
 body:has(.movies-page) .nav-shell { width: min(1400px, calc(100% - 64px)); }
 body:has(.movies-page) .site-header .logo,
@@ -39,11 +47,39 @@ body:has(.movies-page) .footer a span { border-color: #363b46; color: #f5f6f8; }
 
 .movies-shell { width: min(1400px, calc(100% - 64px)); margin: 0 auto; }
 
-/* Type helpers */
-.movies-kicker { display: inline-block; color: var(--movies-accent); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-.movies-topline { display: flex; align-items: center; justify-content: space-between; padding: 6px 0 22px; color: var(--movies-muted); font-size: 12px; font-weight: 600; }
-.movies-topline span:first-child { display: inline-flex; align-items: center; gap: 8px; color: var(--movies-ink); font-size: 13px; }
+/* Film material: grain and a soft vignette over the whole room, generated in place. */
+.movies-page::before,
+.movies-page::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+}
+.movies-page::before { background: radial-gradient(ellipse at 50% 42%, transparent 52%, rgba(3, 4, 7, .72) 100%); }
+.movies-page::after {
+  opacity: .3;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+.movies-shell { position: relative; z-index: 1; }
+
+/* Type helpers — the same monospace micro-label the rest of the portfolio uses. */
+.movies-kicker { display: inline-block; color: var(--movies-accent); font: 700 11px/1 var(--movies-font-mono, ui-monospace, monospace); letter-spacing: .14em; text-transform: uppercase; }
+.movies-topline { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 6px 0 14px; color: var(--movies-muted); font: 11px/1 var(--movies-font-mono, ui-monospace, monospace); letter-spacing: .12em; text-transform: uppercase; }
+.movies-topline span:first-child { display: inline-flex; align-items: center; gap: 8px; color: var(--movies-ink); }
 .movies-topline svg { color: var(--movies-accent); }
+/* A strip of sprocket holes under the topline, the way film stock is perforated. */
+.movies-sprocket {
+  height: 9px;
+  margin-bottom: 26px;
+  border-block: 1px solid var(--movies-line);
+  background-image: repeating-linear-gradient(90deg, var(--movies-line) 0 6px, transparent 6px 22px);
+  background-size: auto 3px;
+  background-position: center;
+  background-repeat: repeat-x;
+  opacity: .75;
+}
 
 /* Buttons */
 .movies-primary-link, .movies-secondary-link {
@@ -55,6 +91,13 @@ body:has(.movies-page) .footer a span { border-color: #363b46; color: #f5f6f8; }
 .movies-primary-link:hover { background: #ffb877; transform: translateY(-1px); }
 .movies-secondary-link { background: rgba(255,255,255,.12); color: #fff; backdrop-filter: blur(8px); }
 .movies-secondary-link:hover { background: rgba(255,255,255,.2); transform: translateY(-1px); }
+
+/* Registration marks, the same corner detail the V3 plates carry. */
+.movies-ticks i { position: absolute; z-index: 2; width: 14px; height: 14px; border: 1px solid var(--movies-accent); pointer-events: none; }
+.movies-ticks i:nth-child(1) { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+.movies-ticks i:nth-child(2) { top: 10px; right: 10px; border-width: 1px 1px 0 0; }
+.movies-ticks i:nth-child(3) { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+.movies-ticks i:nth-child(4) { bottom: 10px; left: 10px; border-width: 0 0 1px 1px; }
 
 /* Featured hero */
 .movies-hero { position: relative; overflow: hidden; border: 1px solid var(--movies-line); border-radius: 18px; background: var(--movies-surface); }
@@ -94,7 +137,8 @@ body:has(.movies-page) .footer a span { border-color: #363b46; color: #f5f6f8; }
 .movies-search button:hover { background: var(--movies-accent); color: var(--movies-accent-ink); }
 
 /* Section headings */
-.movies-result-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 18px; }
+.movies-result-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 18px; padding-bottom: 12px; border-bottom: 1px solid var(--movies-line); }
+.movies-result-heading > div { display: grid; gap: 7px; min-width: 0; }
 .movies-result-heading h1, .movies-result-heading h2 { margin: 0; font-size: clamp(20px, 2.2vw, 26px); font-weight: 800; letter-spacing: -.025em; overflow-wrap: anywhere; }
 .movies-result-heading > span { flex: 0 0 auto; color: var(--movies-muted); font-size: 13px; font-weight: 600; }
 .movies-result-heading > a { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 4px; color: var(--movies-muted); font-size: 13px; font-weight: 700; transition: color 140ms ease; }
@@ -255,4 +299,79 @@ body:has(.movies-page) .footer a span { border-color: #363b46; color: #f5f6f8; }
 
 @media (prefers-reduced-motion: reduce) {
   .movies-page *, .movies-page *::before, .movies-page *::after { transition-duration: .01ms !important; }
+}
+
+/* ------------------------------------------------------------------- curtain
+   Shown once per session on the way in. The pre-paint script in the root layout
+   stamps html[data-movies-curtain], so on a hard load the panels are already closed
+   on the first frame; everything below is CSS, so it needs no hydration to run. */
+
+.movies-curtain { display: none; }
+
+html[data-movies-curtain="show"] .movies-curtain {
+  display: block;
+  position: fixed;
+  z-index: 300;
+  inset: 0;
+  pointer-events: none;
+  animation: movies-curtain-done 1ms 1640ms forwards;
+}
+
+.movies-curtain__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51%;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(0, 0, 0, .55) 0 14px,
+      rgba(255, 255, 255, .035) 14px 30px,
+      rgba(0, 0, 0, .55) 30px 46px),
+    linear-gradient(180deg, #16171c 0%, #0a0b0f 62%, #07080b 100%);
+  will-change: transform;
+}
+.movies-curtain__panel--left {
+  left: 0;
+  /* A warm rim of projector light along the parting edge. */
+  box-shadow: inset -22px 0 34px -26px var(--movies-accent, #f5a35c), 18px 0 60px rgba(0, 0, 0, .8);
+  animation: movies-curtain-left 1020ms 620ms cubic-bezier(.72, 0, .16, 1) forwards;
+}
+.movies-curtain__panel--right {
+  right: 0;
+  box-shadow: inset 22px 0 34px -26px var(--movies-accent, #f5a35c), -18px 0 60px rgba(0, 0, 0, .8);
+  animation: movies-curtain-right 1020ms 620ms cubic-bezier(.72, 0, .16, 1) forwards;
+}
+
+.movies-curtain__card {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 9px;
+  text-align: center;
+  animation: movies-curtain-card 900ms ease forwards;
+}
+.movies-curtain__mark { color: #f5f6f8; font-size: 22px; font-weight: 800; letter-spacing: -.05em; }
+.movies-curtain__mark i { color: var(--movies-accent, #f5a35c); font-style: normal; }
+.movies-curtain__card strong { color: #f5f6f8; font-size: clamp(30px, 5vw, 48px); font-weight: 800; letter-spacing: -.04em; }
+.movies-curtain__sub {
+  color: var(--movies-accent, #f5a35c);
+  font: 700 11px/1 ui-monospace, monospace;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+}
+
+@keyframes movies-curtain-left { to { transform: translateX(-100%); } }
+@keyframes movies-curtain-right { to { transform: translateX(100%); } }
+@keyframes movies-curtain-card {
+  0% { opacity: 0; transform: translateY(8px); }
+  28%, 58% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes movies-curtain-done { to { visibility: hidden; } }
+
+/* No curtain for anyone who asked the interface to hold still. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-movies-curtain="show"] .movies-curtain { display: none; }
 }

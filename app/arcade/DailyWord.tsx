@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { dailyWordFor, scoreGuess, type LetterResult } from "@/lib/arcade";
+import { publishArcadeRecord } from "./useArcadeRecords";
 
 const KEY_ROWS = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
 const RESULT_RANK: Record<LetterResult, number> = { absent: 1, present: 2, correct: 3 };
@@ -50,6 +51,7 @@ export function DailyWord() {
       setCurrent("");
       setMessage("");
       try { localStorage.setItem(`arcade-word-${daily.date}`, JSON.stringify(nextGuesses)); } catch { /* Storage is optional. */ }
+    publishArcadeRecord();
       return;
     }
     if (/^[A-Z]$/.test(key) && current.length < 5) { setCurrent((value) => value + key); setMessage(""); }

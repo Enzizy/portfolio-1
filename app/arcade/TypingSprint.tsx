@@ -2,6 +2,7 @@
 
 import { RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { publishArcadeRecord } from "./useArcadeRecords";
 import { wrapTypingLines } from "@/lib/arcade";
 
 const PROMPTS = [
@@ -75,6 +76,7 @@ export function TypingSprint() {
     bestRef.current = nextBest;
     setBest(nextBest);
     try { localStorage.setItem("arcade-typing-best", String(nextBest)); } catch { /* Best score is optional. */ }
+    publishArcadeRecord();
   }, [prompt]);
 
   useEffect(() => {

@@ -1,0 +1,10 @@
+{
+  "name": "screen-room-catalog",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node --env-file=../../.env.local server.mjs",
+    "test": "node --test"
+  }
+}

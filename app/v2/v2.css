@@ -29,6 +29,11 @@ html[data-theme="dark"] .v2-shell {
   --v2-border: #414044;
 }
 
+/* The pointer is portalled onto <html>, which never inherits from <body>, so the
+   ring cursor reads its colours from here rather than from .v2-shell. */
+html:has(.v2-shell) { --cursor-ink: #14243a; --cursor-ink-active: #a63e00; --cursor-halo: rgba(255, 255, 255, .7); }
+html[data-theme="dark"]:has(.v2-shell) { --cursor-ink: #f5f0e9; --cursor-ink-active: #ffb47d; --cursor-halo: rgba(0, 0, 0, .55); }
+
 @media (min-width: 1024px) {
   .v2-shell { zoom: .909090909; width: 100vw; }
 }

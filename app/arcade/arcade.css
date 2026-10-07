@@ -24,19 +24,49 @@
 .arcade-hero__meta { display: grid; justify-items: center; flex: 0 0 140px; padding-left: 26px; border-left: 1px solid var(--arcade-line); }
 .arcade-hero__meta strong { font-size: 66px; line-height: 1; letter-spacing: -.09em; }
 .arcade-hero__meta span { margin-top: 8px; color: var(--arcade-muted); font: 10px monospace; letter-spacing: .08em; }
+/* A record board: the games already save progress, so show it rather than hide it. */
+.arcade-record-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-top: 26px; overflow: hidden; border: 1px solid var(--arcade-line); border-radius: 9px; background: var(--arcade-line); }
+.arcade-record-board span { display: grid; align-content: center; gap: 7px; min-height: 68px; padding: 13px 16px; background: var(--arcade-surface); }
+.arcade-record-board small { color: var(--arcade-muted); font: 9px/1 monospace; letter-spacing: .09em; }
+.arcade-record-board strong { font-size: 16px; font-weight: 700; letter-spacing: -.02em; }
+
 .arcade-collection { padding: 38px 0 0; }
-.arcade-section-heading h2 { margin: 7px 0 20px; font-size: 25px; font-weight: 650; letter-spacing: -.04em; }
+.arcade-section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+.arcade-section-heading h2 { margin: 7px 0 0; font-size: 25px; font-weight: 650; letter-spacing: -.04em; }
+.arcade-hint { margin: 0; color: var(--arcade-muted); font-size: 11px; }
+.arcade-page kbd { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; border: 1px solid var(--arcade-line); border-radius: 4px; background: var(--arcade-soft); color: var(--arcade-ink); font: 700 10px/1 monospace; }
 .arcade-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .arcade-card { display: flex; flex-direction: column; align-items: flex-start; min-height: 278px; padding: 18px; border: 1px solid var(--arcade-line); border-radius: 9px; background: var(--arcade-surface); color: var(--arcade-ink); text-align: left; cursor: pointer; transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
 .arcade-card:hover { transform: translateY(-3px); border-color: var(--arcade-accent); box-shadow: 0 16px 30px -24px rgba(37,99,235,.35); }
 .arcade-card__top, .arcade-card__bottom { display: flex; justify-content: space-between; align-items: center; width: 100%; font: 700 10px monospace; letter-spacing: .04em; }
 .arcade-card__top { color: var(--arcade-muted); }
-.arcade-card__top svg, .arcade-card__bottom span { color: var(--arcade-accent); }
-.arcade-card__icon { display: grid; place-items: center; width: 56px; height: 56px; margin: 28px 0 15px; border-radius: 8px; background: var(--arcade-soft); color: var(--arcade-accent); }
+.arcade-card__top svg { color: var(--arcade-accent); }
+.arcade-card__bottom > span:last-child { display: inline-flex; align-items: center; gap: 5px; color: var(--arcade-accent); }
+.arcade-card__bottom em { color: var(--arcade-accent); font-style: normal; }
+/* Each card carries a little CRT screen instead of a flat icon. */
+.arcade-card__screen { position: relative; display: grid; place-items: center; width: 100%; height: 96px; margin: 18px 0 16px; overflow: hidden; border: 1px solid var(--arcade-line); border-radius: 7px; background: radial-gradient(ellipse at 50% 38%, var(--arcade-soft), var(--arcade-surface) 78%); color: var(--arcade-accent); }
+.arcade-card__scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(20, 30, 50, .07) 0 1px, transparent 1px 3px); pointer-events: none; }
+.arcade-card:hover .arcade-card__screen { border-color: var(--arcade-accent); }
+/* The portfolio cat, taken from the shared 8x8 atlas: idle at rest, walking on hover. */
+.arcade-card__cat { width: 64px; height: 64px; background: url('/images/black-cat-atlas-v2.png') 0% 42.857% / 800% 800% no-repeat; image-rendering: pixelated; }
+.arcade-card:hover .arcade-card__cat { animation: arcade-cat-walk 680ms steps(1) infinite; }
+@keyframes arcade-cat-walk {
+  0%    { background-position: 0% 0%; }
+  12.5% { background-position: 14.2857% 0%; }
+  25%   { background-position: 28.5714% 0%; }
+  37.5% { background-position: 42.8571% 0%; }
+  50%   { background-position: 57.1429% 0%; }
+  62.5% { background-position: 71.4286% 0%; }
+  75%   { background-position: 85.7143% 0%; }
+  87.5% { background-position: 100% 0%; }
+}
 .arcade-card > strong { font-size: 19px; letter-spacing: -.03em; }
 .arcade-card__description { margin: 7px 0 20px; color: var(--arcade-muted); font-size: 12px; line-height: 1.5; }
 .arcade-card__bottom { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--arcade-line); color: var(--arcade-muted); }
 .arcade-play-area { margin-top: 40px; padding: 25px; scroll-margin-top: 94px; border: 1px solid var(--arcade-line); border-radius: 9px; background: var(--arcade-surface); }
+/* The cabinet: a recessed screen the game sits inside. */
+.arcade-cabinet { position: relative; margin-top: 4px; padding: 18px; border: 1px solid var(--arcade-line); border-radius: 8px; background: var(--arcade-bg); box-shadow: inset 0 2px 14px -8px rgba(15, 25, 45, .5); }
+.arcade-cabinet::after { content: ""; position: absolute; inset: 0; border-radius: 8px; background: repeating-linear-gradient(0deg, rgba(20, 30, 50, .045) 0 1px, transparent 1px 3px); pointer-events: none; }
 .arcade-play-area__heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid var(--arcade-line); }
 .arcade-play-area__heading h2 { margin: 8px 0 0; font-size: 30px; letter-spacing: -.04em; }
 .arcade-play-area__heading > button, .typing-game__footer button, .word-game__result button { min-height: 36px; padding: 8px 12px; border: 1px solid var(--arcade-line); border-radius: 6px; background: var(--arcade-surface); color: var(--arcade-ink); font-family: inherit; font-size: 11px; font-weight: 650; cursor: pointer; }
@@ -104,8 +134,13 @@ html[data-theme="dark"] .word-game__cell { border-color: #505660; }
   .arcade-hero p { font-size: 13px; }
   .arcade-grid { grid-template-columns: 1fr; }
   .arcade-card { min-height: 210px; }
-  .arcade-card__icon { margin: 16px 0 12px; width: 45px; height: 45px; }
+  .arcade-card__screen { height: 78px; margin: 14px 0 12px; }
+  .arcade-record-board { grid-template-columns: 1fr 1fr; }
+  .arcade-record-board span:last-child { display: none; }
+  .arcade-section-heading { display: block; }
+  .arcade-hint { display: none; }
   .arcade-play-area { padding: 16px; }
+  .arcade-cabinet { padding: 12px; }
   .arcade-play-area__heading h2 { font-size: 24px; }
   .typing-game__intro, .word-game__intro { align-items: flex-start; flex-direction: column; }
   .typing-game__dashboard { grid-template-columns: 1fr 104px; gap: 8px; }

@@ -1,10 +1,19 @@
 import Link from "next/link";
 
-export function PortfolioVersionSwitch({ version }: { version: 1 | 2 }) {
+const versions = [
+  { version: 1, label: "V1", href: "/" },
+  { version: 2, label: "V2", href: "/v2" },
+  { version: 3, label: "V3", href: "/v3" },
+] as const;
+
+export function PortfolioVersionSwitch({ version }: { version: 1 | 2 | 3 }) {
   return (
     <nav className="portfolio-version-switch" aria-label="Portfolio layout">
-      <Link href="/" aria-current={version === 1 ? "page" : undefined}>V1</Link>
-      <Link href="/v2" aria-current={version === 2 ? "page" : undefined}>V2</Link>
+      {versions.map((item) => (
+        <Link key={item.version} href={item.href} aria-current={version === item.version ? "page" : undefined}>
+          {item.label}
+        </Link>
+      ))}
     </nav>
   );
 }
