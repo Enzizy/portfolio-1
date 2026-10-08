@@ -12,9 +12,18 @@ const MAX_Z = 1.7;
 const FLY_MS = 720;
 /** Below this zoom the plates collapse to their titles, so the whole map stays readable. */
 const DETAIL_Z = 0.46;
+/** Zooming back in has to clear this before detail returns, so a wheel resting on the
+    threshold cannot flip the whole sheet's layout every frame. */
+const DETAIL_Z_EXIT = 0.5;
+/** Matches the drift layer's background-size, so wrapping its offset is seamless. */
+const DRIFT_PERIOD = 170;
+/** Per-frame (60 Hz) velocity retention once a drag is released. */
+const GLIDE_DECAY = 0.94;
 
 type Camera = { cx: number; cy: number; z: number };
 type Rect = { x: number; y: number; w: number; h: number };
+/** Viewport metrics, cached so the hot path never forces a layout to read them. */
+type Box = { w: number; h: number; left: number; top: number; bw: number; bh: number };
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -65,6 +74,17 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
   const tap = useRef<{ station: StationId | null; x: number; y: number } | null>(null);
   /** The plate the camera was last flown to — tapping it again should not re-frame it. */
   const framed = useRef<StationId | null>("identity");
+  const box = useRef<Box>({ w: 0, h: 0, left: 0, top: 0, bw: 0, bh: 0 });
+  /** Pending paint; every camera change in a frame collapses into one write pass. */
+  const frame = useRef(0);
+  const moving = useRef(false);
+  const settle = useRef(0);
+  const readouts = useRef({ zoom: "", coord: "" });
+  /** The transform last written, so an unmoved camera writes nothing. */
+  const painted = useRef({ tx: NaN, ty: NaN, z: NaN });
+  const lowDetailRef = useRef(false);
+  /** Smoothed drag velocity in screen px/ms, for the release glide. */
+  const velocity = useRef({ x: 0, y: 0, t: 0 });
 
   const [mode, setMode] = useState<"map" | "list">("map");
   const [narrow, setNarrow] = useState(false);
@@ -78,31 +98,69 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
 
   /* ---------------------------------------------------------------- camera */
 
-  const paint = useCallback(() => {
+  /**
+   * Writes the camera to the DOM. Write-only on purpose: it reads nothing from layout,
+   * so a burst of wheel or pointer events can never force a synchronous reflow of the
+   * 5540px world. Call `schedule` from event handlers; `render` only from inside a frame.
+   */
+  const render = useCallback(() => {
+    if (frame.current) {
+      cancelAnimationFrame(frame.current);
+      frame.current = 0;
+    }
     const viewport = viewportRef.current;
     const world = worldRef.current;
     if (!viewport || !world) return;
     const { cx, cy, z } = cam.current;
-    const vw = viewport.clientWidth;
-    const vh = viewport.clientHeight;
+    const { w: vw, h: vh } = box.current;
     const tx = vw / 2 - cx * z;
     const ty = vh / 2 - cy * z;
 
-    world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${z})`;
-    if (driftRef.current) driftRef.current.style.transform = `translate3d(${tx * 0.34}px, ${ty * 0.34}px, 0)`;
-    if (zoomReadoutRef.current) zoomReadoutRef.current.textContent = `${Math.round(z * 100)}%`;
-    if (coordReadoutRef.current) coordReadoutRef.current.textContent = `x ${Math.round(cx)}  y ${Math.round(cy)}`;
+    // A plate resizing (the contact form growing, say) re-runs this with the camera
+    // untouched: refresh the active station below, but leave the DOM alone.
+    const last = painted.current;
+    const still = last.tx === tx && last.ty === ty && last.z === z;
+    if (!still) {
+      painted.current = { tx, ty, z };
+      world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${z})`;
+      if (driftRef.current) {
+        // The dot field repeats every DRIFT_PERIOD px, so only the remainder matters —
+        // the layer stays one tile larger than the screen however far the camera roams.
+        const wrap = (value: number) => ((value % DRIFT_PERIOD) + DRIFT_PERIOD) % DRIFT_PERIOD;
+        driftRef.current.style.transform = `translate3d(${wrap(tx * 0.34)}px, ${wrap(ty * 0.34)}px, 0)`;
+      }
 
-    if (minimapViewRef.current) {
-      const style = minimapViewRef.current.style;
-      style.left = `${((cx - vw / 2 / z) / WORLD.w) * 100}%`;
-      style.top = `${((cy - vh / 2 / z) / WORLD.h) * 100}%`;
-      style.width = `${(vw / z / WORLD.w) * 100}%`;
-      style.height = `${(vh / z / WORLD.h) * 100}%`;
+      const zoomText = `${Math.round(z * 100)}%`;
+      const coordText = `x ${Math.round(cx)}  y ${Math.round(cy)}`;
+      if (zoomText !== readouts.current.zoom && zoomReadoutRef.current) zoomReadoutRef.current.textContent = readouts.current.zoom = zoomText;
+      if (coordText !== readouts.current.coord && coordReadoutRef.current) coordReadoutRef.current.textContent = readouts.current.coord = coordText;
+
+      if (minimapViewRef.current) {
+        const style = minimapViewRef.current.style;
+        style.left = `${((cx - vw / 2 / z) / WORLD.w) * 100}%`;
+        style.top = `${((cy - vh / 2 / z) / WORLD.h) * 100}%`;
+        style.width = `${(vw / z / WORLD.w) * 100}%`;
+        style.height = `${(vh / z / WORLD.h) * 100}%`;
+      }
+
+      // While the sheet moves, plates sliding under a still pointer must not trigger
+      // hover transitions (each one is a repaint inside the scaled layer).
+      if (!moving.current) {
+        moving.current = true;
+        viewport.setAttribute("data-moving", "");
+      }
+      window.clearTimeout(settle.current);
+      settle.current = window.setTimeout(() => {
+        moving.current = false;
+        viewport.removeAttribute("data-moving");
+      }, 140);
     }
 
-    const low = z < DETAIL_Z;
-    setLowDetail((current) => (current === low ? current : low));
+    const low = lowDetailRef.current ? z < DETAIL_Z_EXIT : z < DETAIL_Z;
+    if (low !== lowDetailRef.current) {
+      lowDetailRef.current = low;
+      setLowDetail(low);
+    }
 
     // Whichever plate the crosshair sits in wins; otherwise the nearest centre.
     let nearest: StationId = "identity";
@@ -122,13 +180,19 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
     setActive((current) => (current === nearest ? current : nearest));
   }, []);
 
-  const setCamera = useCallback((next: Partial<Camera>) => {
+  const schedule = useCallback(() => {
+    if (!frame.current) frame.current = requestAnimationFrame(render);
+  }, [render]);
+
+  /** Moves the camera; paints on the next frame unless already inside one. */
+  const setCamera = useCallback((next: Partial<Camera>, now = false) => {
     const camera = cam.current;
     if (next.z != null) camera.z = clamp(next.z, MIN_Z, MAX_Z);
     if (next.cx != null) camera.cx = clamp(next.cx, -600, WORLD.w + 600);
     if (next.cy != null) camera.cy = clamp(next.cy, -600, WORLD.h + 600);
-    paint();
-  }, [paint]);
+    if (now) render();
+    else schedule();
+  }, [render, schedule]);
 
   const flyTo = useCallback((target: Camera) => {
     cancelAnimationFrame(flight.current);
@@ -140,7 +204,7 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
     };
     if (reducedMotion.current) {
       cam.current = to;
-      paint();
+      schedule();
       return;
     }
     const start = performance.now();
@@ -153,18 +217,35 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
         // Zoom is interpolated geometrically so the flight feels even at both ends.
         z: from.z * (to.z / from.z) ** e,
       };
-      paint();
+      render();
       if (t < 1) flight.current = requestAnimationFrame(step);
     };
     flight.current = requestAnimationFrame(step);
-  }, [paint]);
+  }, [render, schedule]);
+
+  /** Lets a released drag coast to a stop instead of halting dead under the finger. */
+  const glide = useCallback((vx: number, vy: number) => {
+    cancelAnimationFrame(flight.current);
+    if (reducedMotion.current) return;
+    let last = performance.now();
+    const step = (now: number) => {
+      // A frame's timestamp can predate the call that queued it; never step backwards.
+      const dt = clamp(now - last, 0, 48);
+      last = now;
+      const { z } = cam.current;
+      setCamera({ cx: cam.current.cx - (vx * dt) / z, cy: cam.current.cy - (vy * dt) / z }, true);
+      const decay = GLIDE_DECAY ** (dt / 16.67);
+      vx *= decay;
+      vy *= decay;
+      if (Math.hypot(vx, vy) > 0.02) flight.current = requestAnimationFrame(step);
+    };
+    flight.current = requestAnimationFrame(step);
+  }, [setCamera]);
 
   const frameStation = useCallback((id: StationId): Camera | null => {
     const rect = rects.current[id];
-    const viewport = viewportRef.current;
-    if (!rect || !viewport) return null;
-    const vw = viewport.clientWidth;
-    const vh = viewport.clientHeight;
+    const { w: vw, h: vh } = box.current;
+    if (!rect || !vw) return null;
 
     // The bar and the side column float over the sheet, so a plate centred in the
     // viewport ends up half-hidden under them. Frame it in the clear area instead.
@@ -209,9 +290,9 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
   }, []);
 
   const fitWorld = useCallback(() => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const z = Math.min(viewport.clientWidth / (WORLD.w + 280), viewport.clientHeight / (WORLD.h + 280));
+    const { w, h } = box.current;
+    if (!w) return;
+    const z = Math.min(w / (WORLD.w + 280), h / (WORLD.h + 280));
     flyTo({ cx: WORLD.w / 2, cy: WORLD.h / 2, z });
   }, [flyTo]);
 
@@ -224,57 +305,86 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
   const measure = useCallback(() => {
     const world = worldRef.current;
     if (!world) return;
-    for (const station of stations) {
+    // Every read first, then every write, so measuring costs one layout, not eight.
+    const sizes = stations.map((station) => {
       const element = world.querySelector<HTMLElement>(`[data-station="${station.id}"]`);
-      if (!element) continue;
       // The scale lives on an ancestor, so offset sizes are already world units.
-      rects.current[station.id] = { x: station.x, y: station.y, w: element.offsetWidth, h: element.offsetHeight };
+      return element ? { station, w: element.offsetWidth, h: element.offsetHeight } : null;
+    });
+    for (const size of sizes) {
+      if (!size) continue;
+      const { station, w, h } = size;
+      rects.current[station.id] = { x: station.x, y: station.y, w, h };
       const dot = minimapRef.current?.querySelector<HTMLElement>(`[data-dot="${station.id}"]`);
-      if (dot) dot.style.height = `${(element.offsetHeight / WORLD.h) * 100}%`;
+      if (dot) dot.style.height = `${(h / WORLD.h) * 100}%`;
     }
-    paint();
-  }, [paint]);
+    schedule();
+  }, [schedule]);
 
   useEffect(() => {
+    const viewport = viewportRef.current;
+    const world = worldRef.current;
+    if (!viewport || !world) return;
+
     reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const media = window.matchMedia("(max-width: 900px)");
     const syncNarrow = () => setNarrow(media.matches);
     syncNarrow();
     media.addEventListener("change", syncNarrow);
 
+    const readBox = () => {
+      const rect = viewport.getBoundingClientRect();
+      box.current = { w: viewport.clientWidth, h: viewport.clientHeight, left: rect.left, top: rect.top, bw: rect.width, bh: rect.height };
+    };
+    readBox();
     measure();
-    document.fonts?.ready.then(measure).catch(() => {});
-    const onResize = () => { measure(); paint(); };
-    window.addEventListener("resize", onResize);
+    render();
+
+    // Observers fire after layout, so their reads are free; they also catch what a
+    // window resize never did — web fonts landing, images sizing a plate, the
+    // contact form swapping to its sent state.
+    const viewObserver = new ResizeObserver(() => { readBox(); schedule(); });
+    viewObserver.observe(viewport);
+    // Zoomed-out plates wear oversized titles; framing must use their reading size.
+    const plateObserver = new ResizeObserver(() => { if (!lowDetailRef.current) measure(); });
+    world.querySelectorAll("[data-station]").forEach((element) => plateObserver.observe(element));
 
     // Let the wide shot land for a beat, then descend on the origin.
+    // Marked as run only once it fires: Strict Mode's mount/unmount/mount would
+    // otherwise clear the timer and then skip the intro on the real mount.
     let intro = 0;
     if (!introRun.current) {
-      introRun.current = true;
-      intro = window.setTimeout(() => goToStation("identity"), 520);
+      intro = window.setTimeout(() => {
+        introRun.current = true;
+        goToStation("identity");
+      }, 520);
     }
 
     return () => {
       media.removeEventListener("change", syncNarrow);
-      window.removeEventListener("resize", onResize);
+      viewObserver.disconnect();
+      plateObserver.disconnect();
       window.clearTimeout(intro);
+      window.clearTimeout(settle.current);
+      moving.current = false;
+      viewport.removeAttribute("data-moving");
       cancelAnimationFrame(flight.current);
+      cancelAnimationFrame(frame.current);
+      frame.current = 0;
     };
-  }, [goToStation, measure, paint]);
+  }, [goToStation, measure, render, schedule]);
 
   const dismissHint = useCallback(() => forgetHint(), []);
 
   /* ------------------------------------------------------------ interaction */
 
   const zoomAt = useCallback((factor: number, screenX: number, screenY: number) => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const box = viewport.getBoundingClientRect();
+    const { left, top, bw, bh } = box.current;
     const { cx, cy, z } = cam.current;
     const nextZ = clamp(z * factor, MIN_Z, MAX_Z);
     if (nextZ === z) return;
-    const offsetX = screenX - box.left - box.width / 2;
-    const offsetY = screenY - box.top - box.height / 2;
+    const offsetX = screenX - left - bw / 2;
+    const offsetY = screenY - top - bh / 2;
     // Keep the world point under the cursor pinned while the scale changes.
     setCamera({ cx: cx + offsetX / z - offsetX / nextZ, cy: cy + offsetY / z - offsetY / nextZ, z: nextZ });
   }, [setCamera]);
@@ -316,6 +426,7 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
 
     dragging.current = true;
     moved.current = 0;
+    velocity.current = { x: 0, y: 0, t: event.timeStamp };
     // Remember where a tap started so pointerup can tell a click from a drag.
     tap.current = interactive || forcePan ? null : {
       station: (target.closest<HTMLElement>("[data-station]")?.dataset.station ?? null) as StationId | null,
@@ -344,14 +455,30 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
         setCamera({ cx: cam.current.cx - (midX - pinch.current.cx) / z, cy: cam.current.cy - (midY - pinch.current.cy) / z });
       }
       pinch.current = { dist, cx: midX, cy: midY };
+      // A pinch never ends in a glide.
+      velocity.current = { x: 0, y: 0, t: 0 };
       return;
     }
 
     if (!dragging.current) return;
     const { z } = cam.current;
-    moved.current += Math.hypot(event.clientX - previous.x, event.clientY - previous.y);
+    const dx = event.clientX - previous.x;
+    const dy = event.clientY - previous.y;
+    moved.current += Math.hypot(dx, dy);
     if (moved.current > 5) framed.current = null;
-    setCamera({ cx: cam.current.cx - (event.clientX - previous.x) / z, cy: cam.current.cy - (event.clientY - previous.y) / z });
+
+    // Exponentially smoothed, weighted by elapsed time so a burst of coalesced
+    // events cannot spike the release speed.
+    const sample = velocity.current;
+    const dt = event.timeStamp - sample.t;
+    if (sample.t && dt > 0) {
+      const k = Math.min(1, dt / 40);
+      sample.x += (dx / dt - sample.x) * k;
+      sample.y += (dy / dt - sample.y) * k;
+      sample.t = event.timeStamp;
+    }
+
+    setCamera({ cx: cam.current.cx - dx / z, cy: cam.current.cy - dy / z });
   };
 
   const endPointer = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -359,8 +486,21 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
     if (pointers.current.size < 2) pinch.current = null;
     if (pointers.current.size > 0) return;
 
+    const wasDragging = dragging.current;
     dragging.current = false;
     setPanning(spaceHeld.current);
+
+    // Coast only if the pointer was still moving when it let go; a drag that paused
+    // before release should stay exactly where it was put down.
+    const { x: vx, y: vy, t } = velocity.current;
+    velocity.current = { x: 0, y: 0, t: 0 };
+    if (wasDragging && isMapRef.current && event.type === "pointerup" && moved.current > 5 && t && event.timeStamp - t < 80) {
+      const speed = Math.hypot(vx, vy);
+      if (speed > 0.15) {
+        const cap = Math.min(1, 4 / speed);
+        glide(vx * cap, vy * cap);
+      }
+    }
 
     // A tap that did not turn into a drag opens the plate under it, so a card can be
     // read without reaching for the rail. Tapping the framed plate is left alone, or
@@ -476,10 +616,10 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
       if (!(target instanceof HTMLElement)) return;
       const id = target.closest<HTMLElement>("[data-station]")?.dataset.station as StationId | undefined;
       if (!id) return;
-      const box = target.getBoundingClientRect();
+      const rect = target.getBoundingClientRect();
       const view = viewport.getBoundingClientRect();
-      const visible = box.top >= view.top + 80 && box.bottom <= view.bottom - 80
-        && box.left >= view.left && box.right <= view.right;
+      const visible = rect.top >= view.top + 80 && rect.bottom <= view.bottom - 80
+        && rect.left >= view.left && rect.right <= view.right;
       if (visible) setActive(id);
       else goToStation(id);
     };
@@ -497,11 +637,11 @@ export function AtlasViewport({ children, fontClass = "" }: { children: ReactNod
   const minimapTo = (event: React.PointerEvent<HTMLDivElement>) => {
     const map = minimapRef.current;
     if (!map) return;
-    const box = map.getBoundingClientRect();
+    const area = map.getBoundingClientRect();
     cancelAnimationFrame(flight.current);
     setCamera({
-      cx: ((event.clientX - box.left) / box.width) * WORLD.w,
-      cy: ((event.clientY - box.top) / box.height) * WORLD.h,
+      cx: ((event.clientX - area.left) / area.width) * WORLD.w,
+      cy: ((event.clientY - area.top) / area.height) * WORLD.h,
     });
   };
 

@@ -18,7 +18,7 @@
   --v3-plate: rgba(13, 18, 28, .92);
   --v3-plate-2: rgba(6, 10, 17, .7);   /* cards nested inside a plate */
   --v3-field: rgba(4, 7, 12, .8);      /* form inputs */
-  --v3-chrome: rgba(5, 7, 12, .8);     /* fixed bar, rail, dock */
+  --v3-chrome: rgba(5, 7, 12, .93);    /* fixed bar, rail, dock — opaque enough to need no blur */
   --v3-chrome-solid: rgba(8, 11, 18, .94);
   --v3-hover: rgba(255, 255, 255, .05);
   --v3-line: rgba(126, 190, 235, .17);
@@ -49,7 +49,7 @@
   --v3-cell-2: #1f7fa6;
   --v3-cell-3: #3fb3dd;
   --v3-cell-4: #7ce4ff;
-  --v3-grain-blend: overlay;
+  --v3-grain: .05;
   --v3-grid: 60px;
   position: fixed;
   inset: 0;
@@ -68,7 +68,7 @@ html[data-theme="light"] .v3-root {
   --v3-plate: rgba(255, 253, 249, .93);
   --v3-plate-2: rgba(255, 253, 249, .78);
   --v3-field: rgba(255, 255, 255, .9);
-  --v3-chrome: rgba(248, 246, 241, .86);
+  --v3-chrome: rgba(248, 246, 241, .95);
   --v3-chrome-solid: rgba(253, 252, 248, .97);
   --v3-hover: rgba(20, 45, 75, .06);
   --v3-line: rgba(32, 72, 110, .2);
@@ -100,7 +100,7 @@ html[data-theme="light"] .v3-root {
   --v3-cell-2: #79bcd6;
   --v3-cell-3: #3691b5;
   --v3-cell-4: #0d6285;
-  --v3-grain-blend: multiply;
+  --v3-grain: .09;
 }
 .v3-root h1, .v3-root h2, .v3-root h3,
 .v3-plate__lede, .v3-bar__now strong, .v3-rail__label,
@@ -149,8 +149,10 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
 .v3-root[data-mode="map"] .v3-world textarea { user-select: text; -webkit-user-select: text; }
 .v3-drift {
   position: absolute;
-  inset: -50%;
+  /* One tile of slack: the camera wraps its offset to 0–170px, so this always covers. */
+  inset: -170px;
   pointer-events: none;
+  will-change: transform;
   opacity: .5;
   background-image: radial-gradient(var(--v3-drift-dot) 1px, transparent 1px);
   background-size: 170px 170px;
@@ -168,8 +170,9 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   content: "";
   position: absolute;
   inset: 0;
-  opacity: .32;
-  mix-blend-mode: var(--v3-grain-blend);
+  /* Plain alpha, not a blend mode: a full-screen blend makes the browser re-composite
+     everything beneath it on every frame the sheet moves. */
+  opacity: var(--v3-grain);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
 }
 
@@ -180,6 +183,8 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   width: 5540px;
   height: 3780px;
   transform-origin: 0 0;
+  /* The opening wide shot, so the first paint before hydration is not a 1:1 corner. */
+  transform: translate3d(calc(50vw - 554px), calc(50vh - 378px), 0) scale(.2);
   will-change: transform;
   /* The drafting grid belongs to the world, so it scales and pans with the plates. */
   background-image:
@@ -203,9 +208,9 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   stroke: var(--v3-line-strong);
   stroke-width: 1.5;
   stroke-dasharray: 14 10;
-  animation: v3-flow 2.4s linear infinite;
+  /* Deliberately static: animating the dash offset repainted the whole 5540px world
+     layer every frame, forever, even with nobody touching the page. */
 }
-@keyframes v3-flow { to { stroke-dashoffset: -48; } }
 
 .v3-survey {
   position: absolute;
@@ -235,8 +240,13 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   border: 1px solid var(--v3-line-strong);
   background: var(--v3-plate);
   box-shadow: var(--v3-plate-shadow);
-  backdrop-filter: blur(3px);
 }
+/* Each plate lays out on its own, so a hover or a form state change inside one never
+   reflows the rest of the sheet. */
+.v3-root[data-mode="map"] .v3-plate { contain: layout style; }
+/* While the camera moves nothing in the world is hit-tested: plates sliding under a
+   still pointer would otherwise fire hover transitions mid-flight. */
+.v3-viewport[data-moving] .v3-world { pointer-events: none; }
 .v3-plate__ticks i {
   position: absolute;
   width: 13px;
@@ -409,7 +419,6 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   padding: 0 18px;
   border-bottom: 1px solid var(--v3-line);
   background: var(--v3-chrome);
-  backdrop-filter: blur(14px);
 }
 .v3-bar__brand { display: flex; align-items: center; gap: 12px; }
 .v3-mark { font-size: 18px; font-weight: 800; letter-spacing: -.05em; }
@@ -460,7 +469,6 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   padding: 7px;
   border: 1px solid var(--v3-line);
   background: var(--v3-chrome);
-  backdrop-filter: blur(14px);
   scrollbar-width: thin;
 }
 .v3-rail__item {
@@ -493,14 +501,13 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   background: var(--v3-chrome);
   cursor: crosshair;
   touch-action: none;
-  backdrop-filter: blur(14px);
 }
 .v3-minimap__dot { position: absolute; height: 5px; background: var(--v3-line-strong); transition: background 150ms ease; }
 .v3-minimap__dot[data-active] { background: var(--v3-amber); }
 .v3-minimap__view { position: absolute; border: 1px solid var(--v3-amber); background: color-mix(in srgb, var(--v3-amber) 14%, transparent); pointer-events: none; }
 .v3-readout { display: flex; justify-content: space-between; gap: 10px; color: var(--v3-dim); font: 10px/1 var(--v3-font-mono), ui-monospace, monospace; letter-spacing: .06em; }
 .v3-readout__zoom { display: inline-flex; align-items: center; gap: 5px; color: var(--v3-cyan); }
-.v3-zoom { display: flex; border: 1px solid var(--v3-line); background: var(--v3-chrome); backdrop-filter: blur(14px); }
+.v3-zoom { display: flex; border: 1px solid var(--v3-line); background: var(--v3-chrome); }
 .v3-zoom button { flex: 1; display: grid; place-items: center; min-height: 32px; border: 0; background: transparent; color: var(--v3-dim); cursor: pointer; transition: color 150ms ease, background 150ms ease; }
 .v3-zoom button:hover { color: var(--v3-amber-text); background: var(--v3-hover); }
 .v3-zoom button + button { border-left: 1px solid var(--v3-line); }
@@ -516,7 +523,6 @@ body:has(.v3-root) .cat-chat { z-index: 60; }
   padding: 17px;
   border: 1px solid var(--v3-line-strong);
   background: var(--v3-chrome-solid);
-  backdrop-filter: blur(14px);
   box-shadow: 0 30px 60px -40px var(--v3-shadow);
 }
 .v3-hint p { display: grid; grid-template-columns: 15px 1fr; align-items: start; gap: 10px; color: var(--v3-dim); font-size: 12.5px; line-height: 1.55; }
@@ -612,6 +618,5 @@ body:has(.v3-root[data-mode="list"]) { overflow: visible; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v3-wire { animation: none; }
   .v3-root *, .v3-root *::before, .v3-root *::after { transition-duration: .01ms !important; }
 }

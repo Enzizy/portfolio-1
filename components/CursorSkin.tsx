@@ -33,8 +33,13 @@ export function CursorSkin() {
     root.dataset.targetCursor = "true";
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Desktop page zoom scales the whole document; pointer coords are not scaled.
-    const pageZoom = () => Number.parseFloat(window.getComputedStyle(document.body).zoom) || 1;
+    // Desktop page zoom scales the whole document; pointer coords are not scaled. It only
+    // changes with a media query, so read it on resize rather than per pointer move —
+    // a computed-style read there forces a style recalc on every frame of a drag.
+    const readZoom = () => Number.parseFloat(window.getComputedStyle(document.body).zoom) || 1;
+    let cachedZoom = readZoom();
+    const onResize = () => { cachedZoom = readZoom(); };
+    const pageZoom = () => cachedZoom;
 
     // quickTo with a zero duration never writes, so a no-lag layer needs a plain set.
     const mover = (element: HTMLElement, duration: number) => {
@@ -86,6 +91,7 @@ export function CursorSkin() {
     const onLeave = () => apply("hidden", false);
     const onEnter = (event: PointerEvent) => apply(stateFor(event.target instanceof Element ? event.target : null), pressed);
 
+    window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
     window.addEventListener("pointerup", onPointerUp, { passive: true });
@@ -96,6 +102,7 @@ export function CursorSkin() {
     return () => {
       delete root.dataset.targetCursor;
       gsap.killTweensOf([lead, tip]);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointerup", onPointerUp);
