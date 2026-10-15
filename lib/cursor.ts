@@ -26,6 +26,7 @@ export function cursorVariantFor(pathname: string | null | undefined): CursorVar
   if (!pathname) return "bracket";
   if (pathname === "/v3" || pathname.startsWith("/v3/")) return "reticle";
   if (pathname === "/v4" || pathname.startsWith("/v4/")) return "orb";
+  if (pathname === "/v5" || pathname.startsWith("/v5/")) return "ring";
   if (pathname === "/v2" || pathname.startsWith("/v2/")) return "ring";
   return "bracket";
 }

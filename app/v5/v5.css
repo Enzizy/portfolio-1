@@ -1,0 +1,221 @@
+/*
+  V5 — "The Book". A portfolio you leaf through: a dark desk, one lamp, a book.
+  The scene is WebGL; everything here is the thin HUD around it and the text edition
+  (visually hidden behind the book, the whole page in "Read as text" mode).
+*/
+
+.v5-root {
+  --ink: #0b0a09;
+  --paper: #f3efe7;
+  --text: #ece7df;
+  --muted: #9a9187;
+  --line: rgba(236, 231, 223, .14);
+  --accent: #d9b98c;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  color: var(--text);
+  background: var(--ink);
+}
+.v5-root a { color: inherit; }
+.v5-root :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.v5-root h1, .v5-root h2, .v5-root h3, .v5-root p { margin: 0; }
+
+/* Designed at 1:1: the site's desktop 110% zoom would push the full-screen desk
+   past the edges of the window. */
+@media (min-width: 1024px) {
+  body:has(.v5-root) { zoom: 1; }
+}
+html:has(.v5-root) {
+  background: #0b0a09;
+  --cursor-ink: #f2efe8;
+  --cursor-ink-active: #d9b98c;
+  --cursor-halo: rgba(0, 0, 0, .7);
+}
+body:has(.v5-root[data-view="book"]) { overflow: hidden; }
+body:has(.v5-root) .cat-chat { z-index: 60; }
+
+/* ------------------------------------------------------------------ stage */
+
+.v5-root[data-view="book"] { position: fixed; inset: 0; overflow: hidden; }
+.v5-stage { position: absolute; inset: 0; }
+/* The canvas owns every touch: a finger on a page is holding the paper, not scrolling. */
+.v5-stage canvas { display: block; width: 100%; height: 100%; touch-action: none; user-select: none; -webkit-user-select: none; }
+/* Doubled class: this rule sits above .v5-chip, whose padding would otherwise win. */
+.v5-chip.v5-chip--icon { width: 34px; padding: 0; justify-content: center; }
+.v5-chip svg { flex: none; }
+/* Static, so it costs nothing per frame: the room falls off into darkness. */
+.v5-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 95% at 50% 52%, transparent 52%, rgba(0, 0, 0, .55) 100%);
+}
+.v5-root[data-view="text"] .v5-stage,
+.v5-root[data-view="text"] .v5-vignette { display: none; }
+
+/* -------------------------------------------------------------------- HUD */
+
+.v5-top {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 22px clamp(16px, 3.4vw, 44px);
+  pointer-events: none;
+}
+.v5-top > * { pointer-events: auto; }
+.v5-top__brand, .v5-top__actions { display: flex; align-items: center; gap: 12px; }
+.v5-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font: 400 26px/1 var(--v5-font-serif), Georgia, serif;
+  text-decoration: none;
+}
+.v5-mark i { width: 10px; height: 10px; border-radius: 50%; background: var(--text); }
+.v5-root .portfolio-version-switch { border-color: var(--line); background: rgba(255, 255, 255, .04); }
+.v5-root .portfolio-version-switch a { color: var(--muted); }
+.v5-root .portfolio-version-switch a[aria-current="page"] { background: var(--text); color: var(--ink); }
+.v5-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(11, 10, 9, .55);
+  color: var(--text);
+  font: 500 12.5px/1 var(--v5-font-mono), ui-monospace, monospace;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.v5-chip:hover { border-color: rgba(236, 231, 223, .4); }
+.v5-chip--solid { border-color: var(--text); background: var(--text); color: var(--ink); }
+.v5-chip--solid:hover { background: #fff; }
+
+.v5-intro {
+  position: absolute;
+  z-index: 5;
+  top: clamp(96px, 16vh, 150px);
+  left: clamp(16px, 3.4vw, 44px);
+  display: grid;
+  gap: 14px;
+  max-width: 560px;
+  pointer-events: none;
+  transition: opacity .6s ease, transform .8s var(--ease);
+}
+.v5-intro[data-hidden] { opacity: 0; transform: translateY(-14px); }
+.v5-intro__title {
+  color: #fff;
+  font: 400 clamp(36px, 4.4vw, 60px)/1 var(--v5-font-serif), Georgia, serif;
+  letter-spacing: -.01em;
+}
+.v5-intro__sub { max-width: 42ch; color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+.v5-pager {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(11, 10, 9, .72);
+  translate: -50% 0;
+  animation: v5-rise .6s var(--ease) both;
+}
+@keyframes v5-rise { from { opacity: 0; transform: translateY(10px); } }
+.v5-pager button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+.v5-pager button:hover { background: rgba(255, 255, 255, .08); }
+.v5-pager__close { margin-left: 4px; border-left: 1px solid var(--line) !important; border-radius: 0 7px 7px 0 !important; }
+.v5-pager p {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 180px;
+  justify-content: center;
+  color: var(--text);
+  font: 400 19px/1 var(--v5-font-serif), Georgia, serif;
+  white-space: nowrap;
+}
+.v5-pager p span { color: var(--muted); font: 500 11px/1 var(--v5-font-mono), monospace; letter-spacing: .08em; }
+
+/* ------------------------------------------------------------ text edition */
+
+/* Behind the book it is visually hidden, but present for assistive tech and search. */
+.v5-root[data-view="book"] .v5-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.v5-root[data-view="text"] { min-height: 100vh; background: #f3efe7; color: #1c1a17; }
+.v5-root[data-view="text"] .v5-top { position: sticky; background: rgba(243, 239, 231, .94); border-bottom: 1px solid rgba(28, 26, 23, .1); }
+.v5-root[data-view="text"] .v5-mark { color: #1c1a17; }
+.v5-root[data-view="text"] .v5-mark i { background: #1c1a17; }
+.v5-root[data-view="text"] .v5-chip { border-color: rgba(28, 26, 23, .2); background: transparent; color: #1c1a17; }
+.v5-root[data-view="text"] .v5-chip--solid { border-color: #1c1a17; background: #1c1a17; color: #f3efe7; }
+.v5-root[data-view="text"] .portfolio-version-switch { border-color: rgba(28, 26, 23, .16); background: rgba(28, 26, 23, .04); }
+.v5-root[data-view="text"] .portfolio-version-switch a[aria-current="page"] { background: #1c1a17; color: #f3efe7; }
+.v5-text__inner {
+  display: grid;
+  gap: 64px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 20px 96px;
+  font-size: 17px;
+  line-height: 1.65;
+}
+.v5-text__inner section, .v5-text__inner header { display: grid; gap: 14px; }
+.v5-text__inner h1 { font: 400 clamp(56px, 9vw, 104px)/.95 var(--v5-font-serif), Georgia, serif; }
+.v5-text__inner h2 { font: 400 clamp(34px, 5vw, 52px)/1.02 var(--v5-font-serif), Georgia, serif; }
+.v5-text__inner h3 { font: 400 30px/1.1 var(--v5-font-serif), Georgia, serif; }
+.v5-text__kicker, .v5-text__meta { color: #a2541f; font: 500 12px/1.4 var(--v5-font-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.v5-text__lede { color: #3b3732; font-size: 19px; }
+.v5-text__inner a { color: #a2541f; font-weight: 600; text-underline-offset: 3px; }
+.v5-text__inner dl { display: grid; gap: 14px; margin: 0; }
+.v5-text__inner dt { font: 400 24px/1.2 var(--v5-font-serif), Georgia, serif; }
+.v5-text__inner dd { margin: 2px 0 0; color: #3b3732; }
+.v5-text__projects { display: grid; gap: 34px; margin: 0; padding: 0; list-style: none; }
+.v5-text__projects li { display: grid; gap: 8px; padding-top: 20px; border-top: 1px solid rgba(28, 26, 23, .14); }
+.v5-text__links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 720px) {
+  .v5-top { padding: 14px 12px; }
+  .v5-top__actions .v5-chip:not(.v5-chip--solid) { display: none; }
+  .v5-root[data-view="text"] .v5-top__actions .v5-chip { display: inline-flex; }
+  .v5-intro { top: 82px; left: 14px; right: 14px; }
+  .v5-pager { bottom: 72px; }
+  .v5-pager p { min-width: 130px; font-size: 16px; }
+}
+@media (max-width: 380px) {
+  .v5-top .portfolio-version-switch { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v5-root *, .v5-root *::before, .v5-root *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
