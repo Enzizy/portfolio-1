@@ -26,7 +26,7 @@ export type Place = {
 
 export const START = { x: 0, z: 9, heading: 0 };
 
-/** Nine islets on an arc north-east of the start, one project each. */
+/** One islet per project, on an arc north-east of the start. */
 const PROJECT_ARC = { x: 48, z: -12, radius: 31, from: 158, to: 22 };
 
 export const projectIslets = projects.map((project, index) => {
@@ -44,7 +44,8 @@ export const projectImages: Record<(typeof projects)[number]["visual"], string> 
   streetkings: "/images/projects/street.png",
   furniture: "/images/projects/bw.png",
   bookvoice: "/images/projects/book.png",
-  roarly: "/images/projects/roarly.png",
+  casatoon: "/images/projects/casatoon.webp",
+  "joyno-accounting": "/images/projects/joyno-accounting.png",
   ccr: "/images/projects/ccr.png",
   "lifedesk-crm": "/images/projects/lifedesk-crm.png",
   lifedesk: "/images/projects/lifedesk-home.png",

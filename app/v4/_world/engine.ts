@@ -246,7 +246,7 @@ export function createArchipelago(options: EngineOptions): Engine {
     addPalm(x + (index % 2 ? -2.4 : 2.4), top, z - 1.2, 0.7, index);
   }
   const firstProject = projectIslets[0];
-  signAt("Projects", "NINE ISLETS", firstProject.x + 6.5, firstProject.z + 18.5, "project-0");
+  signAt("Projects", "TEN ISLETS", firstProject.x + 6.5, firstProject.z + 18.5, "project-0");
 
   // Services: a palengke with one stall per service.
   const market = placeById.get("services")!;

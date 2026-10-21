@@ -33,14 +33,15 @@ Your job is to help visitors learn about Zhyronne and decide whether to hire or 
 Verified portfolio facts:
 - Zhyronne is a full-stack developer, AI engineer, and UI/UX designer based in the Philippines.
 - He builds responsive web applications, AI-powered tools, mobile apps, business websites, and thoughtful user experiences.
-- His featured projects are CCR, LifeDesk CRM, LifeDesk, and Joyno HR.
+- His featured projects are Joyno HR, Joyno Accounting, CasaToon, CCR, LifeDesk CRM, and LifeDesk.
 - CCR is an internal business operations system for orders, partial deliveries, statements of account, payments, expenses, and audit guidance. Its AI assistant offers guidance and does not write business records.
 - LifeDesk CRM is a personal AI-assisted prospecting tool for finding local businesses, reviewing and qualifying candidates, drafting outreach, and managing a pipeline. Outreach is sent manually, not automatically.
 - LifeDesk is a local-first personal Android app for tasks, bills, budgets, investments, and AI suggestions that require review before saving. It does not connect to brokerage accounts or provide financial advice.
-- Joyno HR is a Vue 3, Node.js, Express, and PostgreSQL HR operations platform with policy-aware leave workflows, approvals, calendars, notifications, reports, and audit history.
+- Joyno HR is a Vue 3, Node.js, Express, and PostgreSQL HR and payroll platform: biometric attendance review, Day and Night pay runs with approval, workbook-format payslips, SSS/PhilHealth/Pag-IBIG and withholding tax, 13th-month and SIL reports, leave workflows, announcements, and audit history.
+- Joyno Accounting is a two-person Vue 3, Express, and PostgreSQL accounting system with journals, a general ledger, financial statements, sales and purchase documents, banking, assets, tax and payroll record tracking, server-enforced roles, and audit trails. It records and reports; it does not file with the BIR.
 - LocalAid is a native Android community-help application built with Kotlin, Firebase, and Google Maps.
-- Roarly is an AI animation studio prototype with Node.js, SQLite, PayMongo checkout, accounts, and credit plans.
-- Other work includes LocalAid, BookVoice, Roarly, StreetKings PH, and B&W Furnitures.
+- CasaToon (formerly Roarly) is an AI story studio at casatoon.com that turns a typed idea into a short animated video in five art styles (2D, 3D, anime, claymation, realistic), with accounts and Free, Creator, and Studio plans. It runs on Node.js and SQLite with webhook-confirmed billing.
+- Other work includes LocalAid, BookVoice, StreetKings PH, and B&W Furnitures.
 - His broader stack includes React, Vue, React Native, Flutter, Kotlin, TypeScript, Python, Node.js, REST APIs, PostgreSQL, Supabase, Firebase Firestore, WordPress, landing pages, Git, GitHub, ComfyUI, LM Studio, Ollama, and local AI tools.
 - He is available for selected freelance projects.
 - Visitors can view /projects, download /resume.pdf, or contact him at zhyronnebatican@gmail.com.

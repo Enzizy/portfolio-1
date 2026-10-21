@@ -8,38 +8,37 @@ import { ProjectNavigation } from "@/components/ProjectNavigation";
 import { createProjectMetadata } from "@/lib/metadata";
 
 const features = [
-  "Employee and user-account management",
-  "Role-based Employee, HR, Admin, and CEO workspaces",
-  "Configurable leave policies and eligibility rules",
-  "Paid, unpaid, and partially paid leave calculation",
-  "Probationary leave handling",
-  "Philippine holiday and weekend-aware credit calculation",
-  "Shared leave calendar for pending and approved absences",
-  "Leave approvals, comments, attachments, and rejection flows",
-  "Approved-leave rescheduling and cancellation requests",
-  "Automatic credit refunds for approved cancellations",
-  "Task and meeting management with multiple assignees",
-  "Email links, in-app notifications, and preference controls",
-  "Workspace-wide search and notification center",
-  "Excel reports for leave, payroll impact, departments, and AWOL",
-  "Administrative audit logs",
-  "Responsive light and dark interfaces",
-  "Automated cleanup of expired system records",
+  "Pay runs per payday and shift: employees, attendance, review pay, approve and pay, payslips",
+  "Separate Day and Night shift payroll, with automatic night differential",
+  "Biometric attendance CSV import with a read-only preview and audited HR review",
+  "First and last scan of the day from any reader, with late and undertime in minutes",
+  "Approved overtime and special-holiday / rest-day pay calculated from attendance",
+  "One adjust-pay panel for loans, cash advances, allowances and basic-pay corrections",
+  "SSS, PhilHealth, Pag-IBIG and withholding tax from an editable BIR table",
+  "Payslip PDFs in the company's workbook format, with print, save and email",
+  "Practice payroll on selected employees, clearly labelled and kept out of real pay",
+  "13th-month, SIL cash conversion, remittance, payroll and attendance reports",
+  "One profile per employee for records, compensation history, schedules and government IDs",
+  "Configurable leave policies, Philippine holiday-aware credits and a shared leave calendar",
+  "Leave approvals, rescheduling, cancellations with credit refunds, and calendar date changes",
+  "Announcements targeted by shift, department or person, with read receipts",
+  "Tasks and meetings, notifications, workspace search and email preferences",
+  "Role-based Employee, HR, Admin and CEO workspaces with full audit history",
 ] as const;
 
 const stack = [
-  { label: "Frontend", value: "Vue 3, Composition API, Pinia, Vue Router, Vite, Tailwind CSS" },
-  { label: "Backend", value: "Node.js, Express, and REST APIs" },
-  { label: "Data & authentication", value: "PostgreSQL, Supabase, and JWT authorization" },
-  { label: "Reporting", value: "ExcelJS-powered management exports" },
-  { label: "Communication", value: "Nodemailer and in-app notifications" },
-  { label: "Deployment", value: "Cloudflare Pages and Render" },
+  { label: "Frontend", value: "Vue 3, Composition API, Pinia, Vue Router, Vite and Tailwind CSS" },
+  { label: "Backend", value: "Node.js, Express and REST APIs, with payroll rules versioned per run" },
+  { label: "Data & authentication", value: "PostgreSQL with row-level security, migrations and JWT authorization" },
+  { label: "Payroll documents", value: "Workbook-format payslip PDFs, payroll registers and contribution exports" },
+  { label: "Communication", value: "Payslip and announcement email, plus in-app notifications" },
+  { label: "Quality", value: "150+ backend tests, isolated database integration tests and Playwright checks" },
 ] as const;
 
 export const metadata = createProjectMetadata({
-  title: "Joyno HR — HR Operations and Leave Management Platform",
+  title: "Joyno HR — HR, Attendance and Payroll Platform",
   description:
-    "A full-stack HR operations platform built with Vue 3, Express, and PostgreSQL for employee records, leave workflows, approvals, reporting, and notifications.",
+    "A full-stack HR and payroll platform built with Vue 3, Express, and PostgreSQL: attendance review, Day and Night pay runs, payslips, government contributions, leave workflows, reports, and announcements.",
   image: "/images/projects/hr.png",
   imageAlt: "Joyno HR operations dashboard",
 });
@@ -56,13 +55,13 @@ export default function JoynoHrPage() {
           <p className="eyebrow">// CASE STUDY 01</p>
           <div className="case-study__title">
             <div>
-              <span>HR OPERATIONS &amp; LEAVE MANAGEMENT</span>
+              <span>HR, ATTENDANCE &amp; PAYROLL</span>
               <h1>Joyno HR</h1>
             </div>
             <p>
-              A full-stack platform for employee records, policy-aware leave requests,
-              approvals, workforce calendars, tasks, notifications, audit history,
-              and Excel reporting.
+              A full-stack platform that runs payroll end to end, from biometric attendance
+              to approved pay runs and payslips, alongside employee records, leave,
+              announcements, reports and audit history.
             </p>
           </div>
           <dl className="case-study__facts">
@@ -85,16 +84,16 @@ export default function JoynoHrPage() {
         </figure>
 
         <CaseStudyStory id="joyno-story" story={{
-          challenge: "Leave requests affect payroll, staffing, and employee trust. HR needed one workflow that could apply different policies consistently and keep approvals visible to everyone involved.",
-          decisions: "I translated tenure, leave credits, weekends, and Philippine holidays into explicit calculation rules. Role-based workspaces, approval conversations, and transactional refunds keep changes to approved leave accountable.",
-          result: "Joyno HR brings employee records, leave decisions, workforce calendars, notifications, audit history, and management reports into one operations platform.",
+          challenge: "Payroll depends on attendance, leave, schedules and government rules, and a single mistake reaches every employee. HR was working from a spreadsheet workbook and needed a system that could follow it exactly while making every decision traceable.",
+          decisions: "I modelled payroll as a pay run per payday and shift: import attendance, review only the days that need a decision, calculate, approve, mark paid, then release payslips. Formulas were reconciled line by line against the company workbook, and a labelled practice mode lets HR rehearse on real data without touching real pay.",
+          result: "Joyno HR now covers the full employee cycle in one place: records, attendance, leave, Day and Night payroll, workbook-format payslips, government contributions, 13th-month and SIL reports, and announcements, backed by more than 150 automated tests.",
         }} />
 
         <section className="case-study__features" aria-labelledby="joyno-features">
           <div className="case-study__section-heading">
             <span>// 02</span>
             <h2 id="joyno-features">Key capabilities</h2>
-            <p>Designed around real HR workflows rather than isolated administrative tools.</p>
+            <p>Built around the real HR and payroll cycle, not isolated admin screens.</p>
           </div>
           <ul>
             {features.map((feature) => (

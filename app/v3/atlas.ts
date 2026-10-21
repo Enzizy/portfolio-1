@@ -23,7 +23,7 @@ export const stations: Station[] = [
   { id: "contact", code: "06", label: "Signal out", hint: "Start a conversation", x: 1660, y: 320, w: 1180 },
   { id: "about", code: "01", label: "About", hint: "How I work", x: 520, y: 560, w: 800 },
   { id: "services", code: "02", label: "Services", hint: "What I can build", x: 400, y: 1640, w: 900 },
-  { id: "projects", code: "03", label: "Projects", hint: "Nine things I shipped", x: 3120, y: 320, w: 1900 },
+  { id: "projects", code: "03", label: "Projects", hint: "Ten things I shipped", x: 3120, y: 320, w: 1900 },
   { id: "skills", code: "04", label: "Toolbox", hint: "The stack behind it", x: 3240, y: 2420, w: 1100 },
   { id: "signal", code: "05", label: "Commits", hint: "A year of GitHub activity", x: 1760, y: 2520, w: 1260 },
   { id: "detours", code: "07", label: "Detours", hint: "The fun corners of this site", x: 520, y: 3020, w: 1000 },

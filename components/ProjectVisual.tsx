@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type ProjectVisualProps = {
-  variant: "dashboard" | "localaid" | "streetkings" | "furniture" | "bookvoice" | "roarly" | "ccr" | "lifedesk-crm" | "lifedesk";
+  variant: "dashboard" | "localaid" | "streetkings" | "furniture" | "bookvoice" | "casatoon" | "ccr" | "lifedesk-crm" | "lifedesk" | "joyno-accounting";
 };
 
 function LocalAidVisual() {
@@ -77,11 +77,18 @@ export function ProjectVisual({ variant }: ProjectVisualProps) {
       position="46% center"
     />
   );
-  if (variant === "roarly") return (
+  if (variant === "casatoon") return (
     <WebsiteVisual
-      src="/images/projects/roarly.png"
-      alt="Roarly AI Animation Studio marketing website"
-      position="42% center"
+      src="/images/projects/casatoon.webp"
+      alt="CasaToon home page: Bring Your Stories to Life, with a film-strip frame of an animated boy and lion"
+      position="60% center"
+    />
+  );
+  if (variant === "joyno-accounting") return (
+    <WebsiteVisual
+      src="/images/projects/joyno-accounting.png"
+      alt="Joyno Accounting dashboard with revenue and expenses, tax calendar, balance health and recent activity"
+      position="center top"
     />
   );
   return (

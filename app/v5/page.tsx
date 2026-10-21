@@ -78,7 +78,7 @@ export default async function PortfolioV5Page() {
 
         <section aria-labelledby="v5-work">
           <p className="v5-text__kicker">Selected work</p>
-          <h2 id="v5-work">Nine projects</h2>
+          <h2 id="v5-work">Ten projects</h2>
           <ol className="v5-text__projects">
             {projects.map((project) => (
               <li key={project.href}>

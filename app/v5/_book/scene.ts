@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { optimised, PAGE_RATIO, type BookPage } from "./content";
 import { PaperSound } from "./paper-sound";
 
-// A book on a desk under a single lamp: a rigid front board and nine paper leaves.
+// A book on a desk under a single lamp: a rigid front board and the paper leaves.
 //
 // Pages fold the way paper does. Grab a page and drag: the paper folds along the
 // line that keeps the point you grabbed under your finger, rolls over a soft
@@ -61,6 +61,8 @@ export function createBookScene(options: BookSceneOptions): BookScene {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.75 : 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
+  // Shadows are re-rendered only when the paper or the cover moves (see frame()).
+  renderer.shadowMap.autoUpdate = false;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -209,6 +211,121 @@ export function createBookScene(options: BookSceneOptions): BookScene {
   coffee.position.set(2.45, 0, -1.05);
   coffee.rotation.y = 0.5;
   scene.add(shadowed(coffee));
+
+  /* ------------------------------------------------------------ atmosphere */
+
+  const ambient = { value: 0 };
+
+  // Dust motes drifting through the lamp's cone: only the ones inside the beam glow.
+  const DUST = coarse ? 160 : 320;
+  const dustPositions = new Float32Array(DUST * 3);
+  const dustSeeds = new Float32Array(DUST * 3);
+  {
+    let seed = 29;
+    const random = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < DUST; i++) {
+      dustPositions.set([(random() - 0.5) * 5, random() * 3, (random() - 0.5) * 3.4], i * 3);
+      dustSeeds.set([random(), random(), random()], i * 3);
+    }
+  }
+  const dustGeometry = keep(new THREE.BufferGeometry());
+  dustGeometry.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+  dustGeometry.setAttribute("aSeed", new THREE.BufferAttribute(dustSeeds, 3));
+  const dustMaterial = keep(
+    new THREE.ShaderMaterial({
+      uniforms: { uTime: ambient, uScale: { value: 9 * renderer.getPixelRatio() } },
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      vertexShader: /* glsl */ `
+        uniform float uTime;
+        uniform float uScale;
+        attribute vec3 aSeed;
+        varying float vAlpha;
+        void main() {
+          vec3 p = position;
+          p.x += sin(uTime * 0.11 * (0.5 + aSeed.x) + aSeed.y * 6.2831) * 0.28;
+          p.z += cos(uTime * 0.09 * (0.5 + aSeed.z) + aSeed.x * 6.2831) * 0.28;
+          p.y = mod(position.y + uTime * 0.035 * (0.4 + aSeed.z), 3.0) + 0.12;
+          // Inside the lamp's cone? (lamp at (0.3, 7, 1.6), aimed at the book)
+          vec3 origin = vec3(0.3, 7.0, 1.6);
+          vec3 axis = normalize(vec3(-0.3, -7.0, -1.5));
+          vec3 rel = p - origin;
+          float along = dot(rel, axis);
+          float off = length(rel - axis * along);
+          float radius = along * 0.55;
+          float lit = 1.0 - smoothstep(radius * 0.35, radius, off);
+          float edges = smoothstep(0.12, 0.5, p.y) * (1.0 - smoothstep(2.5, 3.1, p.y));
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_Position = projectionMatrix * mv;
+          gl_PointSize = uScale * (0.5 + aSeed.y) / -mv.z;
+          float twinkle = 0.55 + 0.45 * sin(uTime * (0.6 + aSeed.x) + aSeed.z * 10.0);
+          vAlpha = lit * edges * twinkle * (0.35 + 0.65 * aSeed.z);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        varying float vAlpha;
+        void main() {
+          float d = length(gl_PointCoord - 0.5);
+          if (d > 0.5) discard;
+          gl_FragColor = vec4(1.0, 0.86, 0.66, vAlpha * smoothstep(0.5, 0.0, d) * 0.3);
+        }
+      `,
+    }),
+  );
+  const dust = new THREE.Points(dustGeometry, dustMaterial);
+  dust.frustumCulled = false;
+  scene.add(dust);
+
+  // Steam curling off the coffee: noise-carved wisps on two camera-facing sheets.
+  const steamGeometry = keep(new THREE.PlaneGeometry(0.42, 1.0));
+  const steams = [0, 1].map((index) => {
+    const material = keep(
+      new THREE.ShaderMaterial({
+        uniforms: { uTime: ambient, uSeed: { value: index * 17.3 + 3.1 } },
+        transparent: true,
+        depthWrite: false,
+        vertexShader: /* glsl */ `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: /* glsl */ `
+          uniform float uTime;
+          uniform float uSeed;
+          varying vec2 vUv;
+          float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+          float noise(vec2 p) {
+            vec2 i = floor(p);
+            vec2 f = fract(p);
+            f = f * f * (3.0 - 2.0 * f);
+            return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+          }
+          void main() {
+            float t = uTime * 0.32 + uSeed;
+            float sway = (noise(vec2(vUv.y * 2.2 - t, uSeed)) - 0.5) * 0.55 * vUv.y;
+            float x = vUv.x - 0.5 - sway;
+            float n = noise(vec2(x * 5.0, vUv.y * 3.2 - t * 1.5)) * 0.6 + noise(vec2(x * 11.0 + uSeed, vUv.y * 6.0 - t * 2.1)) * 0.4;
+            float column = exp(-x * x * 26.0);
+            float fade = smoothstep(0.0, 0.16, vUv.y) * (1.0 - smoothstep(0.5, 1.0, vUv.y));
+            float a = smoothstep(0.38, 0.86, n) * column * fade * 0.24;
+            gl_FragColor = vec4(0.97, 0.95, 0.91, a);
+          }
+        `,
+      }),
+    );
+    const sheet = new THREE.Mesh(steamGeometry, material);
+    sheet.position.set(coffee.position.x + (index ? 0.05 : -0.04), 0.78, coffee.position.z + (index ? 0.03 : -0.02));
+    sheet.renderOrder = 5;
+    scene.add(sheet);
+    return sheet;
+  });
+  if (reduced) {
+    dust.visible = false;
+    steams.forEach((sheet) => (sheet.visible = false));
+  }
 
   // A small succulent in a concrete pot.
   const plant = new THREE.Group();
@@ -381,6 +498,8 @@ export function createBookScene(options: BookSceneOptions): BookScene {
     key: string;
   };
 
+  /** Each page's texture, so a page can be redrawn (developing ink, hovered links). */
+  const pageMaps: THREE.Texture[] = [];
   const leaves = Array.from({ length: leafCount }, (_, i) => {
     const geometry = keep(new THREE.BufferGeometry());
     geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertexCount * 3), 3));
@@ -388,10 +507,14 @@ export function createBookScene(options: BookSceneOptions): BookScene {
     geometry.setIndex(index);
     const frontPage = pages[i * 2];
     const backPage = pages[i * 2 + 1];
-    const front = new THREE.Mesh(geometry, paper(texture(frontPage.canvas), { side: THREE.FrontSide }));
+    const frontMap = texture(frontPage.canvas);
+    pageMaps[i * 2] = frontMap;
+    const backMap = backPage ? texture(backPage.canvas, "x") : null;
+    if (backMap) pageMaps[i * 2 + 1] = backMap;
+    const front = new THREE.Mesh(geometry, paper(frontMap, { side: THREE.FrontSide }));
     const back = new THREE.Mesh(
       geometry,
-      paper(backPage ? texture(backPage.canvas, "x") : null, { side: THREE.BackSide }),
+      paper(backMap, { side: THREE.BackSide }),
     );
     front.receiveShadow = back.receiveShadow = true;
     front.userData = { leaf: i + 1, page: i * 2 };
@@ -518,6 +641,30 @@ export function createBookScene(options: BookSceneOptions): BookScene {
     geometry.computeBoundingSphere();
   };
 
+  /* --------------------------------------------------------- developing ink */
+
+  // Pages a turn uncovers develop with it: their reveal follows the turning leaf's
+  // progress (the first 35%), falls back if the leaf is dropped, and finishes on the
+  // clock once the page lies open. Everything else stays fully printed.
+  const DEVELOP_SECONDS = 2.2;
+  const reveal = pages.map(() => 1);
+  reveal[0] = 0; // the title page develops as the cover opens
+  const rendered = pages.map(() => 1);
+  const renderedAt = pages.map(() => 0);
+  const hoverHrefs: (string | null)[] = pages.map(() => null);
+  const hoverDrawn: (string | null)[] = pages.map(() => null);
+  /** Which turning leaf (0 = the cover) is uncovering each page right now. */
+  const owners = new Map<number, number>();
+  const markIncoming = (leaf: number, frame: 0 | 1) => {
+    if (reduced) return;
+    const ids = leaf === 0 ? (frame === 0 ? [0] : []) : frame === 0 ? [leaf * 2 - 1, leaf * 2] : [leaf * 2 - 2, leaf * 2 - 3];
+    for (const id of ids) {
+      if (id < 0 || id >= pages.length) continue;
+      reveal[id] = 0;
+      owners.set(id, leaf);
+    }
+  };
+
   /* --------------------------------------------------------------- the cover */
 
   const cover = { q: 0, goal: 0, mode: "rest" as Mode, side: 0 as 0 | 1, peel: 0, autoStart: 0, autoDuration: 1, from: 0 };
@@ -555,6 +702,7 @@ export function createBookScene(options: BookSceneOptions): BookScene {
       const delay = step * (reduced ? 40 : 140);
       const duration = reduced ? 260 : k === 0 ? 1050 : 820;
       if (k === 0) {
+        if (forward) markIncoming(0, 0);
         cover.mode = "auto";
         cover.from = cover.q;
         cover.goal = forward ? 1 : 0;
@@ -565,6 +713,7 @@ export function createBookScene(options: BookSceneOptions): BookScene {
         state.mode = "auto";
         // Always "go over" in the frame of the side it leaves from.
         state.frame = forward ? 0 : 1;
+        markIncoming(k, state.frame);
         state.target = 1;
         state.peel = 0;
         state.g = { x: W, z: H * 0.18 };
@@ -789,6 +938,7 @@ export function createBookScene(options: BookSceneOptions): BookScene {
         return;
       }
       current.kind = "cover";
+      if (cover.side === 0) markIncoming(0, 0);
       current.from = cover.side;
       cover.mode = "drag";
       sound.startRustle();
@@ -802,6 +952,7 @@ export function createBookScene(options: BookSceneOptions): BookScene {
     const state = leaves[leafNumber - 1].state;
     // Grab the fore-edge at the height you pressed: the page folds from there.
     state.frame = state.side;
+    markIncoming(leafNumber, state.frame);
     state.g = { x: W, z: clamp(hit.local.z, -H / 2 + 0.03, H / 2 - 0.03) };
     current.restD = { ...state.g };
     state.d = { ...state.g };
@@ -999,6 +1150,8 @@ export function createBookScene(options: BookSceneOptions): BookScene {
   let paused = false;
   let last = performance.now();
   const blocks = { right: -1, left: -1 };
+  let shadowsDirty = true;
+  let lastCoverQ = -1;
 
   const frame = (now: number) => {
     raf = requestAnimationFrame(frame);
@@ -1044,6 +1197,10 @@ export function createBookScene(options: BookSceneOptions): BookScene {
     cover.peel += ((coverHovered ? 1 : 0) - cover.peel) * follow(10);
     if (Math.abs((coverHovered ? 1 : 0) - cover.peel) > 0.002) active = true;
     const coverQ = clamp(cover.q + cover.peel * 0.03, 0, 1);
+    if (coverQ !== lastCoverQ) {
+      lastCoverQ = coverQ;
+      shadowsDirty = true;
+    }
     const openness = smooth(clamp(cover.q * 1.2, 0, 1));
     book.position.x = (-W / 2) * (1 - openness);
     frontPivot.position.y = BOARD / 2 + rightY(0) * (1 - smooth(coverQ));
@@ -1122,6 +1279,7 @@ export function createBookScene(options: BookSceneOptions): BookScene {
       const key = `${state.frame}${state.d.x.toFixed(5)},${state.d.z.toFixed(5)},${state.r.toFixed(5)},${state.g.z.toFixed(4)},${lift}`;
       if (key !== state.key) {
         fold(geometry, state.g, state.d, state.r, home + lift, away + lift, state.frame === 1);
+        shadowsDirty = true;
         state.key = key;
       }
       front.castShadow = back.castShadow = moving;
@@ -1142,13 +1300,51 @@ export function createBookScene(options: BookSceneOptions): BookScene {
       leftBlock.visible = restingLeft > 1;
     }
 
+    /* -- developing ink -- */
+    const isShowing = (id: number) => {
+      const k = Math.floor(id / 2) + 1;
+      const state = leaves[k - 1]?.state;
+      if (!state || state.mode !== "rest") return false;
+      if (id % 2 === 0) return state.side === 0 && k === rightTop && (k > 1 || (cover.side === 1 && cover.mode === "rest"));
+      return state.side === 1 && k === leftTop;
+    };
+    pages.forEach((page, id) => {
+      const owner = owners.get(id);
+      if (owner !== undefined) {
+        const leafState = owner === 0 ? null : leaves[owner - 1].state;
+        const moving = owner === 0 ? cover.mode !== "rest" : leafState!.mode !== "rest";
+        if (moving) {
+          const q = owner === 0 ? cover.q : progressOf(leafState!);
+          reveal[id] = 0.35 * smooth(clamp((q - 0.08) / 0.8, 0, 1));
+        } else {
+          owners.delete(id);
+        }
+      }
+      if (!owners.has(id) && reveal[id] < 1 && isShowing(id)) {
+        reveal[id] = Math.min(1, reveal[id] + dt / DEVELOP_SECONDS);
+      }
+      hoverHrefs[id] = hover && hover.page === id ? hover.link : null;
+      const hoverChanged = hoverHrefs[id] !== hoverDrawn[id];
+      if (Math.abs(reveal[id] - rendered[id]) > 0.002 || hoverChanged) {
+        active = true;
+        // ~30fps redraws while developing; the final frame and hover changes go out at once.
+        if (reveal[id] >= 1 || hoverChanged || now - renderedAt[id] > 33) {
+          page.render(reveal[id], hoverHrefs[id]);
+          if (pageMaps[id]) pageMaps[id].needsUpdate = true;
+          rendered[id] = reveal[id];
+          renderedAt[id] = now;
+          hoverDrawn[id] = hoverHrefs[id];
+        }
+      }
+    });
+
     /* -- screenshots in motion -- */
     pages.forEach((page, pageIndex) => {
       if (!page.motion) return;
       const k = Math.floor(pageIndex / 2) + 1;
       const isFront = pageIndex % 2 === 0;
       const state = leaves[k - 1].state;
-      const showing = state.mode === "rest" && state.peel < 0.01 && (isFront ? state.side === 0 && k === rightTop : state.side === 1 && k === leftTop);
+      const showing = reveal[pageIndex] >= 1 && state.mode === "rest" && state.peel < 0.01 && (isFront ? state.side === 0 && k === rightTop : state.side === 1 && k === leftTop);
       const wanted = showing && (coarse || hover?.page === pageIndex) && !reduced && !drag;
       const overlay = wanted ? overlayFor(pageIndex) : overlays.get(pageIndex);
       if (!overlay) return;
@@ -1194,6 +1390,16 @@ export function createBookScene(options: BookSceneOptions): BookScene {
     camera.position.copy(eye);
     camera.lookAt(look);
 
+    // Ambient life: dust and steam move every frame; shadows only when solids move.
+    if (!reduced) {
+      ambient.value += dt;
+      steams.forEach((sheet) => sheet.quaternion.copy(camera.quaternion));
+      active = true;
+    }
+    if (shadowsDirty) {
+      renderer.shadowMap.needsUpdate = true;
+      shadowsDirty = false;
+    }
     if (active || dirty) {
       renderer.render(scene, camera);
       dirty = false;

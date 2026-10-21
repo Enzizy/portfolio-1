@@ -179,7 +179,7 @@ export default function PortfolioV3Page() {
       </Plate>
 
       {/* 03 — Projects */}
-      <Plate id="projects" title="Projects" lede="Nine products built to be used, not just demoed." wide>
+      <Plate id="projects" title="Projects" lede="Ten products built to be used, not just demoed." wide>
         <div className="v3-projects">
           {projects.map((project) => (
             <Link key={project.href} href={project.href} className="v3-project">

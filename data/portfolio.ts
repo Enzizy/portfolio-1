@@ -15,7 +15,7 @@ export const projects = [
   {
     number: "01",
     title: "Joyno HR",
-    description: "A full-stack HR operations platform for employee records, policy-aware leave workflows, approvals, workforce calendars, tasks, notifications, audit history, and reporting.",
+    description: "A full-stack HR and payroll platform: employee records, attendance import and review, day and night pay runs with approval, payslips, government contributions, 13th-month and SIL reports, leave workflows, and announcements.",
     technologies: ["Vue.js", "Node.js", "PostgreSQL"],
     visual: "dashboard" as const,
     href: "/projects/joyno-hr",
@@ -54,11 +54,11 @@ export const projects = [
   },
   {
     number: "06",
-    title: "Roarly",
-    description: "An AI animation studio marketing and checkout prototype with account management, flexible credit plans, PayMongo payments, and webhook-confirmed access.",
-    technologies: ["Node.js", "SQLite", "PayMongo"],
-    visual: "roarly" as const,
-    href: "/projects/roarly",
+    title: "CasaToon",
+    description: "An AI story studio, formerly Roarly, that turns a typed idea into a short animated video in one of five art styles, with accounts, free and paid plans, and a live product site.",
+    technologies: ["Node.js", "SQLite", "AI animation"],
+    visual: "casatoon" as const,
+    href: "/projects/casatoon",
   },
   {
     number: "07",
@@ -83,6 +83,14 @@ export const projects = [
     technologies: ["React Native", "Expo", "SQLite"],
     visual: "lifedesk" as const,
     href: "/projects/lifedesk",
+  },
+  {
+    number: "10",
+    title: "Joyno Accounting",
+    description: "A two-person accounting system with journals, a general ledger and financial statements, sales and purchase documents, banking, assets, tax and payroll record tracking, and company-scoped roles and audit trails.",
+    technologies: ["Vue 3", "Express", "PostgreSQL"],
+    visual: "joyno-accounting" as const,
+    href: "/projects/joyno-accounting",
   },
 ] as const;
 
