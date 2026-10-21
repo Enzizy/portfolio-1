@@ -87,7 +87,7 @@ export const projects = [
   {
     number: "10",
     title: "Joyno Accounting",
-    description: "A two-person accounting system with journals, a general ledger and financial statements, sales and purchase documents, banking, assets, tax and payroll record tracking, and company-scoped roles and audit trails.",
+    description: "A collaborative accounting system I co-built, with journals, a general ledger and financial statements, sales and purchase documents, banking, assets, tax and payroll record tracking, and company-scoped roles and audit trails.",
     technologies: ["Vue 3", "Express", "PostgreSQL"],
     visual: "joyno-accounting" as const,
     href: "/projects/joyno-accounting",

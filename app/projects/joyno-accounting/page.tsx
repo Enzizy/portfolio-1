@@ -34,7 +34,7 @@ const stack = [
 export const metadata = createProjectMetadata({
   title: "Joyno Accounting — Accounting System",
   description:
-    "A two-person accounting system built with Vue 3, Express, and PostgreSQL: journals, financial statements, sales and purchases, banking, assets, tax record tracking, roles, and audit trails.",
+    "A collaborative accounting system co-built with Vue 3, Express, and PostgreSQL: journals, financial statements, sales and purchases, banking, assets, tax record tracking, roles, and audit trails.",
   image: "/images/projects/joyno-accounting.png",
   imageAlt: "Joyno Accounting dashboard",
 });
@@ -61,7 +61,7 @@ export default function JoynoAccountingPage() {
             </p>
           </div>
           <dl className="case-study__facts">
-            <div><dt>Role</dt><dd>Full-stack development, two-person team</dd></div>
+            <div><dt>Role</dt><dd>Co-developer · full-stack development</dd></div>
             <div><dt>Platform</dt><dd>Responsive web application</dd></div>
             <div><dt>Core stack</dt><dd>Vue 3 · Express · PostgreSQL</dd></div>
           </dl>
@@ -80,7 +80,7 @@ export default function JoynoAccountingPage() {
 
         <CaseStudyStory id="joyno-accounting-story" story={{
           challenge: "The company needed its books, documents and reports in one place, with numbers it could trust and a clear record of who changed what.",
-          decisions: "We split the system between two developers by module and joined them through a defined ledger contract. Reports read only posted journal lines, money is stored as integer centavos, and assumptions the accountants have not confirmed are isolated and flagged rather than invented.",
+          decisions: "We built it together around one shared ledger contract, so every module feeds the same books. Reports read only posted journal lines, money is stored as integer centavos, and assumptions the accountants have not confirmed are isolated and flagged rather than invented.",
           result: "Joyno Accounting runs on the company's own server with real records: journals, statements, analytics, sales, purchases, banking, assets and company settings, protected by server-side permissions and nightly encrypted backups.",
         }} />
 
