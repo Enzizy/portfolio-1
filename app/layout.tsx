@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "UXmgTovg7upSW0wO0GCwRdK0flSNkupoRxaN0obTeQM",
+    // Bing Webmaster Tools (same key as public/BingSiteAuth.xml).
+    other: { "msvalidate.01": "E27C54431B4B61407E706E066D706D92" },
   },
   openGraph: {
     title: "Zhyronne Batican — Full Stack Developer",
