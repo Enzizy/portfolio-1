@@ -32,6 +32,7 @@ const stack = [
 ] as const;
 
 export const metadata = createProjectMetadata({
+  path: "/projects/joyno-accounting",
   title: "Joyno Accounting — Accounting System",
   description:
     "A collaborative accounting system co-built with Vue 3, Express, and PostgreSQL: journals, financial statements, sales and purchases, banking, assets, tax record tracking, roles, and audit trails.",

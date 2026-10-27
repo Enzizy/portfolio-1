@@ -32,6 +32,7 @@ const stack = [
 ] as const;
 
 export const metadata = createProjectMetadata({
+  path: "/projects/localaid",
   title: "LocalAid — Crowdsourced Community Assistance App",
   description:
     "A native Android application that helps nearby residents request and offer assistance through location-aware posts, real-time chat, verification, and community rewards.",

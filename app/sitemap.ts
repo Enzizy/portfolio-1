@@ -43,12 +43,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${siteUrl}/movies`,
-      lastModified,
-      changeFrequency: "daily",
-      priority: 0.6,
-    },
-    {
       url: `${siteUrl}/arcade`,
       lastModified,
       changeFrequency: "monthly",

@@ -2,6 +2,7 @@ import { ClientWebsiteCaseStudy } from "@/components/ClientWebsiteCaseStudy";
 import { createProjectMetadata } from "@/lib/metadata";
 
 export const metadata = createProjectMetadata({
+  path: "/projects/streetkings",
   title: "StreetKings PH — WordPress Client Website",
   description:
     "A responsive WordPress website for a Bacoor-based auto painting, refinishing, protection, and detailing business.",

@@ -26,7 +26,9 @@ export const metadata: Metadata = {
     title: "Zhyronne Batican — Full Stack Developer",
     description: "Web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
     type: "website",
-    url: "/",
+    siteName: "Zhyronne Batican",
+    locale: "en_US",
+    // No og:url here: pages without their own would all claim the home page's address.
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Zhyronne Batican portfolio" }],
   },
   twitter: {
@@ -35,6 +37,37 @@ export const metadata: Metadata = {
     description: "Web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
     images: ["/opengraph-image"],
   },
+};
+
+// Tells search engines who the site is about, so a name search can show the profile links.
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${siteUrl}/#person`,
+      name: "Zhyronne Batican",
+      url: siteUrl,
+      image: `${siteUrl}/images/me.jpg`,
+      jobTitle: "Full Stack Developer",
+      email: "mailto:zhyronnebatican@gmail.com",
+      address: { "@type": "PostalAddress", addressCountry: "PH" },
+      knowsAbout: ["Web Development", "WordPress", "Landing Pages", "AI Solutions", "Mobile Apps", "UI/UX Design", "SEO"],
+      sameAs: [
+        "https://github.com/Enzizy",
+        "https://www.linkedin.com/in/zhyronne-batican-5458a53aa/",
+        "https://www.facebook.com/Hakdog.Hakplas.Haler",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Zhyronne Batican",
+      inLanguage: "en",
+      publisher: { "@id": `${siteUrl}/#person` },
+    },
+  ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -54,6 +87,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body id="top" className={GeistSans.className}>
         <noscript><style>{".portfolio-splash{display:none!important}"}</style></noscript>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <PortfolioSplash />
         <CursorSkin />
         <ThemeTransition />

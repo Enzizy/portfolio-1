@@ -40,6 +40,7 @@ const project: PrivateProjectDetails = {
 };
 
 export const metadata = createProjectMetadata({
+  path: "/projects/lifedesk",
   title: "LifeDesk — Personal Command Center",
   description: "A local-first Android app for tasks, budgets, bills, investments, and review-before-save AI assistance.",
   image: project.image,

@@ -9,6 +9,7 @@ import { projects } from "@/data/portfolio";
 export const metadata: Metadata = {
   title: "Projects — Zhyronne Batican",
   description: "Explore selected web, mobile, AI, and product design projects by Zhyronne Batican.",
+  alternates: { canonical: "/projects" },
 };
 
 export default function AllProjectsPage() {

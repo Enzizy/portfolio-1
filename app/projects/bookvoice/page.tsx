@@ -32,6 +32,7 @@ const stack = [
 ] as const;
 
 export const metadata = createProjectMetadata({
+  path: "/projects/bookvoice",
   title: "BookVoice — Local-First Audiobook Studio",
   description:
     "A Windows desktop application that converts documents into locally generated audiobooks and provides a three-track editor for narration, ambience, and effects.",
