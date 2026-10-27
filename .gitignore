@@ -22,3 +22,8 @@
 .DS_Store
 Thumbs.db
 .vercel
+
+# Cloudflare (OpenNext build output, Wrangler state, local secrets)
+/.open-next
+/.wrangler
+.dev.vars*

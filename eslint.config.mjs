@@ -16,7 +16,6 @@ export default defineConfig([
       "components/CommandPalette.tsx",
       "components/PixelCatCompanion.tsx",
       "components/PortfolioSplash.tsx",
-      "components/TargetCursor.tsx",
       "components/TextType.tsx",
     ],
     rules: { "react-hooks/set-state-in-effect": "off" },
@@ -26,5 +25,5 @@ export default defineConfig([
     files: ["components/TextType.tsx"],
     rules: { "react-hooks/refs": "off" },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  globalIgnores([".next/**", ".open-next/**", ".wrangler/**", "out/**", "build/**", "next-env.d.ts"]),
 ]);

@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import { CURSOR_TARGET_SELECTOR, CURSOR_TEXT_SELECTOR, cursorVariantFor } from "@/lib/cursor";
 
 /**
- * The pointer for layouts that do not use the snapping brackets of <TargetCursor>.
+ * The custom pointer for V2, V3 and V4. Every other page uses the normal system cursor.
  *
  * Two independently positioned layers: a lead ring that trails the pointer and a tip
  * that sits exactly on it. GSAP owns the transform of those two wrappers and nothing

@@ -1,4 +1,4 @@
-export type CursorVariant = "bracket" | "reticle" | "ring";
+export type CursorVariant = "bracket" | "reticle" | "ring" | "studio";
 
 /** Elements that get a text caret, where a custom pointer would only be in the way. */
 export const CURSOR_TEXT_SELECTOR = [
@@ -19,12 +19,14 @@ export const CURSOR_TARGET_SELECTOR =
 
 /**
  * Each layout gets the pointer its surface asks for: V3's drafting sheet takes a
- * surveyor's reticle, V2's rounded dashboard a soft ring, everything else the
+ * surveyor's reticle, V2's rounded dashboard a soft ring, V4 an inverting
+ * studio pointer, everything else the
  * original snapping brackets.
  */
 export function cursorVariantFor(pathname: string | null | undefined): CursorVariant {
   if (!pathname) return "bracket";
   if (pathname === "/v3" || pathname.startsWith("/v3/")) return "reticle";
   if (pathname === "/v2" || pathname.startsWith("/v2/")) return "ring";
+  if (pathname === "/v4" || pathname.startsWith("/v4/")) return "studio";
   return "bracket";
 }

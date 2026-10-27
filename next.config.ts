@@ -12,3 +12,6 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Gives `next dev` the same Cloudflare bindings the deployed worker has.
+import("@opennextjs/cloudflare").then((module) => module.initOpenNextCloudflareForDev());

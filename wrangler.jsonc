@@ -1,0 +1,25 @@
+// Cloudflare Workers config for the OpenNext build (`npm run deploy`).
+// Secrets (GEMINI_API_KEY, TMDB_API_KEY, RESEND_API_KEY) are set in the dashboard or
+// with `npx wrangler secret put <NAME>`, never here.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zhyronne-portfolio",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // ISR revalidation (GitHub stats, TMDB data) calls back into this same worker.
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "zhyronne-portfolio" }],
+  // Cached pages and fetches. Wrangler creates the namespace on the first deploy.
+  "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV" }],
+  // next/image resizing.
+  "images": { "binding": "IMAGES" },
+  "vars": {
+    "CONTACT_TO_EMAIL": "zhyronnebatican@gmail.com",
+    "GEMINI_MODEL": "gemini-3.1-flash-lite"
+  },
+  "observability": { "enabled": true }
+}
