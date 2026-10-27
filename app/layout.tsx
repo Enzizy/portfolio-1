@@ -17,7 +17,8 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   verification: {
-    google: "UXmgTovg7upSW0wO0GCwRdK0flSNkupoRxaN0obTeQM",
+    // First key: the old vercel.app property. Second: portfolio.zhyronnebatican.workers.dev.
+    google: ["UXmgTovg7upSW0wO0GCwRdK0flSNkupoRxaN0obTeQM", "92PhbgmH9ULunrd8WSZldCW0CYCsjRd4ldmONnPxMEU"],
     // Bing Webmaster Tools (same key as public/BingSiteAuth.xml).
     other: { "msvalidate.01": "E27C54431B4B61407E706E066D706D92" },
   },
