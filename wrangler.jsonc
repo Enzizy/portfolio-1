@@ -3,7 +3,8 @@
 // with `npx wrangler secret put <NAME>`, never here.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "zhyronne-portfolio",
+  // Served at https://portfolio.zhyronnebatican.workers.dev
+  "name": "portfolio",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -12,7 +13,7 @@
     "binding": "ASSETS"
   },
   // ISR revalidation (GitHub stats, TMDB data) calls back into this same worker.
-  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "zhyronne-portfolio" }],
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "portfolio" }],
   // Cached pages and fetches. Wrangler creates the namespace on the first deploy.
   "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV" }],
   // next/image resizing.
