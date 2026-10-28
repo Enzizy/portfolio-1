@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type ProjectVisualProps = {
-  variant: "dashboard" | "localaid" | "streetkings" | "furniture" | "bookvoice" | "casatoon" | "ccr" | "lifedesk-crm" | "lifedesk" | "joyno-accounting";
+  variant: "dashboard" | "localaid" | "streetkings" | "furniture" | "bookvoice" | "casatoon" | "ccr" | "lifedesk-crm" | "lifedesk" | "joyno-accounting" | "enzi";
 };
 
 function LocalAidVisual() {
@@ -88,6 +88,13 @@ export function ProjectVisual({ variant }: ProjectVisualProps) {
     <WebsiteVisual
       src="/images/projects/joyno-accounting.png"
       alt="Joyno Accounting dashboard with revenue and expenses, tax calendar, balance health and recent activity"
+      position="center top"
+    />
+  );
+  if (variant === "enzi") return (
+    <WebsiteVisual
+      src="/images/projects/enzi/01-hero.webp"
+      alt="Enzi notch open on the music player at the top of a Windows desktop, with the floating to-do widget"
       position="center top"
     />
   );

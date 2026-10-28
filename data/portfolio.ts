@@ -92,6 +92,14 @@ export const projects = [
     visual: "joyno-accounting" as const,
     href: "/projects/joyno-accounting",
   },
+  {
+    number: "11",
+    title: "Enzi",
+    description: "A customizable Dynamic Island-style notch for Windows with music and synced lyrics, a focus timer, to-do list, file shelf, image converter, clipboard history and quick actions, in a 2.4 MB app.",
+    technologies: ["Rust", "Tauri 2", "Windows APIs"],
+    visual: "enzi" as const,
+    href: "/projects/enzi",
+  },
 ] as const;
 
 export const stackGroups = [

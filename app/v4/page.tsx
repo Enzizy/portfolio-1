@@ -31,6 +31,7 @@ const shots: Record<(typeof projects)[number]["visual"], { src: string; position
   "lifedesk-crm": { src: "/images/projects/lifedesk-crm.png", position: "center top" },
   lifedesk: { src: "/images/projects/lifedesk-home.png", position: "center 10%" },
   "joyno-accounting": { src: "/images/projects/joyno-accounting.png", position: "left top" },
+  enzi: { src: "/images/projects/enzi/01-hero.webp", position: "center top" },
 };
 
 const socials = [
