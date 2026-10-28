@@ -25,5 +25,8 @@
     "CONTACT_TO_EMAIL": "zhyronnebatican@gmail.com",
     "GEMINI_MODEL": "gemini-3.1-flash-lite"
   },
+  // Run in Singapore: visitors routed through Hong Kong otherwise hit Gemini's
+  // "User location is not supported", and Singapore stays close to the Philippines.
+  "placement": { "mode": "targeted", "region": "gcp:asia-southeast1" },
   "observability": { "enabled": true }
 }

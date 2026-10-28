@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
   const models = [...new Set([
     configuredModel,
     "gemini-3.1-flash-lite",
-    "gemini-2.5-flash-lite",
+    "gemini-3.5-flash-lite",
   ])];
   try {
     for (const model of models) {
