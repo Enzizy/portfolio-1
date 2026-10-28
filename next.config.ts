@@ -5,13 +5,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/projects/roarly", destination: "/projects/casatoon", permanent: true },
-      // The site moved from Vercel to Cloudflare: send old links and search results to the new address.
-      {
+      // Earlier addresses of the site: send old links and search results to the current one.
+      ...["zhyronne-batican.vercel.app", "portfolio.zhyronnebatican.workers.dev"].map((host) => ({
         source: "/:path*",
-        has: [{ type: "host", value: "zhyronne-batican.vercel.app" }],
-        destination: "https://portfolio.zhyronnebatican.workers.dev/:path*",
+        has: [{ type: "host" as const, value: host }],
+        destination: "https://zhyronne.workwithoddly.com/:path*",
         permanent: true,
-      },
+      })),
     ];
   },
   images: {
