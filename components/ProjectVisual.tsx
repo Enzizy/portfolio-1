@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type ProjectVisualProps = {
-  variant: "dashboard" | "localaid" | "streetkings" | "furniture" | "bookvoice" | "casatoon" | "ccr" | "lifedesk-crm" | "lifedesk" | "joyno-accounting" | "enzi";
+  variant: "dashboard" | "localaid" | "furniture" | "bookvoice" | "casatoon" | "ccr" | "lifedesk-crm" | "lifedesk" | "joyno-accounting" | "enzi" | "joyno-chatbot";
 };
 
 function LocalAidVisual() {
@@ -67,9 +67,6 @@ export function ProjectVisual({ variant }: ProjectVisualProps) {
   if (variant === "ccr") return <WebsiteVisual src="/images/projects/ccr.png" alt="CCR local demo dashboard with empty business records" />;
   if (variant === "lifedesk-crm") return <WebsiteVisual src="/images/projects/lifedesk-crm.png" alt="LifeDesk CRM empty-state workspace, with no prospect records" position="center top" />;
   if (variant === "lifedesk") return <LifeDeskVisual />;
-  if (variant === "streetkings") {
-    return <WebsiteVisual src="/images/projects/street.png" alt="StreetKings PH automotive website home page" />;
-  }
   if (variant === "furniture") return (
     <WebsiteVisual
       src="/images/projects/bw.png"
@@ -96,6 +93,13 @@ export function ProjectVisual({ variant }: ProjectVisualProps) {
       src="/images/projects/enzi/01-hero.webp"
       alt="Enzi notch open on the music player at the top of a Windows desktop, with the floating to-do widget"
       position="center top"
+    />
+  );
+  if (variant === "joyno-chatbot") return (
+    <WebsiteVisual
+      src="/images/projects/joyno-chatbot/03-chat-answer-with-page-button.webp"
+      alt="Joyno Chatbot answering a visitor on a business website, with a View Services button"
+      position="right center"
     />
   );
   return (

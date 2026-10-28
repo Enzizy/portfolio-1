@@ -2,7 +2,7 @@ import { PrivateProjectCaseStudy, type PrivateProjectDetails } from "@/component
 import { createProjectMetadata } from "@/lib/metadata";
 
 const project: PrivateProjectDetails = {
-  number: "07",
+  number: "06",
   title: "CCR",
   category: "INTERNAL BUSINESS OPERATIONS",
   introduction: "A private operations workspace that tracks an order from purchase order through delivery, billing, and payment.",

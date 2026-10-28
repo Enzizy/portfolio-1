@@ -23,7 +23,6 @@ export const metadata: Metadata = {
 const shots: Record<(typeof projects)[number]["visual"], { src: string; position?: string }> = {
   dashboard: { src: "/images/projects/hr.png", position: "left top" },
   localaid: { src: "/images/projects/localaid.png", position: "center 12%" },
-  streetkings: { src: "/images/projects/street.png" },
   furniture: { src: "/images/projects/bw.png" },
   bookvoice: { src: "/images/projects/book.png" },
   casatoon: { src: "/images/projects/casatoon.webp" },
@@ -32,6 +31,7 @@ const shots: Record<(typeof projects)[number]["visual"], { src: string; position
   lifedesk: { src: "/images/projects/lifedesk-home.png", position: "center 10%" },
   "joyno-accounting": { src: "/images/projects/joyno-accounting.png", position: "left top" },
   enzi: { src: "/images/projects/enzi/01-hero.webp", position: "center top" },
+  "joyno-chatbot": { src: "/images/projects/joyno-chatbot/03-chat-answer-with-page-button.webp", position: "right center" },
 };
 
 const socials = [

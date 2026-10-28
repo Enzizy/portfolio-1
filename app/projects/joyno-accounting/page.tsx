@@ -49,7 +49,7 @@ export default function JoynoAccountingPage() {
           <Link className="case-study__back" href="/projects">
             <ArrowLeft size={14} /> All projects
           </Link>
-          <p className="eyebrow">// CASE STUDY 10</p>
+          <p className="eyebrow">// CASE STUDY 09</p>
           <div className="case-study__title">
             <div>
               <span>ACCOUNTING &amp; FINANCIAL REPORTING</span>

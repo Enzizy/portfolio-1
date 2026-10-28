@@ -13,7 +13,7 @@ export const metadata = createProjectMetadata({
 export default function BwFurniturePage() {
   return (
     <ClientWebsiteCaseStudy
-      number="04"
+      number="03"
       title="B&W Furnitures"
       category="CUSTOM FURNITURE PORTFOLIO"
       introduction="A visual WordPress portfolio that helps customers explore custom furniture categories, evaluate craftsmanship, and start an inquiry."

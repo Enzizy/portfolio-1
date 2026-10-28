@@ -2,7 +2,7 @@ import { PrivateProjectCaseStudy, type PrivateProjectDetails } from "@/component
 import { createProjectMetadata } from "@/lib/metadata";
 
 const project: PrivateProjectDetails = {
-  number: "08",
+  number: "07",
   title: "LifeDesk CRM",
   category: "AI-ASSISTED PROSPECTING",
   introduction: "A personal CRM that turns local business discovery into a reviewed prospect list and organized outreach workflow.",

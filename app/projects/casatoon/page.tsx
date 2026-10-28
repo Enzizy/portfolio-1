@@ -49,7 +49,7 @@ export default function CasaToonPage() {
           <Link className="case-study__back" href="/projects">
             <ArrowLeft size={14} /> All projects
           </Link>
-          <p className="eyebrow">// CASE STUDY 06</p>
+          <p className="eyebrow">// CASE STUDY 05</p>
           <div className="case-study__title">
             <div>
               <span>AI STORY STUDIO · FORMERLY ROARLY</span>

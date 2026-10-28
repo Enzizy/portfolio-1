@@ -2,7 +2,7 @@ import { PrivateProjectCaseStudy, type PrivateProjectDetails } from "@/component
 import { createProjectMetadata } from "@/lib/metadata";
 
 const project: PrivateProjectDetails = {
-  number: "09",
+  number: "08",
   title: "LifeDesk",
   category: "PERSONAL COMMAND CENTER",
   introduction: "An Android-first home for daily tasks, personal finances, investments, and AI-assisted planning.",

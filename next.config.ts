@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/projects/roarly", destination: "/projects/casatoon", permanent: true },
+      // StreetKings was removed when the client's site went offline.
+      { source: "/projects/streetkings", destination: "/projects", permanent: true },
       // Earlier addresses of the site: send old links and search results to the current one.
       {
         source: "/:path*",

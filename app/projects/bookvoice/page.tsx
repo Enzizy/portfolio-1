@@ -49,7 +49,7 @@ export default function BookVoicePage() {
           <Link className="case-study__back" href="/projects">
             <ArrowLeft size={14} /> All projects
           </Link>
-          <p className="eyebrow">// CASE STUDY 05</p>
+          <p className="eyebrow">// CASE STUDY 04</p>
           <div className="case-study__title">
             <div>
               <span>LOCAL-FIRST AUDIOBOOK STUDIO</span>

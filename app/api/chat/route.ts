@@ -41,7 +41,9 @@ Verified portfolio facts:
 - Joyno Accounting is a Vue 3, Express, and PostgreSQL accounting system that Zhyronne co-built with a collaborator, with journals, a general ledger, financial statements, sales and purchase documents, banking, assets, tax and payroll record tracking, server-enforced roles, and audit trails. It records and reports; it does not file with the BIR.
 - LocalAid is a native Android community-help application built with Kotlin, Firebase, and Google Maps.
 - CasaToon (formerly Roarly) is an AI story studio at casatoon.com that turns a typed idea into a short animated video in five art styles (2D, 3D, anime, claymation, realistic), with accounts and Free, Creator, and Studio plans. It runs on Node.js and SQLite with webhook-confirmed billing.
-- Other work includes LocalAid, BookVoice, StreetKings PH, and B&W Furnitures.
+- Enzi is a customizable Dynamic Island-style notch for Windows, built with Rust and Tauri 2: music with synced lyrics, a focus timer, to-do list, file shelf, image converter, clipboard history, and quick actions. It is open source on GitHub.
+- Joyno Chatbot is a WordPress plugin and subscription service that gives small businesses a branded AI assistant answering visitors in English and Filipino from the business's own FAQs and pages, using Google Gemini. Zhyronne built the plugin (PHP), the agency service and dashboard (Node.js, SQLite), and its security model.
+- Other work includes LocalAid, BookVoice, and B&W Furnitures.
 - His broader stack includes React, Vue, React Native, Flutter, Kotlin, TypeScript, Python, Node.js, REST APIs, PostgreSQL, Supabase, Firebase Firestore, WordPress, landing pages, Git, GitHub, ComfyUI, LM Studio, Ollama, and local AI tools.
 - He is available for selected freelance projects.
 - Visitors can view /projects, download /resume.pdf, or contact him at zhyronnebatican@gmail.com.
