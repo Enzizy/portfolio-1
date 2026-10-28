@@ -3,12 +3,11 @@
 // with `npx wrangler secret put <NAME>`, never here.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  // Served at https://zhyronne.workwithoddly.com. The old workers.dev address stays on and
-  // redirects there (see next.config.ts).
+  // Served only at https://zhyronne.workwithoddly.com; the workers.dev and preview URLs are off.
   "name": "portfolio",
   "routes": [{ "pattern": "zhyronne.workwithoddly.com", "custom_domain": true }],
-  // Wrangler turns workers.dev off once routes exist; keep it so old links can redirect.
-  "workers_dev": true,
+  "workers_dev": false,
+  "preview_urls": false,
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],

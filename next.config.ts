@@ -6,12 +6,12 @@ const nextConfig: NextConfig = {
     return [
       { source: "/projects/roarly", destination: "/projects/casatoon", permanent: true },
       // Earlier addresses of the site: send old links and search results to the current one.
-      ...["zhyronne-batican.vercel.app", "portfolio.zhyronnebatican.workers.dev"].map((host) => ({
+      {
         source: "/:path*",
-        has: [{ type: "host" as const, value: host }],
+        has: [{ type: "host", value: "zhyronne-batican.vercel.app" }],
         destination: "https://zhyronne.workwithoddly.com/:path*",
         permanent: true,
-      })),
+      },
     ];
   },
   images: {
