@@ -1,0 +1,23 @@
+# Rebuilds the site on Cloudflare once a day so build-time data (the GitHub
+# contribution stats) stays current even when only other repositories get pushes.
+# The Deploy Hook URL lives in the CLOUDFLARE_DEPLOY_HOOK repository secret.
+name: Daily rebuild
+
+on:
+  schedule:
+    - cron: "0 18 * * *" # 02:00 Philippine time
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the Cloudflare deploy hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "::warning::CLOUDFLARE_DEPLOY_HOOK is not set; skipping the rebuild."
+            exit 0
+          fi
+          curl --fail --silent --show-error -X POST "$DEPLOY_HOOK"
