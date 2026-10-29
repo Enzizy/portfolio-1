@@ -36,7 +36,7 @@ export const metadata = createProjectMetadata({
   title: "BookVoice — Local-First Audiobook Studio",
   description:
     "A Windows desktop application that converts documents into locally generated audiobooks and provides a three-track editor for narration, ambience, and effects.",
-  image: "/images/projects/book.png",
+  image: "/images/projects/book.webp",
   imageAlt: "BookVoice local-first audiobook studio",
 });
 
@@ -69,7 +69,7 @@ export default function BookVoicePage() {
 
         <figure className="case-study__hero">
           <Image
-            src="/images/projects/book.png"
+            src="/images/projects/book.webp"
             alt="BookVoice desktop workspace for importing text, generating narration, and editing audio"
             width={1429}
             height={848}

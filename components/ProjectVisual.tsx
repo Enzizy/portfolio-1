@@ -9,7 +9,7 @@ function LocalAidVisual() {
     <div className="visual visual--localaid">
       <Image
         className="localaid-preview"
-        src="/images/projects/localaid.png"
+        src="/images/projects/localaid.webp"
         alt="LocalAid mobile home screen with request and offer help actions"
         width={920}
         height={1920}
@@ -23,7 +23,7 @@ function DashboardVisual() {
   return (
     <div className="visual visual--dashboard">
       <Image
-        src="/images/projects/hr.png"
+        src="/images/projects/hr.webp"
         alt="Joyno HR operations dashboard"
         fill
         sizes="(max-width: 767px) 100vw, 720px"
@@ -37,7 +37,7 @@ function LifeDeskVisual() {
   return (
     <div className="visual visual--lifedesk">
       <Image
-        src="/images/projects/lifedesk-home.png"
+        src="/images/projects/lifedesk-home.webp"
         alt="LifeDesk home screen with an empty local wallet and pinned actions"
         width={430}
         height={930}
@@ -64,12 +64,12 @@ function WebsiteVisual({ src, alt, position = "center" }: { src: string; alt: st
 export function ProjectVisual({ variant }: ProjectVisualProps) {
   if (variant === "dashboard") return <DashboardVisual />;
   if (variant === "localaid") return <LocalAidVisual />;
-  if (variant === "ccr") return <WebsiteVisual src="/images/projects/ccr.png" alt="CCR local demo dashboard with empty business records" />;
-  if (variant === "lifedesk-crm") return <WebsiteVisual src="/images/projects/lifedesk-crm.png" alt="LifeDesk CRM empty-state workspace, with no prospect records" position="center top" />;
+  if (variant === "ccr") return <WebsiteVisual src="/images/projects/ccr.webp" alt="CCR local demo dashboard with empty business records" />;
+  if (variant === "lifedesk-crm") return <WebsiteVisual src="/images/projects/lifedesk-crm.webp" alt="LifeDesk CRM empty-state workspace, with no prospect records" position="center top" />;
   if (variant === "lifedesk") return <LifeDeskVisual />;
   if (variant === "furniture") return (
     <WebsiteVisual
-      src="/images/projects/bw.png"
+      src="/images/projects/bw.webp"
       alt="B&W Customized Furnitures website home page"
       position="46% center"
     />
@@ -83,7 +83,7 @@ export function ProjectVisual({ variant }: ProjectVisualProps) {
   );
   if (variant === "joyno-accounting") return (
     <WebsiteVisual
-      src="/images/projects/joyno-accounting.png"
+      src="/images/projects/joyno-accounting.webp"
       alt="Joyno Accounting dashboard with revenue and expenses, tax calendar, balance health and recent activity"
       position="center top"
     />
@@ -104,7 +104,7 @@ export function ProjectVisual({ variant }: ProjectVisualProps) {
   );
   return (
     <WebsiteVisual
-      src="/images/projects/book.png"
+      src="/images/projects/book.webp"
       alt="BookVoice local-first audiobook studio desktop interface"
       position="48% center"
     />

@@ -147,7 +147,7 @@ export default function PortfolioV3Page() {
           </div>
         </div>
         <a className="v3-featured" href="/projects/ccr">
-          <span className="v3-featured__shot"><Image src="/images/projects/ccr.png" alt="" fill sizes="96px" /></span>
+          <span className="v3-featured__shot"><Image src="/images/projects/ccr.webp" alt="" fill sizes="96px" /></span>
           <span><small>Featured build · CCR</small><strong>Orders, deliveries, and payments in one workflow</strong></span>
           <ArrowUpRight size={16} aria-hidden="true" />
         </a>

@@ -19,7 +19,8 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    formats: ["image/avif", "image/webp"],
+    // Images are already sized WebP files; serving them as-is avoids per-image resize costs.
+    unoptimized: true,
   },
 };
 

@@ -36,7 +36,7 @@ export const metadata = createProjectMetadata({
   title: "LocalAid — Crowdsourced Community Assistance App",
   description:
     "A native Android application that helps nearby residents request and offer assistance through location-aware posts, real-time chat, verification, and community rewards.",
-  image: "/images/projects/localaid.png",
+  image: "/images/projects/localaid.webp",
   imageAlt: "LocalAid community assistance mobile application",
 });
 
@@ -69,7 +69,7 @@ export default function LocalAidPage() {
 
         <figure className="case-study__hero case-study__hero--mobile">
           <Image
-            src="/images/projects/localaid.png"
+            src="/images/projects/localaid.webp"
             alt="LocalAid home screen showing request help, offer help, and recent community posts"
             width={920}
             height={1920}

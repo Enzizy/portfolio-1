@@ -9,7 +9,7 @@ const project: PrivateProjectDetails = {
   role: "Full-stack product development",
   platform: "Private web application",
   coreStack: "Vue 3 · Supabase · AI assistant",
-  image: "/images/projects/ccr.png",
+  image: "/images/projects/ccr.webp",
   imageAlt: "CCR's actual dashboard running with a fresh local database and no business records",
   imageNote: "Actual CCR dashboard, captured in local demo mode with an empty database. No business records are shown.",
   story: {

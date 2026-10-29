@@ -48,7 +48,7 @@ export function Hero() {
           <a className="button button--light" href="#contact" data-cat-perch data-cat-zone="top" data-cat-kind="button">Let&apos;s Work Together <ArrowUpRight size={15} /></a>
         </div>
         <a className="hero-featured" href="/projects/ccr">
-          <span className="hero-featured__image"><Image src="/images/projects/ccr.png" alt="" fill sizes="72px" /></span>
+          <span className="hero-featured__image"><Image src="/images/projects/ccr.webp" alt="" fill sizes="72px" /></span>
           <span><small>FEATURED BUILD · CCR</small><strong>Orders, deliveries, and payments in one workflow</strong></span>
           <ArrowUpRight size={16} aria-hidden="true" />
         </a>

@@ -36,7 +36,7 @@ export const metadata = createProjectMetadata({
   title: "Joyno Accounting — Accounting System",
   description:
     "A collaborative accounting system co-built with Vue 3, Express, and PostgreSQL: journals, financial statements, sales and purchases, banking, assets, tax record tracking, roles, and audit trails.",
-  image: "/images/projects/joyno-accounting.png",
+  image: "/images/projects/joyno-accounting.webp",
   imageAlt: "Joyno Accounting dashboard",
 });
 
@@ -70,7 +70,7 @@ export default function JoynoAccountingPage() {
 
         <figure className="case-study__hero">
           <Image
-            src="/images/projects/joyno-accounting.png"
+            src="/images/projects/joyno-accounting.webp"
             alt="Joyno Accounting dashboard showing revenue, expenses and net income, a monthly revenue chart, the tax calendar, balance health, operating result and recent activity"
             width={1423}
             height={764}

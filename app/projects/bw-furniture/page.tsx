@@ -6,7 +6,7 @@ export const metadata = createProjectMetadata({
   title: "B&W Customized Furnitures — WordPress Client Website",
   description:
     "A portfolio-focused WordPress website for customized furniture, modular cabinetry, storage, and interior solutions in Cebu.",
-  image: "/images/projects/bw.png",
+  image: "/images/projects/bw.webp",
   imageAlt: "B&W Customized Furnitures website",
 });
 
@@ -17,7 +17,7 @@ export default function BwFurniturePage() {
       title="B&W Furnitures"
       category="CUSTOM FURNITURE PORTFOLIO"
       introduction="A visual WordPress portfolio that helps customers explore custom furniture categories, evaluate craftsmanship, and start an inquiry."
-      image="/images/projects/bw.png"
+      image="/images/projects/bw.webp"
       imageAlt="B&W Customized Furnitures WordPress website home page"
       liveUrl="https://bwcustomizedfurniture.com/"
       currentHref="/projects/bw-furniture"

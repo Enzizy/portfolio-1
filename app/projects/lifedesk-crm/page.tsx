@@ -9,7 +9,7 @@ const project: PrivateProjectDetails = {
   role: "Full-stack product development",
   platform: "Private web application",
   coreStack: "React · Supabase · AI workflows",
-  image: "/images/projects/lifedesk-crm.png",
+  image: "/images/projects/lifedesk-crm.webp",
   imageAlt: "LifeDesk CRM empty-state home page with example searches and no prospect records",
   imageNote: "Current app screenshot from its empty-state development preview. No prospect or contact records are shown.",
   imageFit: "cover",

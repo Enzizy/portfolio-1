@@ -15,12 +15,8 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  // ISR revalidation (GitHub stats) calls back into this same worker.
-  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "portfolio" }],
-  // Cached pages and fetches (KV namespace "portfolio-cache").
-  "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "7a4406a08d6d4a1182bc9a968ccc1225" }],
-  // next/image resizing.
-  "images": { "binding": "IMAGES" },
+  // Pages are prerendered into the static assets (see open-next.config.ts), so there is
+  // no KV cache, revalidation queue or image-resizing binding.
   "vars": {
     "GEMINI_MODEL": "gemini-3.1-flash-lite"
   },

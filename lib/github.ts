@@ -25,7 +25,8 @@ export async function getGitHubContributions(): Promise<GitHubContributionData> 
   try {
     const response = await fetch(contributionsUrl, {
       headers: { "User-Agent": "Zhyronne-Portfolio" },
-      next: { revalidate: 21600 },
+      // Fetched once per build; a scheduled daily rebuild keeps the stats current.
+      cache: "force-cache",
     });
 
     if (!response.ok) throw new Error(`GitHub returned ${response.status}`);

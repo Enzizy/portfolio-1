@@ -137,7 +137,7 @@ function V2Dashboard() {
 
       <div className="v2-mobile-featured">
         <div className="v2-mobile-section-head"><h3>Featured work</h3><a href="#projects">All projects <ArrowUpRight size={14} /></a></div>
-        <a href="/projects/lifedesk-crm" className="v2-featured-link"><span className="v2-featured-link__image"><Image src="/images/projects/lifedesk-crm.png" alt="" fill sizes="90px" /></span><span><small>AI-ASSISTED PROSPECTING</small><strong>LifeDesk CRM</strong><em>Discover, review, and organize prospects.</em></span><ArrowUpRight size={17} /></a>
+        <a href="/projects/lifedesk-crm" className="v2-featured-link"><span className="v2-featured-link__image"><Image src="/images/projects/lifedesk-crm.webp" alt="" fill sizes="90px" /></span><span><small>AI-ASSISTED PROSPECTING</small><strong>LifeDesk CRM</strong><em>Discover, review, and organize prospects.</em></span><ArrowUpRight size={17} /></a>
       </div>
 
       <V2ToolBar />
@@ -147,8 +147,8 @@ function V2Dashboard() {
           <span className="v2-card__heading"><span className="v2-card__icon"><Folder size={19} /></span><strong>Projects</strong><ArrowUpRight size={16} /></span>
           <p>Real products for real workflows, from internal operations to personal tools.</p>
           <span className="v2-project-previews" aria-hidden="true">
-            <span><Image src="/images/projects/lifedesk-crm.png" alt="" fill sizes="190px" /></span>
-            <span><Image src="/images/projects/ccr.png" alt="" fill sizes="190px" /></span>
+            <span><Image src="/images/projects/lifedesk-crm.webp" alt="" fill sizes="190px" /></span>
+            <span><Image src="/images/projects/ccr.webp" alt="" fill sizes="190px" /></span>
           </span>
         </a>
 
@@ -190,7 +190,7 @@ function V2Dashboard() {
         <div className="v2-explore-track">
           <a href="#projects" className="v2-explore-card v2-explore-card--projects">
             <span>01 PROJECTS</span>
-            <Image src="/images/projects/lifedesk-crm.png" alt="" fill sizes="240px" />
+            <Image src="/images/projects/lifedesk-crm.webp" alt="" fill sizes="240px" />
             <strong>Products with a purpose</strong><small>See the systems I&apos;ve built.</small>
           </a>
           <a href="#services" className="v2-explore-card v2-explore-card--services">

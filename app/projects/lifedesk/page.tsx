@@ -9,13 +9,13 @@ const project: PrivateProjectDetails = {
   role: "Mobile product development",
   platform: "Personal Android application",
   coreStack: "React Native · Expo · SQLite",
-  image: "/images/projects/lifedesk-home.png",
+  image: "/images/projects/lifedesk-home.webp",
   imageAlt: "Actual LifeDesk home screen in an empty local web session",
   imageNote: "Actual LifeDesk home, wallet, and tasks screens captured from the web build with empty local records.",
   imageFit: "mobile",
   additionalImages: [
-    { src: "/images/projects/lifedesk-wallet.png", alt: "LifeDesk wallet screen with no transactions or investment positions" },
-    { src: "/images/projects/lifedesk-tasks.png", alt: "LifeDesk tasks screen with no saved tasks" },
+    { src: "/images/projects/lifedesk-wallet.webp", alt: "LifeDesk wallet screen with no transactions or investment positions" },
+    { src: "/images/projects/lifedesk-tasks.webp", alt: "LifeDesk tasks screen with no saved tasks" },
   ],
   story: {
     challenge: "Tasks, bills, budgets, and investment notes were competing for attention across separate tools. I wanted one daily view that made upcoming obligations and financial context easy to understand without handing over my personal records.",

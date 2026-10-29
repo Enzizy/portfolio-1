@@ -21,15 +21,15 @@ export const metadata: Metadata = {
 };
 
 const shots: Record<(typeof projects)[number]["visual"], { src: string; position?: string }> = {
-  dashboard: { src: "/images/projects/hr.png", position: "left top" },
-  localaid: { src: "/images/projects/localaid.png", position: "center 12%" },
-  furniture: { src: "/images/projects/bw.png" },
-  bookvoice: { src: "/images/projects/book.png" },
+  dashboard: { src: "/images/projects/hr.webp", position: "left top" },
+  localaid: { src: "/images/projects/localaid.webp", position: "center 12%" },
+  furniture: { src: "/images/projects/bw.webp" },
+  bookvoice: { src: "/images/projects/book.webp" },
   casatoon: { src: "/images/projects/casatoon.webp" },
-  ccr: { src: "/images/projects/ccr.png", position: "left top" },
-  "lifedesk-crm": { src: "/images/projects/lifedesk-crm.png", position: "center top" },
-  lifedesk: { src: "/images/projects/lifedesk-home.png", position: "center 10%" },
-  "joyno-accounting": { src: "/images/projects/joyno-accounting.png", position: "left top" },
+  ccr: { src: "/images/projects/ccr.webp", position: "left top" },
+  "lifedesk-crm": { src: "/images/projects/lifedesk-crm.webp", position: "center top" },
+  lifedesk: { src: "/images/projects/lifedesk-home.webp", position: "center 10%" },
+  "joyno-accounting": { src: "/images/projects/joyno-accounting.webp", position: "left top" },
   enzi: { src: "/images/projects/enzi/01-hero.webp", position: "center top" },
   "joyno-chatbot": { src: "/images/projects/joyno-chatbot/03-chat-answer-with-page-button.webp", position: "right center" },
 };

@@ -1,9 +1,9 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
-import kvIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/kv-incremental-cache";
-import memoryQueue from "@opennextjs/cloudflare/overrides/queue/memory-queue";
+import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
 
-// KV keeps revalidating pages (the GitHub contribution stats) fresh without a paid R2 bucket.
+// Every page is prerendered at build time and served from Workers static assets, so the site
+// needs no KV (whose free tier allows 1,000 writes a day). A daily rebuild refreshes the GitHub stats.
 export default defineCloudflareConfig({
-  incrementalCache: kvIncrementalCache,
-  queue: memoryQueue,
+  incrementalCache: staticAssetsIncrementalCache,
+  enableCacheInterception: true,
 });
