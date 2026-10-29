@@ -18,19 +18,6 @@ function cleanString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (character) => {
-    const entities: Record<string, string> = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;",
-    };
-    return entities[character];
-  });
-}
-
 function isRateLimited(identifier: string) {
   const now = Date.now();
   const recentRequests = (requestLog.get(identifier) ?? []).filter(
@@ -51,7 +38,10 @@ function isRateLimited(identifier: string) {
 }
 
 export async function POST(request: NextRequest) {
-  const identifier = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  const identifier =
+    request.headers.get("cf-connecting-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "local";
   if (isRateLimited(identifier)) {
     return NextResponse.json(
       { message: "Too many messages were submitted. Please try again in a few minutes." },
@@ -90,8 +80,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  // Delivered by the Google Apps Script in scripts/contact-form.gs, which logs the inquiry
+  // to a Google Sheet and emails it. The shared secret keeps others from posting to it.
+  const scriptUrl = process.env.CONTACT_SCRIPT_URL;
+  const scriptSecret = process.env.CONTACT_SCRIPT_SECRET;
+  if (!scriptUrl || !scriptSecret) {
     return NextResponse.json(
       {
         message:
@@ -101,31 +94,23 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: process.env.CONTACT_FROM_EMAIL ?? "Portfolio <onboarding@resend.dev>",
-      to: [process.env.CONTACT_TO_EMAIL ?? "zhyronnebatican@gmail.com"],
-      reply_to: email,
-      subject: `Portfolio inquiry: ${projectType} — ${name}`,
-      html: `
-        <h2>New portfolio inquiry</h2>
-        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-        <p><strong>Project type:</strong> ${escapeHtml(projectType)}</p>
-        <p><strong>Message:</strong></p>
-        <p>${escapeHtml(message).replaceAll("\n", "<br />")}</p>
-      `,
-    }),
-  });
+  let delivered = false;
+  try {
+    // Apps Script answers a POST with a redirect to the result, which fetch follows.
+    const response = await fetch(scriptUrl, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ secret: scriptSecret, name, email, projectType, message }),
+    });
+    const result = (await response.json().catch(() => null)) as { ok?: boolean } | null;
+    delivered = response.ok && result?.ok === true;
+  } catch {
+    delivered = false;
+  }
 
-  if (!response.ok) {
+  if (!delivered) {
     return NextResponse.json(
-      { message: "The email service could not deliver your message. Please email me directly." },
+      { message: "The message service could not deliver your message. Please email me directly." },
       { status: 502 },
     );
   }

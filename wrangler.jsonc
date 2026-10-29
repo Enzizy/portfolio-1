@@ -1,5 +1,5 @@
 // Cloudflare Workers config for the OpenNext build (`npm run deploy`).
-// Secrets (GEMINI_API_KEY, TMDB_API_KEY, RESEND_API_KEY) are set in the dashboard or
+// Secrets (GEMINI_API_KEY, TMDB_API_KEY, CONTACT_SCRIPT_URL, CONTACT_SCRIPT_SECRET) are set in the dashboard or
 // with `npx wrangler secret put <NAME>`, never here.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -22,7 +22,6 @@
   // next/image resizing.
   "images": { "binding": "IMAGES" },
   "vars": {
-    "CONTACT_TO_EMAIL": "zhyronnebatican@gmail.com",
     "GEMINI_MODEL": "gemini-3.1-flash-lite"
   },
   // Run in Singapore: visitors routed through Hong Kong otherwise hit Gemini's

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Check, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { CaseStudyStory } from "@/components/CaseStudyStory";
 import { Navigation } from "@/components/Navigation";
@@ -113,17 +113,12 @@ export default function JoynoAccountingPage() {
 
         <section className="case-study__cta" aria-labelledby="joyno-accounting-cta">
           <div>
-            <span>// SOURCE &amp; CONTACT</span>
+            <span>// BUSINESS SOFTWARE</span>
             <h2 id="joyno-accounting-cta">Need business software your accountants can trust?</h2>
           </div>
-          <div className="case-study__actions">
-            <a className="button button--light" href="https://github.com/sauxxxxx/joynoacctg" target="_blank" rel="noreferrer">
-              View repository <ExternalLink size={15} />
-            </a>
-            <Link className="button button--dark" href="/#contact">
-              Let&apos;s work together <ArrowUpRight size={15} />
-            </Link>
-          </div>
+          <Link className="button button--dark" href="/#contact">
+            Let&apos;s work together <ArrowUpRight size={15} />
+          </Link>
         </section>
         <ProjectNavigation currentHref="/projects/joyno-accounting" />
       </main>
