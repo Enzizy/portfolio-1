@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
-  Clapperboard,
   Code2,
   Facebook,
   Folder,
@@ -203,11 +202,8 @@ function V2Dashboard() {
           <a href="#contact" className="v2-explore-card v2-explore-card--contact">
             <span>04 CONTACT</span><Mail size={62} /><strong>Let&apos;s talk</strong><small>Tell me about your idea.</small>
           </a>
-          <Link href="/movies" className="v2-explore-card v2-explore-card--movies">
-            <span>05 SCREEN ROOM</span><Clapperboard size={62} /><strong>Movies &amp; TV</strong><small>Find your next watch.</small>
-          </Link>
           <Link href="/arcade" className="v2-explore-card v2-explore-card--movies">
-            <span>06 MINI ARCADE</span><Gamepad2 size={62} /><strong>Take a break</strong><small>Three quick games, one little cat.</small>
+            <span>05 MINI ARCADE</span><Gamepad2 size={62} /><strong>Take a break</strong><small>Three quick games, one little cat.</small>
           </Link>
         </div>
       </div>

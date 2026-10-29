@@ -81,7 +81,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var root=document.documentElement;var path=location.pathname;path=path.endsWith('/')?path.slice(0,-1)||'/':path;var home=path==='/'||path==='/v2'||path==='/v3';var show=false;if(home){try{show=sessionStorage.getItem('portfolio-splash-seen')!=='1';if(show)sessionStorage.setItem('portfolio-splash-seen','1')}catch(e){show=true}}root.dataset.portfolioSplash=show?'show':'skip';var movies=path==='/movies'||path.indexOf('/movies/')===0;if(movies){var curtain=false;try{curtain=sessionStorage.getItem('movies-curtain-seen')!=='1';if(curtain)sessionStorage.setItem('movies-curtain-seen','1')}catch(e){curtain=true}root.dataset.moviesCurtain=curtain?'show':'skip'}})();`,
+            __html: `(function(){var root=document.documentElement;var path=location.pathname;path=path.endsWith('/')?path.slice(0,-1)||'/':path;var home=path==='/'||path==='/v2'||path==='/v3';var show=false;if(home){try{show=sessionStorage.getItem('portfolio-splash-seen')!=='1';if(show)sessionStorage.setItem('portfolio-splash-seen','1')}catch(e){show=true}}root.dataset.portfolioSplash=show?'show':'skip'})();`,
           }}
         />
       </head>

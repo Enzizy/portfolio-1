@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import {
   ArrowUpRight,
-  Clapperboard,
   Download,
   Facebook,
   Gamepad2,
@@ -230,12 +229,6 @@ export default function PortfolioV3Page() {
       {/* 07 — Detours */}
       <Plate id="detours" title="Detours" lede="The parts of this site that exist purely because they were fun.">
         <div className="v3-detours">
-          <Link href="/movies" className="v3-detour">
-            <Clapperboard size={26} aria-hidden="true" />
-            <strong>Screen Room</strong>
-            <span>A TMDB catalogue with a player attached.</span>
-            <ArrowUpRight size={15} aria-hidden="true" />
-          </Link>
           <Link href="/arcade" className="v3-detour">
             <Gamepad2 size={26} aria-hidden="true" />
             <strong>Mini Arcade</strong>

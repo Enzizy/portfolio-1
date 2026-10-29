@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, type CSSProperties } from "react";
-import { ArrowDownRight, ArrowUpRight, Clapperboard, Download, Gamepad2, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Download, Gamepad2, Github, Linkedin, Mail } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { PortfolioVersionSwitch } from "@/components/PortfolioVersionSwitch";
 import { projects, services, stackGroups } from "@/data/portfolio";
@@ -266,7 +266,6 @@ export default async function PortfolioV4Page() {
 
       <footer className="v4-footer" data-theme="dark">
         <div className="v4-footer__detours">
-          <Link href="/movies" className="v4-detour"><Clapperboard size={20} aria-hidden="true" /> Screen Room</Link>
           <Link href="/arcade" className="v4-detour"><Gamepad2 size={20} aria-hidden="true" /> Mini Arcade</Link>
           <Link href="/projects" className="v4-detour"><ArrowUpRight size={20} aria-hidden="true" /> All projects</Link>
         </div>

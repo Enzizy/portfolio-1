@@ -1,5 +1,5 @@
 // Cloudflare Workers config for the OpenNext build (`npm run deploy`).
-// Secrets (GEMINI_API_KEY, TMDB_API_KEY, CONTACT_SCRIPT_URL, CONTACT_SCRIPT_SECRET) are set in the dashboard or
+// Secrets (GEMINI_API_KEY, CONTACT_SCRIPT_URL, CONTACT_SCRIPT_SECRET) are set in the dashboard or
 // with `npx wrangler secret put <NAME>`, never here.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -15,7 +15,7 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  // ISR revalidation (GitHub stats, TMDB data) calls back into this same worker.
+  // ISR revalidation (GitHub stats) calls back into this same worker.
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "portfolio" }],
   // Cached pages and fetches (KV namespace "portfolio-cache").
   "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "7a4406a08d6d4a1182bc9a968ccc1225" }],

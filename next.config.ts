@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
       { source: "/projects/roarly", destination: "/projects/casatoon", permanent: true },
       // StreetKings was removed when the client's site went offline.
       { source: "/projects/streetkings", destination: "/projects", permanent: true },
+      // Screen Room (/movies) was removed; old links and crawlers land on the home page.
+      { source: "/movies/:path*", destination: "/", permanent: true },
       // Earlier addresses of the site: send old links and search results to the current one.
       {
         source: "/:path*",
@@ -18,7 +20,6 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
-    remotePatterns: [{ protocol: "https", hostname: "image.tmdb.org", pathname: "/t/p/**" }],
   },
 };
 

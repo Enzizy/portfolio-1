@@ -107,7 +107,6 @@ export function Navigation() {
           {navItems.map((item) => {
             return <a key={item} href={sectionHref(item.toLowerCase())}>/{item.toLowerCase()}</a>;
           })}
-          <Link href="/movies">/movies</Link>
           <PortfolioVersionSwitch version={1} />
           <button className="command-trigger" type="button" onClick={openCommands} aria-label="Open command menu"><Command size={13} />ctrl k</button>
           <ThemeToggle />
@@ -143,7 +142,6 @@ export function Navigation() {
             {navItems.map((item) => {
               return <a key={item} href={sectionHref(item.toLowerCase())} onClick={() => setIsOpen(false)}>/{item.toLowerCase()}</a>;
             })}
-            <Link href="/movies" onClick={() => setIsOpen(false)}>/movies</Link>
             <button className="mobile-command-button" type="button" onClick={openCommands}><Command size={16} />/command menu <kbd>ctrl k</kbd></button>
             <ThemeToggle mobile />
             <Link className="mobile-play-button" href="/arcade" onClick={() => setIsOpen(false)}><Gamepad2 size={16} />/play</Link>
