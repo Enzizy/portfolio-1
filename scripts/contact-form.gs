@@ -2,10 +2,12 @@
  * Google Apps Script for the portfolio contact form.
  *
  * Setup (once):
- * 1. Create a Google Sheet, then open Extensions -> Apps Script and paste this file.
+ * 1. Paste this file into an Apps Script project (from a Google Sheet's Extensions -> Apps Script,
+ *    or a standalone project, which creates a "Portfolio inquiries" sheet in your Drive).
  * 2. Project Settings -> Script properties -> add CONTACT_SECRET with a long random value.
  *    Put the same value in Cloudflare as the CONTACT_SCRIPT_SECRET secret.
- * 3. Deploy -> New deployment -> Web app. Execute as: Me. Who has access: Anyone.
+ * 3. Run `setup` once from the editor to grant permissions; the log shows the sheet's link.
+ * 4. Deploy -> New deployment -> Web app. Execute as: Me. Who has access: Anyone.
  *    Put the web app URL in Cloudflare as the CONTACT_SCRIPT_URL secret.
  *
  * The portfolio validates and rate-limits submissions before calling this script; the
@@ -45,8 +47,24 @@ function doPost(e) {
   return respond({ ok: true });
 }
 
+// Run once from the editor: asks for permissions, creates the sheet if needed, logs its link.
+function setup() {
+  const sheet = inquiriesSheet();
+  MailApp.getRemainingDailyQuota();
+  const hasSecret = Boolean(PropertiesService.getScriptProperties().getProperty("CONTACT_SECRET"));
+  console.log(`Inquiries sheet: ${sheet.getParent().getUrl()}`);
+  console.log(hasSecret ? "CONTACT_SECRET is set." : "CONTACT_SECRET is missing: add it in Project Settings.");
+}
+
 function inquiriesSheet() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  // A script opened from a Sheet uses that Sheet; a standalone one creates its own once.
+  const properties = PropertiesService.getScriptProperties();
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) {
+    const id = properties.getProperty("SHEET_ID");
+    spreadsheet = id ? SpreadsheetApp.openById(id) : SpreadsheetApp.create("Portfolio inquiries");
+    properties.setProperty("SHEET_ID", spreadsheet.getId());
+  }
   let sheet = spreadsheet.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = spreadsheet.insertSheet(SHEET_NAME);
