@@ -38,7 +38,6 @@ export const metadata = createProjectMetadata({
   path: "/projects/ccr",
   title: "CCR — Internal Business Operations",
   description: "A private operations system connecting purchase orders, deliveries, billing, payments, expenses, and audit guidance.",
-  image: project.image,
   imageAlt: project.imageAlt,
 });
 

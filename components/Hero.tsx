@@ -24,7 +24,7 @@ export function Hero() {
         transition={{ duration: 0.28 }}
       >
         <p className="eyebrow">// HELLO, I&apos;M</p>
-        <h1 id="hero-title" data-cat-perch data-cat-zone="top" data-cat-kind="hero">Zhyronne<br />Batican</h1>
+        <h1 id="hero-title" data-cat-perch data-cat-zone="top" data-cat-kind="hero">Zhyronne <br />Batican</h1>
         <div className="roles">
           <span className="sr-only">Full Stack Developer, AI Engineer, and UI/UX Designer</span>
           <TextType

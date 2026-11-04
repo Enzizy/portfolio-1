@@ -17,7 +17,8 @@ import "./v4.css";
 export const metadata: Metadata = {
   title: "Zhyronne Batican — Portfolio V4",
   description: "Full-stack developer, AI engineer and UI/UX designer. Web apps, websites and AI tools, built to feel alive.",
-  alternates: { canonical: "/v4" },
+  // An alternate design of the home page, so ranking signals go to the home page.
+  alternates: { canonical: "/" },
 };
 
 const shots: Record<(typeof projects)[number]["visual"], { src: string; position?: string }> = {

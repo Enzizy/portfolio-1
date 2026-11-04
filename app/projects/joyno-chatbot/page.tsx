@@ -49,7 +49,6 @@ export const metadata = createProjectMetadata({
   title: "Joyno Chatbot — AI Customer Support for WordPress",
   description:
     "A WordPress plugin and subscription service that gives small businesses a branded AI assistant, answering visitors in English and Filipino from the business's own FAQs and pages.",
-  image: "/images/projects/joyno-chatbot/03-chat-answer-with-page-button.webp",
   imageAlt: "Joyno Chatbot answering a visitor on a business website, with a View Services button",
 });
 

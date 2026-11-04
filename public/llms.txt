@@ -1,0 +1,36 @@
+# Zhyronne Batican
+
+> Zhyronne Batican is a freelance full-stack developer, AI engineer, and UI/UX designer based in the Philippines. He builds web apps, WordPress sites, landing pages, mobile apps, desktop tools, and AI-assisted workflows, and is available for freelance projects.
+
+- Stack: TypeScript, React, Vue, Node.js, Express, Python, PostgreSQL, Supabase, Firebase, React Native, Flutter, Kotlin, Rust, Tauri, WordPress
+- Contact: zhyronnebatican@gmail.com
+- Hire or inquire: https://zhyronne.workwithoddly.com/#contact
+
+## Portfolio
+
+- [Home](https://zhyronne.workwithoddly.com/): Who Zhyronne is, services, tech stack, FAQ, and contact
+- [All projects](https://zhyronne.workwithoddly.com/projects): Every case study in one list
+- [Resume](https://zhyronne.workwithoddly.com/resume.pdf): Resume as a PDF
+
+## Business systems
+
+- [Joyno HR](https://zhyronne.workwithoddly.com/projects/joyno-hr): Full-stack HR and payroll platform with attendance review, pay runs, payslips, government contributions, and leave workflows (Vue, Node.js, PostgreSQL)
+- [Joyno Accounting](https://zhyronne.workwithoddly.com/projects/joyno-accounting): Collaborative accounting system, co-built, with journals, a general ledger, financial statements, banking, and audit trails (Vue 3, Express, PostgreSQL)
+- [CCR](https://zhyronne.workwithoddly.com/projects/ccr): Internal operations system for purchase orders, deliveries, receivables, payments, and expenses, with an AI assistant for audit guidance (Vue.js, Supabase)
+- [LifeDesk CRM](https://zhyronne.workwithoddly.com/projects/lifedesk-crm): Prospecting workspace for finding local businesses, reviewing AI-qualified leads, and managing a sales pipeline (React, Supabase)
+
+## AI products
+
+- [CasaToon](https://zhyronne.workwithoddly.com/projects/casatoon): AI story studio that turns a typed idea into a short animated video (Node.js, SQLite)
+- [Joyno Chatbot](https://zhyronne.workwithoddly.com/projects/joyno-chatbot): WordPress plugin and subscription service giving small businesses a branded AI assistant in English and Filipino (PHP, Node.js, Google Gemini)
+
+## Apps and tools
+
+- [Enzi](https://zhyronne.workwithoddly.com/projects/enzi): Open-source, customizable Dynamic Island-style notch for Windows (Rust, Tauri 2)
+- [BookVoice](https://zhyronne.workwithoddly.com/projects/bookvoice): Local-first Windows audiobook studio with a multitrack editor (Electron, Python)
+- [LifeDesk](https://zhyronne.workwithoddly.com/projects/lifedesk): Local-first Android app for tasks, bills, budgets, and investments (React Native, Expo, SQLite)
+- [LocalAid](https://zhyronne.workwithoddly.com/projects/localaid): Native Android app connecting nearby residents to request and offer help (Kotlin, Firebase, Google Maps)
+
+## Websites
+
+- [B&W Furnitures](https://zhyronne.workwithoddly.com/projects/bw-furniture): WordPress website for a customized furniture and cabinetry business in Cebu

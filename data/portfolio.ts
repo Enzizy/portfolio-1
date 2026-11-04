@@ -102,6 +102,34 @@ export const projects = [
   },
 ] as const;
 
+// Shown on the home page and published as FAQPage data, so answer engines can quote them directly.
+export const faqs = [
+  {
+    question: "Who is Zhyronne Batican?",
+    answer: "Zhyronne Batican is a freelance full-stack developer, AI engineer, and UI/UX designer based in the Philippines. He builds web apps, WordPress sites, landing pages, mobile apps, desktop tools, and AI-assisted workflows.",
+  },
+  {
+    question: "What services does Zhyronne Batican offer?",
+    answer: "He offers web development, WordPress sites and landing pages, AI chatbots and automation, mobile apps, UI/UX design, and SEO and performance work.",
+  },
+  {
+    question: "What technologies does he work with?",
+    answer: "His main stack includes TypeScript, React, Vue, Node.js, Express, Python, PostgreSQL, Supabase, Firebase, React Native, Flutter, Kotlin, and WordPress, plus AI APIs and local AI tools such as Ollama and LM Studio.",
+  },
+  {
+    question: "What has he built?",
+    answer: "His work includes Joyno HR, an HR and payroll platform; Joyno Accounting, a co-built accounting system; CasaToon, an AI story studio; Joyno Chatbot, an AI assistant for WordPress sites; Enzi, a customizable notch for Windows; and LocalAid, a community-help Android app.",
+  },
+  {
+    question: "Can Zhyronne add AI to an existing website or business system?",
+    answer: "Yes. He has built AI assistants into business software and websites, including the audit guidance assistant in CCR and the Joyno Chatbot plugin, which answers visitors from a business's own FAQs and pages.",
+  },
+  {
+    question: "Is Zhyronne Batican available for freelance work?",
+    answer: "Yes. He is available for freelance projects. You can reach him through the contact form on this site or at zhyronnebatican@gmail.com.",
+  },
+] as const;
+
 export const stackGroups = [
   { title: "Web", items: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Vue", "Tailwind CSS", "Vite"] },
   { title: "Mobile", items: ["React Native", "Expo", "Flutter", "Dart", "Kotlin"] },

@@ -2,52 +2,12 @@ import type { MetadataRoute } from "next";
 import { projects } from "@/data/portfolio";
 import { siteUrl } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-  const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
-    url: `${siteUrl}${project.href}`,
-    lastModified,
-    changeFrequency: "monthly",
-    priority: 0.8,
-  }));
+// Bump when page content changes. It is a fixed date because the site rebuilds daily, and a
+// "last modified" that moves without real changes teaches search engines to ignore it.
+const lastModified = "2026-11-04";
 
-  return [
-    {
-      url: siteUrl,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    {
-      url: `${siteUrl}/projects`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/v2`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/v3`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/v4`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/arcade`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    ...projectPages,
-  ];
+// V2-V4 are alternate designs of the home page and canonicalize to it, so they stay out of here.
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [siteUrl, `${siteUrl}/projects`, ...projects.map((project) => `${siteUrl}${project.href}`), `${siteUrl}/arcade`]
+    .map((url) => ({ url, lastModified }));
 }

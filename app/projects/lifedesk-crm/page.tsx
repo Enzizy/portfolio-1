@@ -39,7 +39,6 @@ export const metadata = createProjectMetadata({
   path: "/projects/lifedesk-crm",
   title: "LifeDesk CRM — AI-Assisted Prospecting",
   description: "A personal CRM for local business discovery, reviewed lead qualification, outreach drafting, and pipeline management.",
-  image: project.image,
   imageAlt: project.imageAlt,
 });
 

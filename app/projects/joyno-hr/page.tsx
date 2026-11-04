@@ -40,7 +40,6 @@ export const metadata = createProjectMetadata({
   title: "Joyno HR — HR, Attendance and Payroll Platform",
   description:
     "A full-stack HR and payroll platform built with Vue 3, Express, and PostgreSQL: attendance review, Day and Night pay runs, payslips, government contributions, leave workflows, reports, and announcements.",
-  image: "/images/projects/hr.webp",
   imageAlt: "Joyno HR operations dashboard",
 });
 

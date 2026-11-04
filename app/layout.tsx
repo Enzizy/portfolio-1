@@ -4,38 +4,24 @@ import { CatChat } from "@/components/CatChat";
 import { CursorSkin } from "@/components/CursorSkin";
 import { PortfolioSplash } from "@/components/PortfolioSplash";
 import { ThemeTransition } from "@/components/ThemeTransition";
+import { JsonLd } from "@/components/JsonLd";
+import { services, stackGroups } from "@/data/portfolio";
+import { createPageMetadata, defaultDescription, defaultTitle } from "@/lib/metadata";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Zhyronne Batican — Full Stack Developer",
-  description:
-    "Full stack developer building web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
-  keywords: ["Full Stack Developer", "WordPress Developer", "Landing Pages", "AI Engineer", "UI/UX Designer", "Zhyronne Batican"],
-  alternates: {
-    canonical: "/",
-  },
+  ...createPageMetadata({ title: defaultTitle, description: defaultDescription, path: "/" }),
+  authors: [{ name: "Zhyronne Batican", url: siteUrl }],
+  creator: "Zhyronne Batican",
+  // Lets search and AI results show full snippets and large image previews.
+  robots: { googleBot: { "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   verification: {
     // Search Console property for https://zhyronne.workwithoddly.com.
     google: "zIkdOATdJZhoJ3gShLITylhFiN9kxuZNx-k04nByiM4",
     // Bing Webmaster Tools (same key as public/BingSiteAuth.xml).
     other: { "msvalidate.01": "E27C54431B4B61407E706E066D706D92" },
-  },
-  openGraph: {
-    title: "Zhyronne Batican — Full Stack Developer",
-    description: "Web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
-    type: "website",
-    siteName: "Zhyronne Batican",
-    locale: "en_US",
-    // No og:url here: pages without their own would all claim the home page's address.
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Zhyronne Batican portfolio" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Zhyronne Batican — Full Stack Developer",
-    description: "Web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.",
-    images: ["/opengraph-image"],
   },
 };
 
@@ -49,10 +35,15 @@ const structuredData = {
       name: "Zhyronne Batican",
       url: siteUrl,
       image: `${siteUrl}/images/me.jpg`,
-      jobTitle: "Full Stack Developer",
+      description: defaultDescription,
+      jobTitle: ["Full Stack Developer", "AI Engineer", "UI/UX Designer"],
       email: "mailto:zhyronnebatican@gmail.com",
       address: { "@type": "PostalAddress", addressCountry: "PH" },
-      knowsAbout: ["Web Development", "WordPress", "Landing Pages", "AI Solutions", "Mobile Apps", "UI/UX Design", "SEO"],
+      knowsAbout: [...services.map(({ title }) => title), ...stackGroups.flatMap(({ items }) => items)],
+      makesOffer: services.map(({ title, description }) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: title, description },
+      })),
       sameAs: [
         "https://github.com/Enzizy",
         "https://www.linkedin.com/in/zhyronne-batican-5458a53aa/",
@@ -87,7 +78,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body id="top" className={GeistSans.className}>
         <noscript><style>{".portfolio-splash{display:none!important}"}</style></noscript>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        <JsonLd data={structuredData} />
         <PortfolioSplash />
         <CursorSkin />
         <ThemeTransition />

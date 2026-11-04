@@ -24,7 +24,8 @@ import "./v3.css";
 export const metadata: Metadata = {
   title: "Zhyronne Batican — Portfolio V3, an atlas",
   description: "The same portfolio, drawn as a map. Pan and zoom across projects, services, skills, and contact.",
-  alternates: { canonical: "/v3" },
+  // An alternate design of the home page, so ranking signals go to the home page.
+  alternates: { canonical: "/" },
 };
 
 const socials = [
@@ -129,7 +130,7 @@ export default function PortfolioV3Page() {
           </div>
           <div className="v3-origin__copy">
             <span className="v3-eyebrow">00 · You are here</span>
-            <h1 id="v3-identity-title">Zhyronne<br />Batican</h1>
+            <h1 id="v3-identity-title">Zhyronne <br />Batican</h1>
             <p className="v3-origin__roles">Full Stack Developer · AI Engineer · UI/UX Designer</p>
             <p className="v3-origin__blurb">I build custom web apps, WordPress sites, landing pages, mobile tools, and AI-assisted workflows.</p>
             <p className="v3-status"><i aria-hidden="true" />Available for freelance projects</p>

@@ -3,6 +3,8 @@ import { Navigation } from "@/components/Navigation";
 import { NotFoundActions } from "@/components/NotFoundActions";
 import { CatSprite } from "@/components/pixel-cat/CatSprite";
 
+export const metadata = { title: "Page not found — Zhyronne Batican" };
+
 export default function NotFound() {
   return (
     <>

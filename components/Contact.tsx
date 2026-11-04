@@ -22,9 +22,9 @@ const contactLinks = [
 export function Contact() {
   return (
     <MotionSection id="contact" labelledBy="contact-title" className="section contact-section">
-      <SectionHeading number="05" title="Let's Connect" id="contact-title" />
+      <SectionHeading number="06" title="Let's Connect" id="contact-title" />
       <div className="contact-copy">
-        <h2>Let&apos;s build something<br />amazing together.</h2>
+        <h2>Let&apos;s build something <br />amazing together.</h2>
         <p>I&apos;m currently available for freelance projects.</p>
       </div>
       <div className="contact-panel">

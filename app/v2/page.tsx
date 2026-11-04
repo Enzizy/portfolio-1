@@ -28,7 +28,8 @@ import "./v2.css";
 export const metadata: Metadata = {
   title: "Zhyronne Batican — Portfolio V2",
   description: "Explore Zhyronne Batican's web apps, WordPress sites, landing pages, mobile tools, and AI-assisted work.",
-  alternates: { canonical: "/v2" },
+  // An alternate design of the home page, so ranking signals go to the home page.
+  alternates: { canonical: "/" },
 };
 
 const socials = [

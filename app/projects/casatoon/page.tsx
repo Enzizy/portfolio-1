@@ -36,7 +36,6 @@ export const metadata = createProjectMetadata({
   title: "CasaToon — AI Story Studio",
   description:
     "CasaToon (formerly Roarly) turns a typed idea into a short animated video in one of five art styles, with accounts, free and paid plans, and webhook-confirmed billing.",
-  image: "/images/projects/casatoon.webp",
   imageAlt: "CasaToon home page: Bring Your Stories to Life",
 });
 

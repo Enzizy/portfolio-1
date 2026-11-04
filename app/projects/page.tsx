@@ -1,20 +1,43 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
+import { JsonLd } from "@/components/JsonLd";
 import { Navigation } from "@/components/Navigation";
 import { ProjectCard } from "@/components/ProjectCard";
 import { projects } from "@/data/portfolio";
+import { createPageMetadata } from "@/lib/metadata";
+import { siteUrl } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Projects — Zhyronne Batican",
-  description: "Explore selected web, mobile, AI, and product design projects by Zhyronne Batican.",
-  alternates: { canonical: "/projects" },
+export const metadata = createPageMetadata({
+  title: "Projects: Web, Mobile & AI Case Studies | Zhyronne Batican",
+  description:
+    "Case studies of web apps, HR and accounting systems, WordPress sites, mobile apps, desktop tools, and AI products built by Zhyronne Batican.",
+  path: "/projects",
+});
+
+const projectsSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": `${siteUrl}/projects#page`,
+  url: `${siteUrl}/projects`,
+  name: "Projects by Zhyronne Batican",
+  about: { "@id": `${siteUrl}/#person` },
+  isPartOf: { "@id": `${siteUrl}/#website` },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: projects.map((project, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: project.title,
+      url: `${siteUrl}${project.href}`,
+    })),
+  },
 };
 
 export default function AllProjectsPage() {
   return (
     <>
+      <JsonLd data={projectsSchema} />
       <Navigation />
       <main id="main-content" className="page-shell projects-page" tabIndex={-1}>
         <header className="projects-page__hero">
