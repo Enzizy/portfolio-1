@@ -35,7 +35,7 @@ export const metadata = createProjectMetadata({
   path: "/projects/localaid",
   title: "LocalAid — Crowdsourced Community Assistance App",
   description:
-    "A native Android application that helps nearby residents request and offer assistance through location-aware posts, real-time chat, verification, and community rewards.",
+    "A native Android app that helps nearby residents request and offer help through location-aware posts, real-time chat, verification, and community rewards.",
   imageAlt: "LocalAid community assistance mobile application",
 });
 

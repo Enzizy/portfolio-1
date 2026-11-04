@@ -48,7 +48,7 @@ export const metadata = createProjectMetadata({
   path: "/projects/joyno-chatbot",
   title: "Joyno Chatbot — AI Customer Support for WordPress",
   description:
-    "A WordPress plugin and subscription service that gives small businesses a branded AI assistant, answering visitors in English and Filipino from the business's own FAQs and pages.",
+    "A WordPress plugin and subscription service giving small businesses a branded AI assistant that answers visitors in English and Filipino from their own content.",
   imageAlt: "Joyno Chatbot answering a visitor on a business website, with a View Services button",
 });
 

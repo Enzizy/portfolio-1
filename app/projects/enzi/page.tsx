@@ -43,7 +43,7 @@ export const metadata = createProjectMetadata({
   path: "/projects/enzi",
   title: "Enzi — A Customizable Notch for Windows",
   description:
-    "A Dynamic Island-style notch for Windows built with Rust and Tauri 2: music and synced lyrics, focus timer, to-do list, file shelf, clipboard history and quick actions.",
+    "A Dynamic Island-style notch for Windows built with Rust and Tauri 2: music with synced lyrics, focus timer, to-do list, file shelf, and clipboard history.",
   imageAlt: "Enzi notch open on the music player with the floating to-do widget",
 });
 
