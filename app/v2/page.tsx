@@ -203,7 +203,7 @@ function V2Dashboard() {
           <a href="#contact" className="v2-explore-card v2-explore-card--contact">
             <span>04 CONTACT</span><Mail size={62} /><strong>Let&apos;s talk</strong><small>Tell me about your idea.</small>
           </a>
-          <Link href="/arcade" className="v2-explore-card v2-explore-card--movies">
+          <Link href="/arcade" className="v2-explore-card v2-explore-card--arcade">
             <span>05 MINI ARCADE</span><Gamepad2 size={62} /><strong>Take a break</strong><small>Three quick games, one little cat.</small>
           </Link>
         </div>
