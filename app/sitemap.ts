@@ -8,6 +8,7 @@ const lastModified = "2026-11-04";
 
 // V2-V4 are alternate designs of the home page and canonicalize to it, so they stay out of here.
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [siteUrl, `${siteUrl}/projects`, ...projects.map((project) => `${siteUrl}${project.href}`), `${siteUrl}/arcade`]
+  // The home page needs its trailing slash to match the URL Google indexes it under.
+  return [`${siteUrl}/`, `${siteUrl}/projects`, ...projects.map((project) => `${siteUrl}${project.href}`), `${siteUrl}/arcade`]
     .map((url) => ({ url, lastModified }));
 }
