@@ -27,6 +27,7 @@
 ## Apps and tools
 
 - [Enzi](https://zhyronne.workwithoddly.com/projects/enzi): Open-source, customizable Dynamic Island-style notch for Windows (Rust, Tauri 2)
+- [Enzi Music](https://zhyronne.workwithoddly.com/projects/enzi-music): Open-source YouTube Music client for Windows and Android, built on LiMusic (Rust, Tauri 2, Svelte)
 - [BookVoice](https://zhyronne.workwithoddly.com/projects/bookvoice): Local-first Windows audiobook studio with a multitrack editor (Electron, Python)
 - [LifeDesk](https://zhyronne.workwithoddly.com/projects/lifedesk): Local-first Android app for tasks, bills, budgets, and investments (React Native, Expo, SQLite)
 - [LocalAid](https://zhyronne.workwithoddly.com/projects/localaid): Native Android app connecting nearby residents to request and offer help (Kotlin, Firebase, Google Maps)

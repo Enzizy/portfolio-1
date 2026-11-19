@@ -33,6 +33,7 @@ const shots: Record<(typeof projects)[number]["visual"], { src: string; position
   "joyno-accounting": { src: "/images/projects/joyno-accounting.webp", position: "left top" },
   enzi: { src: "/images/projects/enzi/01-hero.webp", position: "center top" },
   "joyno-chatbot": { src: "/images/projects/joyno-chatbot/03-chat-answer-with-page-button.webp", position: "right center" },
+  "enzi-music": { src: "/images/projects/enzi-music/01-player.webp", position: "center center" },
 };
 
 const socials = [

@@ -100,6 +100,14 @@ export const projects = [
     visual: "joyno-chatbot" as const,
     href: "/projects/joyno-chatbot",
   },
+  {
+    number: "12",
+    title: "Enzi Music",
+    description: "A YouTube Music client for Windows and Android with gapless playback, synced lyrics, tempo and pitch effects, themes and custom backgrounds, and the Enzi notch showing what's playing.",
+    technologies: ["Rust", "Tauri 2", "Svelte 5"],
+    visual: "enzi-music" as const,
+    href: "/projects/enzi-music",
+  },
 ] as const;
 
 // Shown on the home page and published as FAQPage data, so answer engines can quote them directly.
@@ -118,7 +126,7 @@ export const faqs = [
   },
   {
     question: "What has he built?",
-    answer: "His work includes Joyno HR, an HR and payroll platform; Joyno Accounting, a co-built accounting system; CasaToon, an AI story studio; Joyno Chatbot, an AI assistant for WordPress sites; Enzi, a customizable notch for Windows; and LocalAid, a community-help Android app.",
+    answer: "His work includes Joyno HR, an HR and payroll platform; Joyno Accounting, a co-built accounting system; CasaToon, an AI story studio; Joyno Chatbot, an AI assistant for WordPress sites; Enzi, a customizable notch for Windows; Enzi Music, a YouTube Music client for Windows and Android; and LocalAid, a community-help Android app.",
   },
   {
     question: "Can Zhyronne add AI to an existing website or business system?",

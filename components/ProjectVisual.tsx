@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type ProjectVisualProps = {
-  variant: "dashboard" | "localaid" | "furniture" | "bookvoice" | "casatoon" | "ccr" | "lifedesk-crm" | "lifedesk" | "joyno-accounting" | "enzi" | "joyno-chatbot";
+  variant: "dashboard" | "localaid" | "furniture" | "bookvoice" | "casatoon" | "ccr" | "lifedesk-crm" | "lifedesk" | "joyno-accounting" | "enzi" | "joyno-chatbot" | "enzi-music";
 };
 
 function LocalAidVisual() {
@@ -93,6 +93,13 @@ export function ProjectVisual({ variant }: ProjectVisualProps) {
       src="/images/projects/enzi/01-hero.webp"
       alt="Enzi notch open on the music player at the top of a Windows desktop, with the floating to-do widget"
       position="center top"
+    />
+  );
+  if (variant === "enzi-music") return (
+    <WebsiteVisual
+      src="/images/projects/enzi-music/01-player.webp"
+      alt="Enzi Music's player with album art and the queue open beside it"
+      position="center center"
     />
   );
   if (variant === "joyno-chatbot") return (

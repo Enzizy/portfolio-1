@@ -9,7 +9,7 @@ import { createProjectMetadata } from "@/lib/metadata";
 
 const features = [
   "A slim notch at the top of the screen that opens on hover and gets out of the way",
-  "Now playing from Spotify, browsers and any app using Windows media controls",
+  "Now playing from Spotify, Enzi Music, browsers and any app using Windows media controls",
   "Synced lyrics from LRCLIB with an adjustable timing offset",
   "Pomodoro focus timer with breaks, a chime and a daily session count",
   "To-do list with an always-on-top floating widget",
