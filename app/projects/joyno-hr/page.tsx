@@ -35,12 +35,18 @@ const stack = [
   { label: "Quality", value: "150+ backend tests, isolated database integration tests and Playwright checks" },
 ] as const;
 
+const gallery = [
+  { file: "attendance-review.webp", alt: "Attendance review for the payday: daily time-in and time-out per employee, with lateness deducted as recorded" },
+  { file: "payslips-release.webp", alt: "Approved payroll ready to release to employees' My payslips page or by email" },
+  { file: "dashboard.webp", alt: "Joyno Workspace home with the next payday, shift status and items needing attention" },
+] as const;
+
 export const metadata = createProjectMetadata({
   path: "/projects/joyno-hr",
   title: "Joyno HR — Full HRMS with Attendance and Payroll",
   description:
     "A full HRMS built with Vue 3, Express, and PostgreSQL: employee records, biometric attendance, payroll, payslips, government contributions, and leave.",
-  imageAlt: "Joyno HR operations dashboard",
+  imageAlt: "Joyno HR pay review showing earnings, deductions and net pay",
 });
 
 export default function JoynoHrPage() {
@@ -74,9 +80,9 @@ export default function JoynoHrPage() {
         <figure className="case-study__hero">
           <Image
             src="/images/projects/hr.webp"
-            alt="Joyno HR operations dashboard showing navigation, leave approvals, workforce availability, and recent activity"
-            width={1424}
-            height={762}
+            alt="Joyno HR pay review for the November 15 payday: earnings, deductions and net pay for nine employees, ready to approve"
+            width={1600}
+            height={1000}
             sizes="(max-width: 948px) calc(100vw - 48px), 900px"
             unoptimized
             priority
@@ -102,9 +108,28 @@ export default function JoynoHrPage() {
           </ul>
         </section>
 
-        <section className="case-study__technology" aria-labelledby="joyno-technology">
+        <section className="case-study__features" aria-labelledby="joyno-gallery">
           <div className="case-study__section-heading">
             <span>// 03</span>
+            <h2 id="joyno-gallery">From biometric scans to payslips</h2>
+            <p>One payday, start to finish. Screens use demo employees and amounts.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+            {gallery.map(({ file, alt }) => (
+              <Image key={file} src={`/images/projects/joyno-hr/${file}`} alt={alt} width={1600} height={1000}
+                sizes="(max-width: 948px) calc(100vw - 48px), 450px"
+                style={{ width: "100%", height: "auto", borderRadius: 12 }} />
+            ))}
+            {/* The payslip is a tall document, so it keeps its own proportions. */}
+            <Image src="/images/projects/joyno-hr/payslip.webp" alt="Approved payslip in the company's workbook format: basic salary, deductions, withholding tax and net pay in words"
+              width={900} height={1669} sizes="(max-width: 948px) calc(100vw - 48px), 450px"
+              style={{ width: "100%", height: "auto", maxHeight: 560, objectFit: "contain", objectPosition: "top", borderRadius: 12, background: "#fff" }} />
+          </div>
+        </section>
+
+        <section className="case-study__technology" aria-labelledby="joyno-technology">
+          <div className="case-study__section-heading">
+            <span>// 04</span>
             <h2 id="joyno-technology">Technology</h2>
             <p>Built across the frontend, API, database, reporting, and communication layers.</p>
           </div>

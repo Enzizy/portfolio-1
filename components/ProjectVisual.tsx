@@ -24,7 +24,7 @@ function DashboardVisual() {
     <div className="visual visual--dashboard">
       <Image
         src="/images/projects/hr.webp"
-        alt="Joyno HR operations dashboard"
+        alt="Joyno HR pay review showing earnings, deductions and net pay for a payday"
         fill
         sizes="(max-width: 767px) 100vw, 720px"
         unoptimized
