@@ -37,9 +37,9 @@ const stack = [
 
 export const metadata = createProjectMetadata({
   path: "/projects/joyno-hr",
-  title: "Joyno HR — HR, Attendance and Payroll Platform",
+  title: "Joyno HR — Full HRMS with Attendance and Payroll",
   description:
-    "A full-stack HR and payroll platform built with Vue 3, Express, and PostgreSQL: attendance review, pay runs, payslips, government contributions, and leave workflows.",
+    "A full HRMS built with Vue 3, Express, and PostgreSQL: employee records, biometric attendance, payroll, payslips, government contributions, and leave.",
   imageAlt: "Joyno HR operations dashboard",
 });
 
@@ -55,11 +55,11 @@ export default function JoynoHrPage() {
           <p className="eyebrow">// CASE STUDY 01</p>
           <div className="case-study__title">
             <div>
-              <span>HR, ATTENDANCE &amp; PAYROLL</span>
+              <span>FULL HRMS WITH PAYROLL</span>
               <h1>Joyno HR</h1>
             </div>
             <p>
-              A full-stack platform that runs payroll end to end, from biometric attendance
+              A full HRMS that runs payroll end to end, from biometric attendance
               to approved pay runs and payslips, alongside employee records, leave,
               announcements, reports and audit history.
             </p>

@@ -15,7 +15,7 @@ export const projects = [
   {
     number: "01",
     title: "Joyno HR",
-    description: "A full-stack HR and payroll platform: employee records, attendance import and review, day and night pay runs with approval, payslips, government contributions, 13th-month and SIL reports, leave workflows, and announcements.",
+    description: "A full HRMS with payroll: employee records, biometric attendance review, Day and Night pay runs with approval, payslips, government contributions, 13th-month and SIL reports, leave, and announcements.",
     technologies: ["Vue.js", "Node.js", "PostgreSQL"],
     visual: "dashboard" as const,
     href: "/projects/joyno-hr",
@@ -126,7 +126,7 @@ export const faqs = [
   },
   {
     question: "What has he built?",
-    answer: "His work includes Joyno HR, an HR and payroll platform; Joyno Accounting, a co-built accounting system; CasaToon, an AI story studio; Joyno Chatbot, an AI assistant for WordPress sites; Enzi, a customizable notch for Windows; Enzi Music, a YouTube Music client for Windows and Android; and LocalAid, a community-help Android app.",
+    answer: "His work includes Joyno HR, a full HRMS with payroll; Joyno Accounting, a co-built accounting system; CasaToon, an AI story studio; Joyno Chatbot, an AI assistant for WordPress sites; Enzi, a customizable notch for Windows; Enzi Music, a YouTube Music client for Windows and Android; and LocalAid, a community-help Android app.",
   },
   {
     question: "Can Zhyronne add AI to an existing website or business system?",

@@ -14,7 +14,7 @@
 
 ## Business systems
 
-- [Joyno HR](https://zhyronne.workwithoddly.com/projects/joyno-hr): Full-stack HR and payroll platform with attendance review, pay runs, payslips, government contributions, and leave workflows (Vue, Node.js, PostgreSQL)
+- [Joyno HR](https://zhyronne.workwithoddly.com/projects/joyno-hr): Full HRMS with payroll: employee records, biometric attendance, Day and Night pay runs, payslips, government contributions, and leave (Vue, Node.js, PostgreSQL)
 - [Joyno Accounting](https://zhyronne.workwithoddly.com/projects/joyno-accounting): Collaborative accounting system, co-built, with journals, a general ledger, financial statements, banking, and audit trails (Vue 3, Express, PostgreSQL)
 - [CCR](https://zhyronne.workwithoddly.com/projects/ccr): Internal operations system for purchase orders, deliveries, receivables, payments, and expenses, with an AI assistant for audit guidance (Vue.js, Supabase)
 - [LifeDesk CRM](https://zhyronne.workwithoddly.com/projects/lifedesk-crm): Prospecting workspace for finding local businesses, reviewing AI-qualified leads, and managing a sales pipeline (React, Supabase)
